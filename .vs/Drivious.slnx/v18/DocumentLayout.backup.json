@@ -1,0 +1,326 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Asus\\Desktop\\Drivious\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\vehicle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\enums\\vehiclestatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:enums\\vehiclestatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\enums\\notificationtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:enums\\notificationtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\enums\\maintenancetype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:enums\\maintenancetype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\enums\\expensecategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:enums\\expensecategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\enums\\fueltype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:enums\\fueltype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\enums\\documenttype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:enums\\documenttype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\maintenance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\maintenance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\insurance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\insurance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\income.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\income.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\fuellog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\fuellog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\expense.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\expense.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\driver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\driver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\documnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\documnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\vehicleassignment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\vehicleassignment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\models\\basemodels\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:models\\basemodels\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|c:\\users\\asus\\desktop\\drivious\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF82784A-9B92-4EAE-8C76-7F74F71CAC4B}|Drivious.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 12,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NotificationType.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\NotificationType.cs",
+              "RelativeDocumentMoniker": "Enums\\NotificationType.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\NotificationType.cs",
+              "RelativeToolTip": "Enums\\NotificationType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:20:36.583Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Notification.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Notification.cs",
+              "RelativeDocumentMoniker": "Models\\Notification.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Notification.cs",
+              "RelativeToolTip": "Models\\Notification.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAoAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:20:18.289Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DocumentType.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\DocumentType.cs",
+              "RelativeDocumentMoniker": "Enums\\DocumentType.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\DocumentType.cs",
+              "RelativeToolTip": "Enums\\DocumentType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:18:17.857Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Documnet.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Documnet.cs",
+              "RelativeDocumentMoniker": "Models\\Documnet.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Documnet.cs",
+              "RelativeToolTip": "Models\\Documnet.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAqwAwAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:17:57.414Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "FuelLog.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\FuelLog.cs",
+              "RelativeDocumentMoniker": "Models\\FuelLog.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\FuelLog.cs",
+              "RelativeToolTip": "Models\\FuelLog.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAQwAQAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:15:49.592Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MaintenanceType.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\MaintenanceType.cs",
+              "RelativeDocumentMoniker": "Enums\\MaintenanceType.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\MaintenanceType.cs",
+              "RelativeToolTip": "Enums\\MaintenanceType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:11:26.17Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Insurance.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Insurance.cs",
+              "RelativeDocumentMoniker": "Models\\Insurance.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Insurance.cs",
+              "RelativeToolTip": "Models\\Insurance.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAQwBIAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:08:54.085Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Maintenance.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Maintenance.cs",
+              "RelativeDocumentMoniker": "Models\\Maintenance.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Maintenance.cs",
+              "RelativeToolTip": "Models\\Maintenance.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAswBcAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:04:59.312Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Income.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Income.cs",
+              "RelativeDocumentMoniker": "Models\\Income.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Income.cs",
+              "RelativeToolTip": "Models\\Income.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:03:05.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Expense.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Expense.cs",
+              "RelativeDocumentMoniker": "Models\\Expense.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Expense.cs",
+              "RelativeToolTip": "Models\\Expense.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T17:01:20.826Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "VehicleAssignment.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\VehicleAssignment.cs",
+              "RelativeDocumentMoniker": "Models\\VehicleAssignment.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\VehicleAssignment.cs",
+              "RelativeToolTip": "Models\\VehicleAssignment.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAkwAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T16:59:42.334Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Driver.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Driver.cs",
+              "RelativeDocumentMoniker": "Models\\Driver.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Driver.cs",
+              "RelativeToolTip": "Models\\Driver.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAUwBwAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T16:56:43.338Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Vehicle.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Vehicle.cs",
+              "RelativeDocumentMoniker": "Models\\Vehicle.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\Vehicle.cs*",
+              "RelativeToolTip": "Models\\Vehicle.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T16:38:51.307Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ExpenseCategory.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\ExpenseCategory.cs",
+              "RelativeDocumentMoniker": "Enums\\ExpenseCategory.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\ExpenseCategory.cs",
+              "RelativeToolTip": "Enums\\ExpenseCategory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T16:29:55.205Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FuelType.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\FuelType.cs",
+              "RelativeDocumentMoniker": "Enums\\FuelType.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\FuelType.cs",
+              "RelativeToolTip": "Enums\\FuelType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T16:29:15.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VehicleStatus.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\VehicleStatus.cs",
+              "RelativeDocumentMoniker": "Enums\\VehicleStatus.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Enums\\VehicleStatus.cs",
+              "RelativeToolTip": "Enums\\VehicleStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T16:28:00.167Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "BaseEntity.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\BaseModels\\BaseEntity.cs",
+              "RelativeDocumentMoniker": "Models\\BaseModels\\BaseEntity.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Models\\BaseModels\\BaseEntity.cs",
+              "RelativeToolTip": "Models\\BaseModels\\BaseEntity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T16:23:19.634Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\Drivious\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\Drivious\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-06T16:20:13.369Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
