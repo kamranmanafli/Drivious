@@ -1,8 +1,9 @@
 ﻿using Drivious.Enums;
+using Drivious.Models.BaseModels;
 
 namespace Drivious.Models
 {
-    public class Notification
+    public class Notification : BaseEntity
     {
         public string Title { get; set; }            // Bildiriş başlığı
 

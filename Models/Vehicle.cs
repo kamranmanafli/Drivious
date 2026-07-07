@@ -40,6 +40,6 @@ namespace Drivious.Models
 
         public List<FuelLog> FuelLogs { get; set; } = new();       // Yanacaq tarixçəsi
 
-        public List<Document> Documents { get; set; } = new();     // Sənədlər
+        public List<VehicleDocument> vehicleDocuments { get; set; } = new();     // Sənədlər
     }
 }
