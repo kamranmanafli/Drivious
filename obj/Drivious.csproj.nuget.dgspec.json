@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Asus\\Desktop\\Drivious\\Drivious.csproj": {}
+    "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Drivious.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Asus\\Desktop\\Drivious\\Drivious.csproj": {
+    "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Drivious.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asus\\Desktop\\Drivious\\Drivious.csproj",
+        "projectUniqueName": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Drivious.csproj",
         "projectName": "Drivious",
-        "projectPath": "C:\\Users\\Asus\\Desktop\\Drivious\\Drivious.csproj",
+        "projectPath": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Drivious.csproj",
         "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asus\\Desktop\\Drivious\\obj\\",
+        "outputPath": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
