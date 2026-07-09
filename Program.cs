@@ -19,6 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Conf
 // Services
 
 builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<IDriverService, DriverService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
 
 
 var app = builder.Build();

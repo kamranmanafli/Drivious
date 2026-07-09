@@ -128,7 +128,7 @@ namespace Drivious.Services.Implements
 
             vehicle.Image.DeleteFile(_env.WebRootPath, "Images", "Vehicle");
 
-            var result = _context.Remove(vehicle);
+            var result = _context.Vehicles.Remove(vehicle);
 
             if (result.State != EntityState.Deleted)
                 return false;
