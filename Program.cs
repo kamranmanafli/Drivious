@@ -21,6 +21,9 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Conf
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IDriverService, DriverService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<IIncomeService, IncomeService>();
+builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
+builder.Services.AddScoped<IInsuranceService, InsuranceService>();
 
 
 var app = builder.Build();

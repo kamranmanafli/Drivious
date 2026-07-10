@@ -3,12 +3,52 @@
   "WorkspaceRootPath": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\controllers\\expensescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:controllers\\expensescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\services\\implements\\expenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:services\\implements\\expenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\dtos\\maintenance\\maintenancecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:dtos\\maintenance\\maintenancecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\dtos\\insurance\\insurancecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:dtos\\insurance\\insurancecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\dtos\\income\\incomecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:dtos\\income\\incomecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\dtos\\expense\\expensecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:dtos\\expense\\expensecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\dtos\\driver\\drivercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:dtos\\driver\\drivercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\controllers\\insurancescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:controllers\\insurancescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\controllers\\incomescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:controllers\\incomescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\services\\implements\\insuranceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:services\\implements\\insuranceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\services\\interfaces\\iinsuranceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:services\\interfaces\\iinsuranceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\dtos\\insurance\\insurancegetdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:dtos\\insurance\\insurancegetdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\dtos\\insurance\\insuranceupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:dtos\\insurance\\insuranceupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,32 +58,159 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ExpensesController.cs",
-              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\ExpensesController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ExpensesController.cs",
-              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\ExpensesController.cs",
-              "RelativeToolTip": "Controllers\\ExpensesController.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwBQAAAAJAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "MaintenanceCreateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Maintenance\\MaintenanceCreateDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\Maintenance\\MaintenanceCreateDTO.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Maintenance\\MaintenanceCreateDTO.cs",
+              "RelativeToolTip": "DTOs\\Maintenance\\MaintenanceCreateDTO.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-09T19:19:44.146Z",
+              "WhenOpened": "2026-07-10T19:18:07.516Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ExpenseService.cs",
-              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\ExpenseService.cs",
-              "RelativeDocumentMoniker": "Services\\Implements\\ExpenseService.cs",
-              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\ExpenseService.cs",
-              "RelativeToolTip": "Services\\Implements\\ExpenseService.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAMwBAAAAABAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "IncomeCreateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Income\\IncomeCreateDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\Income\\IncomeCreateDTO.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Income\\IncomeCreateDTO.cs",
+              "RelativeToolTip": "DTOs\\Income\\IncomeCreateDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-09T19:00:52.506Z",
+              "WhenOpened": "2026-07-10T19:18:01.318Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ExpenseCreateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Expense\\ExpenseCreateDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\Expense\\ExpenseCreateDTO.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Expense\\ExpenseCreateDTO.cs",
+              "RelativeToolTip": "DTOs\\Expense\\ExpenseCreateDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T19:17:57.966Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DriverCreateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Driver\\DriverCreateDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\Driver\\DriverCreateDTO.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Driver\\DriverCreateDTO.cs",
+              "RelativeToolTip": "DTOs\\Driver\\DriverCreateDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T19:17:54.718Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IncomesController.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\IncomesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\IncomesController.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\IncomesController.cs",
+              "RelativeToolTip": "Controllers\\IncomesController.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAowEAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T19:17:03.487Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "InsurancesController.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\InsurancesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\InsurancesController.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\InsurancesController.cs",
+              "RelativeToolTip": "Controllers\\InsurancesController.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAowEAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T19:16:59.459Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "IInsuranceService.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Interfaces\\IInsuranceService.cs",
+              "RelativeDocumentMoniker": "Services\\Interfaces\\IInsuranceService.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Interfaces\\IInsuranceService.cs",
+              "RelativeToolTip": "Services\\Interfaces\\IInsuranceService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T19:12:23.152Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "InsuranceService.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\InsuranceService.cs",
+              "RelativeDocumentMoniker": "Services\\Implements\\InsuranceService.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\InsuranceService.cs",
+              "RelativeToolTip": "Services\\Implements\\InsuranceService.cs",
+              "ViewState": "AgIAAI8AAAAAAAAAAAAowKIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T19:11:39.928Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "InsuranceUpdateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Insurance\\InsuranceUpdateDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\Insurance\\InsuranceUpdateDTO.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Insurance\\InsuranceUpdateDTO.cs",
+              "RelativeToolTip": "DTOs\\Insurance\\InsuranceUpdateDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T19:09:21.189Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "InsuranceGetDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Insurance\\InsuranceGetDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\Insurance\\InsuranceGetDTO.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Insurance\\InsuranceGetDTO.cs",
+              "RelativeToolTip": "DTOs\\Insurance\\InsuranceGetDTO.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAA9wBgAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T19:09:07.599Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "InsuranceCreateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Insurance\\InsuranceCreateDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\Insurance\\InsuranceCreateDTO.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Insurance\\InsuranceCreateDTO.cs",
+              "RelativeToolTip": "DTOs\\Insurance\\InsuranceCreateDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T19:08:53.668Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Program.cs*",
+              "RelativeToolTip": "Program.cs*",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABkAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T17:39:00.978Z",
               "EditorCaption": ""
             }
           ]
