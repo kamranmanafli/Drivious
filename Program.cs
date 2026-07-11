@@ -24,6 +24,8 @@ builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IIncomeService, IncomeService>();
 builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
 builder.Services.AddScoped<IInsuranceService, InsuranceService>();
+builder.Services.AddScoped<IVehicleAssignmentService, VehicleAssignmentService>();
+builder.Services.AddScoped<IFuelLogService, FuelLogService>();
 
 
 var app = builder.Build();
