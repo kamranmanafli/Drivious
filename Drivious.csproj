@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Helpers\" />
     <Folder Include="wwwroot\Files\VehicleDocuments\" />
     <Folder Include="wwwroot\Images\Driver\" />
     <Folder Include="wwwroot\Images\Vehicle\" />

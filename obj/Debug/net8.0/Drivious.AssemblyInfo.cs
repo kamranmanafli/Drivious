@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Drivious")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c56f03398e766f1b12121963a8e23d4688753439")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6647a7b01156375916b387e367ac7bb7a65c3d0c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Drivious")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Drivious")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

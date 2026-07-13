@@ -1,4 +1,5 @@
 using Drivious.Data;
+using Drivious.Middlewares;
 using Drivious.Services.Implements;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseStaticFiles();
 
