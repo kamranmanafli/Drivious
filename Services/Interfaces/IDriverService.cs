@@ -1,19 +1,20 @@
 ﻿using Drivious.DTOs.Driver;
+using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
 {
     public interface IDriverService
     {
-        Task<bool> CreateAsync(DriverCreateDTO dto);
+        Task<ApiResponse<object>> CreateAsync(DriverCreateDTO dto);
 
-        Task<bool> RemoveAsync(Guid id);
+        Task<ApiResponse<object>> RemoveAsync(Guid id);
 
-        Task<List<DriverGetDTO>> GetAllAsync();
+        Task<ApiResponse<List<DriverGetDTO>>> GetAllAsync();
 
-        Task<DriverGetDTO> GetAsync(Guid id);
+        Task<ApiResponse<DriverGetDTO>> GetAsync(Guid id);
 
-        Task<bool> UpdateAsync(Guid id, DriverUpdateDTO dto);
+        Task<ApiResponse<object>> UpdateAsync(Guid id, DriverUpdateDTO dto);
 
-        Task<bool> ToggleAsync(Guid id);
+        Task<ApiResponse<object>> ToggleAsync(Guid id);
     }
 }

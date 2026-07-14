@@ -3,6 +3,38 @@
   "WorkspaceRootPath": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\controllers\\expensescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:controllers\\expensescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\services\\implements\\expenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:services\\implements\\expenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\services\\interfaces\\iexpenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:services\\interfaces\\iexpenseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\controllers\\driverscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:controllers\\driverscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\services\\implements\\driverservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:services\\implements\\driverservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\responses\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:responses\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\services\\interfaces\\idriverservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:services\\interfaces\\idriverservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\middlewares\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:middlewares\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -17,14 +49,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\exceptions\\unauthorizedexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:exceptions\\unauthorizedexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\responses\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|solutionrelative:responses\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9932711C-2A6D-5F2C-15EA-1BDE1811BB2C}|Drivious.csproj|c:\\users\\asus\\desktop\\driviousapi\\controllers\\notificationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -70,11 +94,89 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ExpensesController.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\ExpensesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ExpensesController.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\ExpensesController.cs",
+              "RelativeToolTip": "Controllers\\ExpensesController.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAwwA8AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T18:57:46.902Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ExpenseService.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\ExpenseService.cs",
+              "RelativeDocumentMoniker": "Services\\Implements\\ExpenseService.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\ExpenseService.cs",
+              "RelativeToolTip": "Services\\Implements\\ExpenseService.cs",
+              "ViewState": "AgIAAOgAAAAAAAAAAAAuwAIBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T18:50:37.553Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IExpenseService.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Interfaces\\IExpenseService.cs",
+              "RelativeDocumentMoniker": "Services\\Interfaces\\IExpenseService.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Interfaces\\IExpenseService.cs",
+              "RelativeToolTip": "Services\\Interfaces\\IExpenseService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T18:50:01.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "DriversController.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\DriversController.cs",
+              "RelativeDocumentMoniker": "Controllers\\DriversController.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\DriversController.cs",
+              "RelativeToolTip": "Controllers\\DriversController.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAAowEIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T18:38:46.292Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DriverService.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\DriverService.cs",
+              "RelativeDocumentMoniker": "Services\\Implements\\DriverService.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\DriverService.cs",
+              "RelativeToolTip": "Services\\Implements\\DriverService.cs",
+              "ViewState": "AgIAACUBAAAAAAAAAAAuwD8BAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T18:25:13.173Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IDriverService.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Interfaces\\IDriverService.cs",
+              "RelativeDocumentMoniker": "Services\\Interfaces\\IDriverService.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Interfaces\\IDriverService.cs",
+              "RelativeToolTip": "Services\\Interfaces\\IDriverService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T18:24:20.049Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "UnauthorizedException.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Exceptions\\UnauthorizedException.cs",
               "RelativeDocumentMoniker": "Exceptions\\UnauthorizedException.cs",
@@ -82,12 +184,11 @@
               "RelativeToolTip": "Exceptions\\UnauthorizedException.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-13T17:31:03.006Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-13T17:31:03.006Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 9,
               "Title": "BadRequestException.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Exceptions\\BadRequestException.cs",
               "RelativeDocumentMoniker": "Exceptions\\BadRequestException.cs",
@@ -95,12 +196,11 @@
               "RelativeToolTip": "Exceptions\\BadRequestException.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-13T17:30:48.281Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-13T17:30:48.281Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 10,
               "Title": "NotFoundException.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Exceptions\\NotFoundException.cs",
               "RelativeDocumentMoniker": "Exceptions\\NotFoundException.cs",
@@ -108,12 +208,11 @@
               "RelativeToolTip": "Exceptions\\NotFoundException.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-13T17:30:32.949Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-13T17:30:32.949Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 8,
               "Title": "ExceptionMiddleware.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Middlewares\\ExceptionMiddleware.cs",
               "RelativeDocumentMoniker": "Middlewares\\ExceptionMiddleware.cs",
@@ -132,14 +231,14 @@
               "RelativeDocumentMoniker": "Responses\\ApiResponse.cs",
               "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Responses\\ApiResponse.cs",
               "RelativeToolTip": "Responses\\ApiResponse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-13T17:22:19.248Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "NotificationsController.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\NotificationsController.cs",
               "RelativeDocumentMoniker": "Controllers\\NotificationsController.cs",
@@ -147,12 +246,11 @@
               "RelativeToolTip": "Controllers\\NotificationsController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T19:20:09.776Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-12T19:20:09.776Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 14,
               "Title": "INotificationService.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Interfaces\\INotificationService.cs",
               "RelativeDocumentMoniker": "Services\\Interfaces\\INotificationService.cs",
@@ -160,12 +258,11 @@
               "RelativeToolTip": "Services\\Interfaces\\INotificationService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T19:15:32.874Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-12T19:15:32.874Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 13,
               "Title": "NotificationService.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\NotificationService.cs",
               "RelativeDocumentMoniker": "Services\\Implements\\NotificationService.cs",
@@ -173,12 +270,11 @@
               "RelativeToolTip": "Services\\Implements\\NotificationService.cs",
               "ViewState": "AgIAAHoAAAAAAAAAAAAiwJ0AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T19:15:19.949Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-12T19:15:19.949Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 15,
               "Title": "NotificationUpdateDTO.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Notification\\NotificationUpdateDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\Notification\\NotificationUpdateDTO.cs",
@@ -186,12 +282,11 @@
               "RelativeToolTip": "DTOs\\Notification\\NotificationUpdateDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T19:08:16.615Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-12T19:08:16.615Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 16,
               "Title": "NotificationGetDTO.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Notification\\NotificationGetDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\Notification\\NotificationGetDTO.cs",
@@ -199,12 +294,11 @@
               "RelativeToolTip": "DTOs\\Notification\\NotificationGetDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T19:05:33.242Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-12T19:05:33.242Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 17,
               "Title": "NotificationCreateDTO.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\DTOs\\Notification\\NotificationCreateDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\Notification\\NotificationCreateDTO.cs",
@@ -212,12 +306,11 @@
               "RelativeToolTip": "DTOs\\Notification\\NotificationCreateDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T19:03:39.153Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-12T19:03:39.153Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "VehicleDocumentsController.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Controllers\\VehicleDocumentsController.cs",
               "RelativeDocumentMoniker": "Controllers\\VehicleDocumentsController.cs",
@@ -225,25 +318,24 @@
               "RelativeToolTip": "Controllers\\VehicleDocumentsController.cs",
               "ViewState": "AgIAABgAAAAAAAAAAAAowEAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T18:57:33.951Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-12T18:57:33.951Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAAAAACsAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAABwAAAAAAAAAAAAAACwAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-12T18:50:46.364Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 20,
               "Title": "VehicleService.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\VehicleService.cs",
               "RelativeDocumentMoniker": "Services\\Implements\\VehicleService.cs",
@@ -251,12 +343,11 @@
               "RelativeToolTip": "Services\\Implements\\VehicleService.cs",
               "ViewState": "AgIAABYAAAAAAAAAAAAgwNIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T18:41:41.658Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-12T18:41:41.658Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 19,
               "Title": "VehicleDocumentService.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\DriviousAPI\\Services\\Implements\\VehicleDocumentService.cs",
               "RelativeDocumentMoniker": "Services\\Implements\\VehicleDocumentService.cs",
@@ -264,8 +355,7 @@
               "RelativeToolTip": "Services\\Implements\\VehicleDocumentService.cs",
               "ViewState": "AgIAAJ0AAAAAAAAAAAAowLYAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T18:37:19.299Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-12T18:37:19.299Z"
             }
           ]
         }

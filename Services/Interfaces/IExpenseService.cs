@@ -1,19 +1,20 @@
 ﻿using Drivious.DTOs.Expense;
+using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
 {
     public interface IExpenseService
     {
-        Task<bool> CreateAsync(ExpenseCreateDTO dto);
+        Task<ApiResponse<object>> CreateAsync(ExpenseCreateDTO dto);
 
-        Task<bool> RemoveAsync(Guid id);
+        Task<ApiResponse<object>> RemoveAsync(Guid id);
 
-        Task<List<ExpenseGetDTO>> GetAllAsync();
+        Task<ApiResponse<List<ExpenseGetDTO>>> GetAllAsync();
 
-        Task<ExpenseGetDTO> GetAsync(Guid id);
+        Task<ApiResponse<ExpenseGetDTO>> GetAsync(Guid id);
 
-        Task<bool> UpdateAsync(Guid id, ExpenseUpdateDTO dto);
+        Task<ApiResponse<object>> UpdateAsync(Guid id, ExpenseUpdateDTO dto);
 
-        Task<bool> ToggleAsync(Guid id);
+        Task<ApiResponse<object>> ToggleAsync(Guid id);
     }
 }

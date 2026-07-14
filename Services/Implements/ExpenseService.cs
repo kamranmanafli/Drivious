@@ -1,6 +1,7 @@
 ﻿using Drivious.Data;
 using Drivious.DTOs.Expense;
 using Drivious.Models;
+using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +15,7 @@ namespace Drivious.Services.Implements
         {
             _context = context;
         }
-        public async Task<bool> CreateAsync(ExpenseCreateDTO dto)
+        public async Task<ApiResponse<object>> CreateAsync(ExpenseCreateDTO dto)
         {
             Expense expense = new()
             {
@@ -30,14 +31,33 @@ namespace Drivious.Services.Implements
             var result = await _context.Expenses.AddAsync(expense);
 
             if (result.State != EntityState.Added)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense could not be created.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense could not be saved.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Expense created successfully.",
+                null
+            );
         }
 
-        public async Task<List<ExpenseGetDTO>> GetAllAsync()
+        public async Task<ApiResponse<List<ExpenseGetDTO>>> GetAllAsync()
         {
             var expenses = await _context.Expenses.ToListAsync();
 
@@ -58,19 +78,27 @@ namespace Drivious.Services.Implements
 
             }).ToList();
 
-            return dtos;
+            return new ApiResponse<List<ExpenseGetDTO>>(
+                true,
+                "Expenses retrieved successfully.",
+                dtos
+            );
         }
 
-        public async Task<ExpenseGetDTO> GetAsync(Guid id)
+        public async Task<ApiResponse<ExpenseGetDTO>> GetAsync(Guid id)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
             if (expense == null)
             {
-                throw new Exception("Expense not found!");
+                return new ApiResponse<ExpenseGetDTO>(
+                    false,
+                    "Expense not found.",
+                    null
+                );
             }
 
-            var dto = new ExpenseGetDTO()
+            var dto = new ExpenseGetDTO
             {
                 Id = expense.Id,
 
@@ -86,61 +114,117 @@ namespace Drivious.Services.Implements
                 IsDeleted = expense.IsDeleted
             };
 
-            return dto;
+            return new ApiResponse<ExpenseGetDTO>(
+                true,
+                "Expense retrieved successfully.",
+                dto
+            );
         }
 
-        public async Task<bool> RemoveAsync(Guid id)
+        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
             if (expense == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense not found.",
+                    null
+                );
+            }
 
             var result = _context.Expenses.Remove(expense);
 
             if (result.State != EntityState.Deleted)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense could not be deleted.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense could not be deleted.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Expense deleted successfully.",
+                null
+            );
         }
 
-        public async Task<bool> ToggleAsync(Guid id)
+        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
             if (expense == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense not found.",
+                    null
+                );
+            }
 
             expense.IsDeleted = !expense.IsDeleted;
-
             expense.DeletedAt = expense.IsDeleted ? DateTime.Now : null;
 
             var result = _context.Expenses.Update(expense);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense status could not be changed.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense status could not be changed.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Expense status changed successfully.",
+                null
+            );
         }
-        public async Task<bool> UpdateAsync(Guid id, ExpenseUpdateDTO dto)
+
+        public async Task<ApiResponse<object>> UpdateAsync(Guid id, ExpenseUpdateDTO dto)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
             if (expense == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense not found.",
+                    null
+                );
+            }
 
             expense.VehicleId = dto.VehicleId ?? expense.VehicleId;
-
             expense.Category = dto.Category ?? expense.Category;
-
             expense.Amount = dto.Amount ?? expense.Amount;
-
             expense.ExpenseDate = dto.ExpenseDate ?? expense.ExpenseDate;
-
             expense.Description = dto.Description ?? expense.Description;
 
             expense.UpdatedAt = DateTime.Now;
@@ -148,11 +232,30 @@ namespace Drivious.Services.Implements
             var result = _context.Expenses.Update(expense);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense could not be updated.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Expense could not be updated.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Expense updated successfully.",
+                null
+            );
         }
     }
 }

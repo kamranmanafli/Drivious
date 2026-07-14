@@ -2,6 +2,7 @@
 using Drivious.DTOs.Driver;
 using Drivious.Extensions;
 using Drivious.Models;
+using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ namespace Drivious.Services.Implements
             _accessor = accessor;
         }
 
-        public async Task<bool> CreateAsync(DriverCreateDTO dto)
+        public async Task<ApiResponse<object>> CreateAsync(DriverCreateDTO dto)
         {
             Driver driver = new()
             {
@@ -49,14 +50,33 @@ namespace Drivious.Services.Implements
             var result = await _context.Drivers.AddAsync(driver);
 
             if (result.State != EntityState.Added)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver could not be created.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver could not be saved.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Driver created successfully.",
+                null
+            );
         }
 
-        public async Task<List<DriverGetDTO>> GetAllAsync()
+        public async Task<ApiResponse<List<DriverGetDTO>>> GetAllAsync()
         {
             var drivers = await _context.Drivers.ToListAsync();
 
@@ -82,21 +102,30 @@ namespace Drivious.Services.Implements
                 UpdatedAt = d.UpdatedAt,
                 DeletedAt = d.DeletedAt,
                 IsDeleted = d.IsDeleted
+
             }).ToList();
 
-            return dtos;
+            return new ApiResponse<List<DriverGetDTO>>(
+                true,
+                "Drivers retrieved successfully.",
+                dtos
+            );
         }
 
-        public async Task<DriverGetDTO> GetAsync(Guid id)
+        public async Task<ApiResponse<DriverGetDTO>> GetAsync(Guid id)
         {
             var driver = await _context.Drivers.FindAsync(id);
 
             if (driver == null)
             {
-                throw new Exception("Driver not found!");
+                return new ApiResponse<DriverGetDTO>(
+                    false,
+                    "Driver not found.",
+                    null
+                );
             }
 
-            var dto = new DriverGetDTO()
+            var dto = new DriverGetDTO
             {
                 Id = driver.Id,
 
@@ -122,15 +151,25 @@ namespace Drivious.Services.Implements
                 IsDeleted = driver.IsDeleted
             };
 
-            return dto;
+            return new ApiResponse<DriverGetDTO>(
+                true,
+                "Driver retrieved successfully.",
+                dto
+            );
         }
 
-        public async Task<bool> RemoveAsync(Guid id)
+        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
         {
             var driver = await _context.Drivers.FindAsync(id);
 
             if (driver == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver not found.",
+                    null
+                );
+            }
 
             if (!string.IsNullOrEmpty(driver.Image))
             {
@@ -140,19 +179,44 @@ namespace Drivious.Services.Implements
             var result = _context.Drivers.Remove(driver);
 
             if (result.State != EntityState.Deleted)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver could not be deleted.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver could not be deleted.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Driver deleted successfully.",
+                null
+            );
         }
 
-        public async Task<bool> ToggleAsync(Guid id)
+        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
         {
             var driver = await _context.Drivers.FindAsync(id);
 
             if (driver == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver not found.",
+                    null
+                );
+            }
 
             driver.IsDeleted = !driver.IsDeleted;
 
@@ -161,54 +225,67 @@ namespace Drivious.Services.Implements
             var result = _context.Drivers.Update(driver);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver status could not be changed.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver status could not be changed.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Driver status changed successfully.",
+                null
+            );
         }
 
-        public async Task<bool> UpdateAsync(Guid id, DriverUpdateDTO dto)
+        public async Task<ApiResponse<object>> UpdateAsync(Guid id, DriverUpdateDTO dto)
         {
             var driver = await _context.Drivers.FindAsync(id);
 
             if (driver == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver not found.",
+                    null
+                );
+            }
 
             if (dto.Image != null)
             {
-                // Köhnə şəkli silirik
                 if (!string.IsNullOrEmpty(driver.Image))
                 {
                     driver.Image.DeleteFile(_env.WebRootPath, "Images", "Driver");
                 }
 
-                // Yeni şəkli əlavə edirik
                 driver.Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Driver");
 
                 driver.ImageUrl = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Images/Driver/{driver.Image}";
             }
 
             driver.FirstName = dto.FirstName ?? driver.FirstName;
-
             driver.LastName = dto.LastName ?? driver.LastName;
-
             driver.PhoneNumber = dto.PhoneNumber ?? driver.PhoneNumber;
-
             driver.Email = dto.Email ?? driver.Email;
-
             driver.IdentityNumber = dto.IdentityNumber ?? driver.IdentityNumber;
-
             driver.DriverLicenseNumber = dto.DriverLicenseNumber ?? driver.DriverLicenseNumber;
-
             driver.LicenseExpireDate = dto.LicenseExpireDate ?? driver.LicenseExpireDate;
-
             driver.BirthDate = dto.BirthDate ?? driver.BirthDate;
-
             driver.HireDate = dto.HireDate ?? driver.HireDate;
-
             driver.Address = dto.Address ?? driver.Address;
-
             driver.IsActive = dto.IsActive ?? driver.IsActive;
 
             driver.UpdatedAt = DateTime.Now;
@@ -216,11 +293,30 @@ namespace Drivious.Services.Implements
             var result = _context.Drivers.Update(driver);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver could not be updated.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Driver could not be updated.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Driver updated successfully.",
+                null
+            );
         }
     }
 }
