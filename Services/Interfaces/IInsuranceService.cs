@@ -1,19 +1,20 @@
 ﻿using Drivious.DTOs.Insurance;
+using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
 {
     public interface IInsuranceService
     {
-        Task<bool> CreateAsync(InsuranceCreateDTO dto);
+        Task<ApiResponse<object>> CreateAsync(InsuranceCreateDTO dto);
 
-        Task<bool> RemoveAsync(Guid id);
+        Task<ApiResponse<object>> RemoveAsync(Guid id);
 
-        Task<List<InsuranceGetDTO>> GetAllAsync();
+        Task<ApiResponse<List<InsuranceGetDTO>>> GetAllAsync();
 
-        Task<InsuranceGetDTO> GetAsync(Guid id);
+        Task<ApiResponse<InsuranceGetDTO>> GetAsync(Guid id);
 
-        Task<bool> UpdateAsync(Guid id, InsuranceUpdateDTO dto);
+        Task<ApiResponse<object>> UpdateAsync(Guid id, InsuranceUpdateDTO dto);
 
-        Task<bool> ToggleAsync(Guid id);
+        Task<ApiResponse<object>> ToggleAsync(Guid id);
     }
 }

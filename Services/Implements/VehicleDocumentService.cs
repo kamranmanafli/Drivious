@@ -2,6 +2,7 @@
 using Drivious.DTOs.VehicleDocumnet;
 using Drivious.Extensions;
 using Drivious.Models;
+using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ namespace Drivious.Services.Implements
             _accessor = accessor;
         }
 
-        public async Task<bool> CreateAsync(VehicleDocumentCreateDTO dto)
+        public async Task<ApiResponse<object>> CreateAsync(VehicleDocumentCreateDTO dto)
         {
             VehicleDocument vehicleDocument = new()
             {
@@ -43,14 +44,33 @@ namespace Drivious.Services.Implements
             var result = await _context.VehicleDocuments.AddAsync(vehicleDocument);
 
             if (result.State != EntityState.Added)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document could not be created.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document could not be saved.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Vehicle document created successfully.",
+                null
+            );
         }
 
-        public async Task<List<VehicleDocumentGetDTO>> GetAllAsync()
+        public async Task<ApiResponse<List<VehicleDocumentGetDTO>>> GetAllAsync()
         {
             var documents = await _context.VehicleDocuments.ToListAsync();
 
@@ -72,16 +92,24 @@ namespace Drivious.Services.Implements
 
             }).ToList();
 
-            return dtos;
+            return new ApiResponse<List<VehicleDocumentGetDTO>>(
+                true,
+                "Vehicle documents retrieved successfully.",
+                dtos
+            );
         }
 
-        public async Task<VehicleDocumentGetDTO> GetAsync(Guid id)
+        public async Task<ApiResponse<VehicleDocumentGetDTO>> GetAsync(Guid id)
         {
             var document = await _context.VehicleDocuments.FindAsync(id);
 
             if (document == null)
             {
-                throw new Exception("Vehicle document not found!");
+                return new ApiResponse<VehicleDocumentGetDTO>(
+                    false,
+                    "Vehicle document not found.",
+                    null
+                );
             }
 
             var dto = new VehicleDocumentGetDTO()
@@ -101,65 +129,122 @@ namespace Drivious.Services.Implements
                 IsDeleted = document.IsDeleted
             };
 
-            return dto;
+            return new ApiResponse<VehicleDocumentGetDTO>(
+                true,
+                "Vehicle document retrieved successfully.",
+                dto
+            );
         }
 
-        public async Task<bool> RemoveAsync(Guid id)
+        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
         {
             var document = await _context.VehicleDocuments.FindAsync(id);
 
             if (document == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document not found.",
+                    null
+                );
+            }
 
             document.FileName.DeleteFile(_env.WebRootPath, "Files", "VehicleDocuments");
 
             var result = _context.VehicleDocuments.Remove(document);
 
             if (result.State != EntityState.Deleted)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document could not be deleted.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document could not be deleted.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Vehicle document deleted successfully.",
+                null
+            );
         }
 
-        public async Task<bool> ToggleAsync(Guid id)
+        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
         {
             var document = await _context.VehicleDocuments.FindAsync(id);
 
             if (document == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document not found.",
+                    null
+                );
+            }
 
             document.IsDeleted = !document.IsDeleted;
-
             document.DeletedAt = document.IsDeleted ? DateTime.Now : null;
 
             var result = _context.VehicleDocuments.Update(document);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document status could not be changed.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document status could not be changed.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Vehicle document status changed successfully.",
+                null
+            );
         }
 
-        public async Task<bool> UpdateAsync(Guid id, VehicleDocumentUpdateDTO dto)
+        public async Task<ApiResponse<object>> UpdateAsync(Guid id, VehicleDocumentUpdateDTO dto)
         {
             var document = await _context.VehicleDocuments.FindAsync(id);
 
             if (document == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document not found.",
+                    null
+                );
+            }
 
             if (dto.File != null)
             {
-                // Köhnə faylı silirik
                 if (!string.IsNullOrEmpty(document.FileName))
                 {
                     document.FileName.DeleteFile(_env.WebRootPath, "Files", "VehicleDocuments");
                 }
 
-                // Yeni faylı yükləyirik
                 document.FileName = await dto.File.CreateFileAsync(_env.WebRootPath, "Files", "VehicleDocuments");
 
                 document.FileUrl = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Files/VehicleDocuments/{document.FileName}";
@@ -168,9 +253,7 @@ namespace Drivious.Services.Implements
             }
 
             document.VehicleId = dto.VehicleId ?? document.VehicleId;
-
             document.Title = dto.Title ?? document.Title;
-
             document.DocumentType = dto.DocumentType ?? document.DocumentType;
 
             document.UpdatedAt = DateTime.Now;
@@ -178,11 +261,30 @@ namespace Drivious.Services.Implements
             var result = _context.VehicleDocuments.Update(document);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document could not be updated.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle document could not be updated.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Vehicle document updated successfully.",
+                null
+            );
         }
     }
 }

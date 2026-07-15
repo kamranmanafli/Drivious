@@ -1,6 +1,7 @@
 ﻿using Drivious.Data;
 using Drivious.DTOs.Income;
 using Drivious.Models;
+using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +15,7 @@ namespace Drivious.Services.Implements
         {
             _context = context;
         }
-        public async Task<bool> CreateAsync(IncomeCreateDTO dto)
+        public async Task<ApiResponse<object>> CreateAsync(IncomeCreateDTO dto)
         {
             Income income = new()
             {
@@ -30,14 +31,33 @@ namespace Drivious.Services.Implements
             var result = await _context.Incomes.AddAsync(income);
 
             if (result.State != EntityState.Added)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income could not be created.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income could not be saved.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Income created successfully.",
+                null
+            );
         }
 
-        public async Task<List<IncomeGetDTO>> GetAllAsync()
+        public async Task<ApiResponse<List<IncomeGetDTO>>> GetAllAsync()
         {
             var incomes = await _context.Incomes.ToListAsync();
 
@@ -58,19 +78,27 @@ namespace Drivious.Services.Implements
 
             }).ToList();
 
-            return dtos;
+            return new ApiResponse<List<IncomeGetDTO>>(
+                true,
+                "Incomes retrieved successfully.",
+                dtos
+            );
         }
 
-        public async Task<IncomeGetDTO> GetAsync(Guid id)
+        public async Task<ApiResponse<IncomeGetDTO>> GetAsync(Guid id)
         {
             var income = await _context.Incomes.FindAsync(id);
 
             if (income == null)
             {
-                throw new Exception("Income not found!");
+                return new ApiResponse<IncomeGetDTO>(
+                    false,
+                    "Income not found.",
+                    null
+                );
             }
 
-            var dto = new IncomeGetDTO()
+            var dto = new IncomeGetDTO
             {
                 Id = income.Id,
 
@@ -86,62 +114,117 @@ namespace Drivious.Services.Implements
                 IsDeleted = income.IsDeleted
             };
 
-            return dto;
+            return new ApiResponse<IncomeGetDTO>(
+                true,
+                "Income retrieved successfully.",
+                dto
+            );
         }
 
-        public async Task<bool> RemoveAsync(Guid id)
+        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
         {
             var income = await _context.Incomes.FindAsync(id);
 
             if (income == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income not found.",
+                    null
+                );
+            }
 
             var result = _context.Incomes.Remove(income);
 
             if (result.State != EntityState.Deleted)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income could not be deleted.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income could not be deleted.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Income deleted successfully.",
+                null
+            );
         }
 
-        public async Task<bool> ToggleAsync(Guid id)
+        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
         {
             var income = await _context.Incomes.FindAsync(id);
 
             if (income == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income not found.",
+                    null
+                );
+            }
 
             income.IsDeleted = !income.IsDeleted;
-
             income.DeletedAt = income.IsDeleted ? DateTime.Now : null;
 
             var result = _context.Incomes.Update(income);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income status could not be changed.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income status could not be changed.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Income status changed successfully.",
+                null
+            );
         }
 
-        public async Task<bool> UpdateAsync(Guid id, IncomeUpdateDTO dto)
+        public async Task<ApiResponse<object>> UpdateAsync(Guid id, IncomeUpdateDTO dto)
         {
             var income = await _context.Incomes.FindAsync(id);
 
             if (income == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income not found.",
+                    null
+                );
+            }
 
             income.VehicleId = dto.VehicleId ?? income.VehicleId;
-
             income.DriverId = dto.DriverId ?? income.DriverId;
-
             income.Amount = dto.Amount ?? income.Amount;
-
             income.IncomeDate = dto.IncomeDate ?? income.IncomeDate;
-
             income.Description = dto.Description ?? income.Description;
 
             income.UpdatedAt = DateTime.Now;
@@ -149,11 +232,30 @@ namespace Drivious.Services.Implements
             var result = _context.Incomes.Update(income);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income could not be updated.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Income could not be updated.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Income updated successfully.",
+                null
+            );
         }
     }
 }

@@ -3,3 +3,4 @@ wwwroot\Images\Driver\2f2acf01-0f29-4ba2-998e-6620081a26091.jpg
 wwwroot\Images\Driver\b3addc0f-0306-48a2-921e-32ffb842006f2.jpeg
 wwwroot\Files\VehicleDocuments\6adef347-1545-41a8-8127-f4b654d649dd1-big.jpeg
 wwwroot\Files\VehicleDocuments\2b24a195-cd88-457f-9b70-6e1f6419eb765.jpeg
+wwwroot\Images\Driver\c297133f-d68e-480d-a480-e3ce711896502.jpeg

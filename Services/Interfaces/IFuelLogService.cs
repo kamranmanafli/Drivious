@@ -1,19 +1,20 @@
 ﻿using Drivious.DTOs.FuelLog;
+using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
 {
     public interface IFuelLogService
     {
-        Task<bool> CreateAsync(FuelLogCreateDTO dto);
+        Task<ApiResponse<object>> CreateAsync(FuelLogCreateDTO dto);
 
-        Task<bool> RemoveAsync(Guid id);
+        Task<ApiResponse<object>> RemoveAsync(Guid id);
 
-        Task<List<FuelLogGetDTO>> GetAllAsync();
+        Task<ApiResponse<List<FuelLogGetDTO>>> GetAllAsync();
 
-        Task<FuelLogGetDTO> GetAsync(Guid id);
+        Task<ApiResponse<FuelLogGetDTO>> GetAsync(Guid id);
 
-        Task<bool> UpdateAsync(Guid id, FuelLogUpdateDTO dto);
+        Task<ApiResponse<object>> UpdateAsync(Guid id, FuelLogUpdateDTO dto);
 
-        Task<bool> ToggleAsync(Guid id);
+        Task<ApiResponse<object>> ToggleAsync(Guid id);
     }
 }

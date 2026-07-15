@@ -1,19 +1,20 @@
 ﻿using Drivious.DTOs.Maintenance;
+using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
 {
     public interface IMaintenanceService
     {
-        Task<bool> CreateAsync(MaintenanceCreateDTO dto);
+        Task<ApiResponse<object>> CreateAsync(MaintenanceCreateDTO dto);
 
-        Task<bool> RemoveAsync(Guid id);
+        Task<ApiResponse<object>> RemoveAsync(Guid id);
 
-        Task<List<MaintenanceGetDTO>> GetAllAsync();
+        Task<ApiResponse<List<MaintenanceGetDTO>>> GetAllAsync();
 
-        Task<MaintenanceGetDTO> GetAsync(Guid id);
+        Task<ApiResponse<MaintenanceGetDTO>> GetAsync(Guid id);
 
-        Task<bool> UpdateAsync(Guid id, MaintenanceUpdateDTO dto);
+        Task<ApiResponse<object>> UpdateAsync(Guid id, MaintenanceUpdateDTO dto);
 
-        Task<bool> ToggleAsync(Guid id);
+        Task<ApiResponse<object>> ToggleAsync(Guid id);
     }
 }

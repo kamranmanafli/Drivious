@@ -1,19 +1,20 @@
 ﻿using Drivious.DTOs.Notification;
+using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
 {
     public interface INotificationService
     {
-        Task<bool> CreateAsync(NotificationCreateDTO dto);
+        Task<ApiResponse<object>> CreateAsync(NotificationCreateDTO dto);
 
-        Task<bool> RemoveAsync(Guid id);
+        Task<ApiResponse<object>> RemoveAsync(Guid id);
 
-        Task<List<NotificationGetDTO>> GetAllAsync();
+        Task<ApiResponse<List<NotificationGetDTO>>> GetAllAsync();
 
-        Task<NotificationGetDTO> GetAsync(Guid id);
+        Task<ApiResponse<NotificationGetDTO>> GetAsync(Guid id);
 
-        Task<bool> UpdateAsync(Guid id, NotificationUpdateDTO dto);
+        Task<ApiResponse<object>> UpdateAsync(Guid id, NotificationUpdateDTO dto);
 
-        Task<bool> ToggleAsync(Guid id);
+        Task<ApiResponse<object>> ToggleAsync(Guid id);
     }
 }

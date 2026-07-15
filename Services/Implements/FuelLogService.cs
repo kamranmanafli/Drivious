@@ -1,6 +1,7 @@
 ﻿using Drivious.Data;
 using Drivious.DTOs.FuelLog;
 using Drivious.Models;
+using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ namespace Drivious.Services.Implements
             _context = context;
         }
 
-        public async Task<bool> CreateAsync(FuelLogCreateDTO dto)
+        public async Task<ApiResponse<object>> CreateAsync(FuelLogCreateDTO dto)
         {
             FuelLog fuelLog = new()
             {
@@ -32,14 +33,33 @@ namespace Drivious.Services.Implements
             var result = await _context.FuelLogs.AddAsync(fuelLog);
 
             if (result.State != EntityState.Added)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log could not be created.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log could not be saved.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Fuel log created successfully.",
+                null
+            );
         }
 
-        public async Task<List<FuelLogGetDTO>> GetAllAsync()
+        public async Task<ApiResponse<List<FuelLogGetDTO>>> GetAllAsync()
         {
             var fuelLogs = await _context.FuelLogs.ToListAsync();
 
@@ -61,19 +81,27 @@ namespace Drivious.Services.Implements
 
             }).ToList();
 
-            return dtos;
+            return new ApiResponse<List<FuelLogGetDTO>>(
+                true,
+                "Fuel logs retrieved successfully.",
+                dtos
+            );
         }
 
-        public async Task<FuelLogGetDTO> GetAsync(Guid id)
+        public async Task<ApiResponse<FuelLogGetDTO>> GetAsync(Guid id)
         {
             var fuelLog = await _context.FuelLogs.FindAsync(id);
 
             if (fuelLog == null)
             {
-                throw new Exception("FuelLog not found!");
+                return new ApiResponse<FuelLogGetDTO>(
+                    false,
+                    "Fuel log not found.",
+                    null
+                );
             }
 
-            var dto = new FuelLogGetDTO()
+            var dto = new FuelLogGetDTO
             {
                 Id = fuelLog.Id,
 
@@ -90,64 +118,118 @@ namespace Drivious.Services.Implements
                 IsDeleted = fuelLog.IsDeleted
             };
 
-            return dto;
+            return new ApiResponse<FuelLogGetDTO>(
+                true,
+                "Fuel log retrieved successfully.",
+                dto
+            );
         }
 
-        public async Task<bool> RemoveAsync(Guid id)
+        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
         {
             var fuelLog = await _context.FuelLogs.FindAsync(id);
 
             if (fuelLog == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log not found.",
+                    null
+                );
+            }
 
             var result = _context.FuelLogs.Remove(fuelLog);
 
             if (result.State != EntityState.Deleted)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log could not be deleted.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log could not be deleted.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Fuel log deleted successfully.",
+                null
+            );
         }
 
-        public async Task<bool> ToggleAsync(Guid id)
+        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
         {
             var fuelLog = await _context.FuelLogs.FindAsync(id);
 
             if (fuelLog == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log not found.",
+                    null
+                );
+            }
 
             fuelLog.IsDeleted = !fuelLog.IsDeleted;
-
             fuelLog.DeletedAt = fuelLog.IsDeleted ? DateTime.Now : null;
 
             var result = _context.FuelLogs.Update(fuelLog);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log status could not be changed.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log status could not be changed.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Fuel log status changed successfully.",
+                null
+            );
         }
 
-        public async Task<bool> UpdateAsync(Guid id, FuelLogUpdateDTO dto)
+        public async Task<ApiResponse<object>> UpdateAsync(Guid id, FuelLogUpdateDTO dto)
         {
             var fuelLog = await _context.FuelLogs.FindAsync(id);
 
             if (fuelLog == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log not found.",
+                    null
+                );
+            }
 
             fuelLog.VehicleId = dto.VehicleId ?? fuelLog.VehicleId;
-
             fuelLog.Liters = dto.Liters ?? fuelLog.Liters;
-
             fuelLog.Price = dto.Price ?? fuelLog.Price;
-
             fuelLog.FuelDate = dto.FuelDate ?? fuelLog.FuelDate;
-
             fuelLog.Mileage = dto.Mileage ?? fuelLog.Mileage;
-
             fuelLog.StationName = dto.StationName ?? fuelLog.StationName;
 
             fuelLog.UpdatedAt = DateTime.Now;
@@ -155,11 +237,30 @@ namespace Drivious.Services.Implements
             var result = _context.FuelLogs.Update(fuelLog);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log could not be updated.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Fuel log could not be updated.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Fuel log updated successfully.",
+                null
+            );
         }
     }
 }

@@ -1,19 +1,20 @@
 ﻿using Drivious.DTOs.Income;
+using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
 {
     public interface IIncomeService
     {
-        Task<bool> CreateAsync(IncomeCreateDTO dto);
+        Task<ApiResponse<object>> CreateAsync(IncomeCreateDTO dto);
 
-        Task<bool> RemoveAsync(Guid id);
+        Task<ApiResponse<object>> RemoveAsync(Guid id);
 
-        Task<List<IncomeGetDTO>> GetAllAsync();
+        Task<ApiResponse<List<IncomeGetDTO>>> GetAllAsync();
 
-        Task<IncomeGetDTO> GetAsync(Guid id);
+        Task<ApiResponse<IncomeGetDTO>> GetAsync(Guid id);
 
-        Task<bool> UpdateAsync(Guid id, IncomeUpdateDTO dto);
+        Task<ApiResponse<object>> UpdateAsync(Guid id, IncomeUpdateDTO dto);
 
-        Task<bool> ToggleAsync(Guid id);
+        Task<ApiResponse<object>> ToggleAsync(Guid id);
     }
 }

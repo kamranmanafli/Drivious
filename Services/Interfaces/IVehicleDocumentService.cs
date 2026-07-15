@@ -1,19 +1,20 @@
 ﻿using Drivious.DTOs.VehicleDocumnet;
+using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
 {
     public interface IVehicleDocumentService
     {
-        Task<bool> CreateAsync(VehicleDocumentCreateDTO dto);
+        Task<ApiResponse<object>> CreateAsync(VehicleDocumentCreateDTO dto);
 
-        Task<bool> RemoveAsync(Guid id);
+        Task<ApiResponse<object>> RemoveAsync(Guid id);
 
-        Task<List<VehicleDocumentGetDTO>> GetAllAsync();
+        Task<ApiResponse<List<VehicleDocumentGetDTO>>> GetAllAsync();
 
-        Task<VehicleDocumentGetDTO> GetAsync(Guid id);
+        Task<ApiResponse<VehicleDocumentGetDTO>> GetAsync(Guid id);
 
-        Task<bool> UpdateAsync(Guid id, VehicleDocumentUpdateDTO dto);
+        Task<ApiResponse<object>> UpdateAsync(Guid id, VehicleDocumentUpdateDTO dto);
 
-        Task<bool> ToggleAsync(Guid id);
+        Task<ApiResponse<object>> ToggleAsync(Guid id);
     }
 }

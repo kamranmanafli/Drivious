@@ -1,6 +1,7 @@
 ﻿using Drivious.Data;
 using Drivious.DTOs.VehicleAssignment;
 using Drivious.Models;
+using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ namespace Drivious.Services.Implements
             _context = context;
         }
 
-        public async Task<bool> CreateAsync(VehicleAssignmentCreateDTO dto)
+        public async Task<ApiResponse<object>> CreateAsync(VehicleAssignmentCreateDTO dto)
         {
             VehicleAssignment vehicleAssignment = new()
             {
@@ -32,14 +33,33 @@ namespace Drivious.Services.Implements
             var result = await _context.VehicleAssignments.AddAsync(vehicleAssignment);
 
             if (result.State != EntityState.Added)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment could not be created.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment could not be saved.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Vehicle assignment created successfully.",
+                null
+            );
         }
 
-        public async Task<List<VehicleAssignmentGetDTO>> GetAllAsync()
+        public async Task<ApiResponse<List<VehicleAssignmentGetDTO>>> GetAllAsync()
         {
             var vehicleAssignments = await _context.VehicleAssignments.ToListAsync();
 
@@ -61,16 +81,24 @@ namespace Drivious.Services.Implements
 
             }).ToList();
 
-            return dtos;
+            return new ApiResponse<List<VehicleAssignmentGetDTO>>(
+                true,
+                "Vehicle assignments retrieved successfully.",
+                dtos
+            );
         }
 
-        public async Task<VehicleAssignmentGetDTO> GetAsync(Guid id)
+        public async Task<ApiResponse<VehicleAssignmentGetDTO>> GetAsync(Guid id)
         {
             var vehicleAssignment = await _context.VehicleAssignments.FindAsync(id);
 
             if (vehicleAssignment == null)
             {
-                throw new Exception("VehicleAssignment not found!");
+                return new ApiResponse<VehicleAssignmentGetDTO>(
+                    false,
+                    "Vehicle assignment not found.",
+                    null
+                );
             }
 
             var dto = new VehicleAssignmentGetDTO()
@@ -90,64 +118,118 @@ namespace Drivious.Services.Implements
                 IsDeleted = vehicleAssignment.IsDeleted
             };
 
-            return dto;
+            return new ApiResponse<VehicleAssignmentGetDTO>(
+                true,
+                "Vehicle assignment retrieved successfully.",
+                dto
+            );
         }
 
-        public async Task<bool> RemoveAsync(Guid id)
+        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
         {
             var vehicleAssignment = await _context.VehicleAssignments.FindAsync(id);
 
             if (vehicleAssignment == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment not found.",
+                    null
+                );
+            }
 
             var result = _context.VehicleAssignments.Remove(vehicleAssignment);
 
             if (result.State != EntityState.Deleted)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment could not be deleted.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment could not be deleted.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Vehicle assignment deleted successfully.",
+                null
+            );
         }
 
-        public async Task<bool> ToggleAsync(Guid id)
+        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
         {
             var vehicleAssignment = await _context.VehicleAssignments.FindAsync(id);
 
             if (vehicleAssignment == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment not found.",
+                    null
+                );
+            }
 
             vehicleAssignment.IsDeleted = !vehicleAssignment.IsDeleted;
-
             vehicleAssignment.DeletedAt = vehicleAssignment.IsDeleted ? DateTime.Now : null;
 
             var result = _context.VehicleAssignments.Update(vehicleAssignment);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment status could not be changed.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment status could not be changed.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Vehicle assignment status changed successfully.",
+                null
+            );
         }
 
-        public async Task<bool> UpdateAsync(Guid id, VehicleAssignmentUpdateDTO dto)
+        public async Task<ApiResponse<object>> UpdateAsync(Guid id, VehicleAssignmentUpdateDTO dto)
         {
             var vehicleAssignment = await _context.VehicleAssignments.FindAsync(id);
 
             if (vehicleAssignment == null)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment not found.",
+                    null
+                );
+            }
 
             vehicleAssignment.VehicleId = dto.VehicleId ?? vehicleAssignment.VehicleId;
-
             vehicleAssignment.DriverId = dto.DriverId ?? vehicleAssignment.DriverId;
-
             vehicleAssignment.AssignedDate = dto.AssignedDate ?? vehicleAssignment.AssignedDate;
-
             vehicleAssignment.ReturnedDate = dto.ReturnedDate ?? vehicleAssignment.ReturnedDate;
-
             vehicleAssignment.IsActive = dto.IsActive ?? vehicleAssignment.IsActive;
-
             vehicleAssignment.Note = dto.Note ?? vehicleAssignment.Note;
 
             vehicleAssignment.UpdatedAt = DateTime.Now;
@@ -155,11 +237,30 @@ namespace Drivious.Services.Implements
             var result = _context.VehicleAssignments.Update(vehicleAssignment);
 
             if (result.State != EntityState.Modified)
-                return false;
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment could not be updated.",
+                    null
+                );
+            }
 
             var saveCount = await _context.SaveChangesAsync();
 
-            return saveCount > 0;
+            if (saveCount <= 0)
+            {
+                return new ApiResponse<object>(
+                    false,
+                    "Vehicle assignment could not be updated.",
+                    null
+                );
+            }
+
+            return new ApiResponse<object>(
+                true,
+                "Vehicle assignment updated successfully.",
+                null
+            );
         }
     }
 }

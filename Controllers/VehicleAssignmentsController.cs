@@ -20,7 +20,7 @@ namespace Drivious.Controllers
         {
             var result = await _service.CreateAsync(dto);
 
-            return result ? StatusCode(201, "Created successful!") : BadRequest();
+            return result.Success ? StatusCode(201, result) : BadRequest(result);
         }
 
         [HttpDelete("{id}")]
@@ -28,7 +28,7 @@ namespace Drivious.Controllers
         {
             var result = await _service.RemoveAsync(id);
 
-            return result ? StatusCode(204) : BadRequest();
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpGet]
@@ -44,7 +44,7 @@ namespace Drivious.Controllers
         {
             var result = await _service.GetAsync(id);
 
-            return Ok(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         [HttpPatch("{id}")]
@@ -52,7 +52,7 @@ namespace Drivious.Controllers
         {
             var result = await _service.UpdateAsync(id, dto);
 
-            return result ? Ok("Updated successful!") : BadRequest();
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPatch("toggle/{id}")]
@@ -60,7 +60,7 @@ namespace Drivious.Controllers
         {
             var result = await _service.ToggleAsync(id);
 
-            return result ? Ok("Status changed successfully!") : BadRequest();
+            return result.Success ? Ok(result) : BadRequest(result);
         }
     }
 }
