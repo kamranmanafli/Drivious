@@ -305,3 +305,5 @@ C:\Users\Asus\Desktop\DriviousAPI\obj\Debug\net8.0\Drivious.csproj.Up2Date
 C:\Users\Asus\Desktop\DriviousAPI\obj\Debug\net8.0\Drivious.genruntimeconfig.cache
 C:\Users\Asus\Desktop\DriviousAPI\obj\Debug\net8.0\ref\Drivious.dll
 C:\Users\Asus\Desktop\DriviousAPI\bin\Debug\net8.0\Drivious.staticwebassets.runtime.json
+C:\Users\Asus\Desktop\DriviousAPI\bin\Debug\net8.0\FluentValidation.dll
+C:\Users\Asus\Desktop\DriviousAPI\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
