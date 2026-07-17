@@ -2,6 +2,9 @@ using Drivious.Data;
 using Drivious.Middlewares;
 using Drivious.Services.Implements;
 using Drivious.Services.Interfaces;
+using Drivious.Validators.Driver;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +19,11 @@ builder.Services.AddHttpContextAccessor();
 
 // Database
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+
+// FluentValidation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<DriverCreateDTOValidator>();
+
 
 // Services
 
