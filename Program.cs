@@ -1,4 +1,5 @@
 using Drivious.Data;
+using Drivious.Mappings;
 using Drivious.Middlewares;
 using Drivious.Services.Implements;
 using Drivious.Services.Interfaces;
@@ -15,6 +16,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddHttpContextAccessor();
 
 // Database

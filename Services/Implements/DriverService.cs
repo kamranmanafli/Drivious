@@ -1,4 +1,5 @@
-﻿using Drivious.Data;
+﻿using AutoMapper;
+using Drivious.Data;
 using Drivious.DTOs.Driver;
 using Drivious.Extensions;
 using Drivious.Models;
@@ -13,37 +14,27 @@ namespace Drivious.Services.Implements
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
         public DriverService(
             AppDbContext context,
             IWebHostEnvironment env,
-            IHttpContextAccessor accessor)
+            IHttpContextAccessor accessor,
+            IMapper mapper)
         {
             _context = context;
             _env = env;
             _accessor = accessor;
+            _mapper = mapper;
         }
 
         public async Task<ApiResponse<object>> CreateAsync(DriverCreateDTO dto)
         {
-            Driver driver = new()
-            {
-                CreatedAt = DateTime.Now,
+            Driver driver = _mapper.Map<Driver>(dto);
 
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                PhoneNumber = dto.PhoneNumber,
-                Email = dto.Email,
-                IdentityNumber = dto.IdentityNumber,
-                DriverLicenseNumber = dto.DriverLicenseNumber,
-                LicenseExpireDate = dto.LicenseExpireDate,
-                BirthDate = dto.BirthDate,
-                HireDate = dto.HireDate,
-                Address = dto.Address,
-                IsActive = dto.IsActive,
+            driver.CreatedAt = DateTime.Now;
 
-                Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Driver"),
-            };
+            driver.Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Driver");
 
             driver.ImageUrl = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Images/Driver/{driver.Image}";
 
@@ -80,30 +71,7 @@ namespace Drivious.Services.Implements
         {
             var drivers = await _context.Drivers.ToListAsync();
 
-            var dtos = drivers.Select(d => new DriverGetDTO
-            {
-                Id = d.Id,
-
-                FirstName = d.FirstName,
-                LastName = d.LastName,
-                PhoneNumber = d.PhoneNumber,
-                Email = d.Email,
-                IdentityNumber = d.IdentityNumber,
-                DriverLicenseNumber = d.DriverLicenseNumber,
-                LicenseExpireDate = d.LicenseExpireDate,
-                BirthDate = d.BirthDate,
-                HireDate = d.HireDate,
-                Address = d.Address,
-                Image = d.Image,
-                ImageUrl = d.ImageUrl,
-                IsActive = d.IsActive,
-
-                CreatedAt = d.CreatedAt,
-                UpdatedAt = d.UpdatedAt,
-                DeletedAt = d.DeletedAt,
-                IsDeleted = d.IsDeleted
-
-            }).ToList();
+            var dtos = _mapper.Map<List<DriverGetDTO>>(drivers);
 
             return new ApiResponse<List<DriverGetDTO>>(
                 true,
@@ -125,31 +93,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            var dto = new DriverGetDTO
-            {
-                Id = driver.Id,
-
-                FirstName = driver.FirstName,
-                LastName = driver.LastName,
-                PhoneNumber = driver.PhoneNumber,
-                Email = driver.Email,
-                IdentityNumber = driver.IdentityNumber,
-                DriverLicenseNumber = driver.DriverLicenseNumber,
-                LicenseExpireDate = driver.LicenseExpireDate,
-                BirthDate = driver.BirthDate,
-                HireDate = driver.HireDate,
-                Address = driver.Address,
-
-                Image = driver.Image,
-                ImageUrl = driver.ImageUrl,
-
-                IsActive = driver.IsActive,
-
-                CreatedAt = driver.CreatedAt,
-                UpdatedAt = driver.UpdatedAt,
-                DeletedAt = driver.DeletedAt,
-                IsDeleted = driver.IsDeleted
-            };
+            var dto = _mapper.Map<DriverGetDTO>(driver);
 
             return new ApiResponse<DriverGetDTO>(
                 true,
@@ -276,17 +220,7 @@ namespace Drivious.Services.Implements
                 driver.ImageUrl = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Images/Driver/{driver.Image}";
             }
 
-            driver.FirstName = dto.FirstName ?? driver.FirstName;
-            driver.LastName = dto.LastName ?? driver.LastName;
-            driver.PhoneNumber = dto.PhoneNumber ?? driver.PhoneNumber;
-            driver.Email = dto.Email ?? driver.Email;
-            driver.IdentityNumber = dto.IdentityNumber ?? driver.IdentityNumber;
-            driver.DriverLicenseNumber = dto.DriverLicenseNumber ?? driver.DriverLicenseNumber;
-            driver.LicenseExpireDate = dto.LicenseExpireDate ?? driver.LicenseExpireDate;
-            driver.BirthDate = dto.BirthDate ?? driver.BirthDate;
-            driver.HireDate = dto.HireDate ?? driver.HireDate;
-            driver.Address = dto.Address ?? driver.Address;
-            driver.IsActive = dto.IsActive ?? driver.IsActive;
+            _mapper.Map(dto, driver);
 
             driver.UpdatedAt = DateTime.Now;
 
