@@ -1,4 +1,5 @@
-﻿using Drivious.Data;
+﻿using AutoMapper;
+using Drivious.Data;
 using Drivious.DTOs.VehicleDocumnet;
 using Drivious.Extensions;
 using Drivious.Models;
@@ -13,33 +14,35 @@ namespace Drivious.Services.Implements
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
         public VehicleDocumentService(
             AppDbContext context,
             IWebHostEnvironment env,
-            IHttpContextAccessor accessor)
+            IHttpContextAccessor accessor,
+            IMapper mapper)
         {
             _context = context;
             _env = env;
             _accessor = accessor;
+            _mapper = mapper;
         }
 
         public async Task<ApiResponse<object>> CreateAsync(VehicleDocumentCreateDTO dto)
         {
-            VehicleDocument vehicleDocument = new()
-            {
-                CreatedAt = DateTime.Now,
+            VehicleDocument vehicleDocument = _mapper.Map<VehicleDocument>(dto);
 
-                VehicleId = dto.VehicleId,
-                Title = dto.Title,
-                DocumentType = dto.DocumentType,
+            vehicleDocument.CreatedAt = DateTime.Now;
 
-                FileName = await dto.File.CreateFileAsync(_env.WebRootPath, "Files", "VehicleDocuments"),
+            vehicleDocument.FileName = await dto.File.CreateFileAsync(
+                _env.WebRootPath,
+                "Files",
+                "VehicleDocuments");
 
-                UploadDate = DateTime.Now,
-            };
+            vehicleDocument.FileUrl =
+                $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Files/VehicleDocuments/{vehicleDocument.FileName}";
 
-            vehicleDocument.FileUrl = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Files/VehicleDocuments/{vehicleDocument.FileName}";
+            vehicleDocument.UploadDate = DateTime.Now;
 
             var result = await _context.VehicleDocuments.AddAsync(vehicleDocument);
 
@@ -74,23 +77,7 @@ namespace Drivious.Services.Implements
         {
             var documents = await _context.VehicleDocuments.ToListAsync();
 
-            var dtos = documents.Select(d => new VehicleDocumentGetDTO
-            {
-                Id = d.Id,
-
-                VehicleId = d.VehicleId,
-                Title = d.Title,
-                DocumentType = d.DocumentType,
-                FileName = d.FileName,
-                FileUrl = d.FileUrl,
-                UploadDate = d.UploadDate,
-
-                CreatedAt = d.CreatedAt,
-                UpdatedAt = d.UpdatedAt,
-                DeletedAt = d.DeletedAt,
-                IsDeleted = d.IsDeleted
-
-            }).ToList();
+            var dtos = _mapper.Map<List<VehicleDocumentGetDTO>>(documents);
 
             return new ApiResponse<List<VehicleDocumentGetDTO>>(
                 true,
@@ -112,22 +99,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            var dto = new VehicleDocumentGetDTO()
-            {
-                Id = document.Id,
-
-                VehicleId = document.VehicleId,
-                Title = document.Title,
-                DocumentType = document.DocumentType,
-                FileName = document.FileName,
-                FileUrl = document.FileUrl,
-                UploadDate = document.UploadDate,
-
-                CreatedAt = document.CreatedAt,
-                UpdatedAt = document.UpdatedAt,
-                DeletedAt = document.DeletedAt,
-                IsDeleted = document.IsDeleted
-            };
+            var dto = _mapper.Map<VehicleDocumentGetDTO>(document);
 
             return new ApiResponse<VehicleDocumentGetDTO>(
                 true,
@@ -245,16 +217,18 @@ namespace Drivious.Services.Implements
                     document.FileName.DeleteFile(_env.WebRootPath, "Files", "VehicleDocuments");
                 }
 
-                document.FileName = await dto.File.CreateFileAsync(_env.WebRootPath, "Files", "VehicleDocuments");
+                document.FileName = await dto.File.CreateFileAsync(
+                    _env.WebRootPath,
+                    "Files",
+                    "VehicleDocuments");
 
-                document.FileUrl = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Files/VehicleDocuments/{document.FileName}";
+                document.FileUrl =
+                    $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Files/VehicleDocuments/{document.FileName}";
 
                 document.UploadDate = DateTime.Now;
             }
 
-            document.VehicleId = dto.VehicleId ?? document.VehicleId;
-            document.Title = dto.Title ?? document.Title;
-            document.DocumentType = dto.DocumentType ?? document.DocumentType;
+            _mapper.Map(dto, document);
 
             document.UpdatedAt = DateTime.Now;
 

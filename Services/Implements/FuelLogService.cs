@@ -1,4 +1,5 @@
-﻿using Drivious.Data;
+﻿using AutoMapper;
+using Drivious.Data;
 using Drivious.DTOs.FuelLog;
 using Drivious.Models;
 using Drivious.Responses;
@@ -10,25 +11,21 @@ namespace Drivious.Services.Implements
     public class FuelLogService : IFuelLogService
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public FuelLogService(AppDbContext context)
+        public FuelLogService(
+            AppDbContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<ApiResponse<object>> CreateAsync(FuelLogCreateDTO dto)
         {
-            FuelLog fuelLog = new()
-            {
-                CreatedAt = DateTime.Now,
+            FuelLog fuelLog = _mapper.Map<FuelLog>(dto);
 
-                VehicleId = dto.VehicleId,
-                Liters = dto.Liters,
-                Price = dto.Price,
-                FuelDate = dto.FuelDate,
-                Mileage = dto.Mileage,
-                StationName = dto.StationName,
-            };
+            fuelLog.CreatedAt = DateTime.Now;
 
             var result = await _context.FuelLogs.AddAsync(fuelLog);
 
@@ -63,23 +60,7 @@ namespace Drivious.Services.Implements
         {
             var fuelLogs = await _context.FuelLogs.ToListAsync();
 
-            var dtos = fuelLogs.Select(f => new FuelLogGetDTO
-            {
-                Id = f.Id,
-
-                VehicleId = f.VehicleId,
-                Liters = f.Liters,
-                Price = f.Price,
-                FuelDate = f.FuelDate,
-                Mileage = f.Mileage,
-                StationName = f.StationName,
-
-                CreatedAt = f.CreatedAt,
-                UpdatedAt = f.UpdatedAt,
-                DeletedAt = f.DeletedAt,
-                IsDeleted = f.IsDeleted
-
-            }).ToList();
+            var dtos = _mapper.Map<List<FuelLogGetDTO>>(fuelLogs);
 
             return new ApiResponse<List<FuelLogGetDTO>>(
                 true,
@@ -101,22 +82,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            var dto = new FuelLogGetDTO
-            {
-                Id = fuelLog.Id,
-
-                VehicleId = fuelLog.VehicleId,
-                Liters = fuelLog.Liters,
-                Price = fuelLog.Price,
-                FuelDate = fuelLog.FuelDate,
-                Mileage = fuelLog.Mileage,
-                StationName = fuelLog.StationName,
-
-                CreatedAt = fuelLog.CreatedAt,
-                UpdatedAt = fuelLog.UpdatedAt,
-                DeletedAt = fuelLog.DeletedAt,
-                IsDeleted = fuelLog.IsDeleted
-            };
+            var dto = _mapper.Map<FuelLogGetDTO>(fuelLog);
 
             return new ApiResponse<FuelLogGetDTO>(
                 true,
@@ -225,12 +191,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            fuelLog.VehicleId = dto.VehicleId ?? fuelLog.VehicleId;
-            fuelLog.Liters = dto.Liters ?? fuelLog.Liters;
-            fuelLog.Price = dto.Price ?? fuelLog.Price;
-            fuelLog.FuelDate = dto.FuelDate ?? fuelLog.FuelDate;
-            fuelLog.Mileage = dto.Mileage ?? fuelLog.Mileage;
-            fuelLog.StationName = dto.StationName ?? fuelLog.StationName;
+            _mapper.Map(dto, fuelLog);
 
             fuelLog.UpdatedAt = DateTime.Now;
 

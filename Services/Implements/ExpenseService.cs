@@ -1,4 +1,5 @@
-﻿using Drivious.Data;
+﻿using AutoMapper;
+using Drivious.Data;
 using Drivious.DTOs.Expense;
 using Drivious.Models;
 using Drivious.Responses;
@@ -10,23 +11,21 @@ namespace Drivious.Services.Implements
     public class ExpenseService : IExpenseService
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ExpenseService(AppDbContext context)
+        public ExpenseService(
+            AppDbContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
+
         public async Task<ApiResponse<object>> CreateAsync(ExpenseCreateDTO dto)
         {
-            Expense expense = new()
-            {
-                CreatedAt = DateTime.Now,
+            Expense expense = _mapper.Map<Expense>(dto);
 
-                VehicleId = dto.VehicleId,
-                Category = dto.Category,
-                Amount = dto.Amount,
-                ExpenseDate = dto.ExpenseDate,
-                Description = dto.Description,
-            };
+            expense.CreatedAt = DateTime.Now;
 
             var result = await _context.Expenses.AddAsync(expense);
 
@@ -61,22 +60,7 @@ namespace Drivious.Services.Implements
         {
             var expenses = await _context.Expenses.ToListAsync();
 
-            var dtos = expenses.Select(e => new ExpenseGetDTO
-            {
-                Id = e.Id,
-
-                VehicleId = e.VehicleId,
-                Category = e.Category,
-                Amount = e.Amount,
-                ExpenseDate = e.ExpenseDate,
-                Description = e.Description,
-
-                CreatedAt = e.CreatedAt,
-                UpdatedAt = e.UpdatedAt,
-                DeletedAt = e.DeletedAt,
-                IsDeleted = e.IsDeleted
-
-            }).ToList();
+            var dtos = _mapper.Map<List<ExpenseGetDTO>>(expenses);
 
             return new ApiResponse<List<ExpenseGetDTO>>(
                 true,
@@ -98,21 +82,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            var dto = new ExpenseGetDTO
-            {
-                Id = expense.Id,
-
-                VehicleId = expense.VehicleId,
-                Category = expense.Category,
-                Amount = expense.Amount,
-                ExpenseDate = expense.ExpenseDate,
-                Description = expense.Description,
-
-                CreatedAt = expense.CreatedAt,
-                UpdatedAt = expense.UpdatedAt,
-                DeletedAt = expense.DeletedAt,
-                IsDeleted = expense.IsDeleted
-            };
+            var dto = _mapper.Map<ExpenseGetDTO>(expense);
 
             return new ApiResponse<ExpenseGetDTO>(
                 true,
@@ -221,11 +191,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            expense.VehicleId = dto.VehicleId ?? expense.VehicleId;
-            expense.Category = dto.Category ?? expense.Category;
-            expense.Amount = dto.Amount ?? expense.Amount;
-            expense.ExpenseDate = dto.ExpenseDate ?? expense.ExpenseDate;
-            expense.Description = dto.Description ?? expense.Description;
+            _mapper.Map(dto, expense);
 
             expense.UpdatedAt = DateTime.Now;
 

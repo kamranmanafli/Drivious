@@ -1,4 +1,5 @@
-﻿using Drivious.Data;
+﻿using AutoMapper;
+using Drivious.Data;
 using Drivious.DTOs.Notification;
 using Drivious.Models;
 using Drivious.Responses;
@@ -10,24 +11,21 @@ namespace Drivious.Services.Implements
     public class NotificationService : INotificationService
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public NotificationService(AppDbContext context)
+        public NotificationService(
+            AppDbContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<ApiResponse<object>> CreateAsync(NotificationCreateDTO dto)
         {
-            Notification notification = new()
-            {
-                CreatedAt = DateTime.Now,
+            Notification notification = _mapper.Map<Notification>(dto);
 
-                Title = dto.Title,
-                Message = dto.Message,
-                Type = dto.Type,
-                IsRead = dto.IsRead,
-                NotificationDate = dto.NotificationDate,
-            };
+            notification.CreatedAt = DateTime.Now;
 
             var result = await _context.Notifications.AddAsync(notification);
 
@@ -62,21 +60,7 @@ namespace Drivious.Services.Implements
         {
             var notifications = await _context.Notifications.ToListAsync();
 
-            var dtos = notifications.Select(n => new NotificationGetDTO
-            {
-                Id = n.Id,
-
-                Title = n.Title,
-                Message = n.Message,
-                Type = n.Type,
-                IsRead = n.IsRead,
-                NotificationDate = n.NotificationDate,
-
-                CreatedAt = n.CreatedAt,
-                UpdatedAt = n.UpdatedAt,
-                DeletedAt = n.DeletedAt,
-                IsDeleted = n.IsDeleted
-            }).ToList();
+            var dtos = _mapper.Map<List<NotificationGetDTO>>(notifications);
 
             return new ApiResponse<List<NotificationGetDTO>>(
                 true,
@@ -98,21 +82,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            var dto = new NotificationGetDTO
-            {
-                Id = notification.Id,
-
-                Title = notification.Title,
-                Message = notification.Message,
-                Type = notification.Type,
-                IsRead = notification.IsRead,
-                NotificationDate = notification.NotificationDate,
-
-                CreatedAt = notification.CreatedAt,
-                UpdatedAt = notification.UpdatedAt,
-                DeletedAt = notification.DeletedAt,
-                IsDeleted = notification.IsDeleted
-            };
+            var dto = _mapper.Map<NotificationGetDTO>(notification);
 
             return new ApiResponse<NotificationGetDTO>(
                 true,
@@ -221,11 +191,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            notification.Title = dto.Title ?? notification.Title;
-            notification.Message = dto.Message ?? notification.Message;
-            notification.Type = dto.Type ?? notification.Type;
-            notification.IsRead = dto.IsRead ?? notification.IsRead;
-            notification.NotificationDate = dto.NotificationDate ?? notification.NotificationDate;
+            _mapper.Map(dto, notification);
 
             notification.UpdatedAt = DateTime.Now;
 

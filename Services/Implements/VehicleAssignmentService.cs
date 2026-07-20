@@ -1,4 +1,5 @@
-﻿using Drivious.Data;
+﻿using AutoMapper;
+using Drivious.Data;
 using Drivious.DTOs.VehicleAssignment;
 using Drivious.Models;
 using Drivious.Responses;
@@ -10,25 +11,21 @@ namespace Drivious.Services.Implements
     public class VehicleAssignmentService : IVehicleAssignmentService
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public VehicleAssignmentService(AppDbContext context)
+        public VehicleAssignmentService(
+            AppDbContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<ApiResponse<object>> CreateAsync(VehicleAssignmentCreateDTO dto)
         {
-            VehicleAssignment vehicleAssignment = new()
-            {
-                CreatedAt = DateTime.Now,
+            VehicleAssignment vehicleAssignment = _mapper.Map<VehicleAssignment>(dto);
 
-                VehicleId = dto.VehicleId,
-                DriverId = dto.DriverId,
-                AssignedDate = dto.AssignedDate,
-                ReturnedDate = dto.ReturnedDate,
-                IsActive = dto.IsActive,
-                Note = dto.Note,
-            };
+            vehicleAssignment.CreatedAt = DateTime.Now;
 
             var result = await _context.VehicleAssignments.AddAsync(vehicleAssignment);
 
@@ -63,23 +60,7 @@ namespace Drivious.Services.Implements
         {
             var vehicleAssignments = await _context.VehicleAssignments.ToListAsync();
 
-            var dtos = vehicleAssignments.Select(v => new VehicleAssignmentGetDTO
-            {
-                Id = v.Id,
-
-                VehicleId = v.VehicleId,
-                DriverId = v.DriverId,
-                AssignedDate = v.AssignedDate,
-                ReturnedDate = v.ReturnedDate,
-                IsActive = v.IsActive,
-                Note = v.Note,
-
-                CreatedAt = v.CreatedAt,
-                UpdatedAt = v.UpdatedAt,
-                DeletedAt = v.DeletedAt,
-                IsDeleted = v.IsDeleted
-
-            }).ToList();
+            var dtos = _mapper.Map<List<VehicleAssignmentGetDTO>>(vehicleAssignments);
 
             return new ApiResponse<List<VehicleAssignmentGetDTO>>(
                 true,
@@ -101,22 +82,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            var dto = new VehicleAssignmentGetDTO()
-            {
-                Id = vehicleAssignment.Id,
-
-                VehicleId = vehicleAssignment.VehicleId,
-                DriverId = vehicleAssignment.DriverId,
-                AssignedDate = vehicleAssignment.AssignedDate,
-                ReturnedDate = vehicleAssignment.ReturnedDate,
-                IsActive = vehicleAssignment.IsActive,
-                Note = vehicleAssignment.Note,
-
-                CreatedAt = vehicleAssignment.CreatedAt,
-                UpdatedAt = vehicleAssignment.UpdatedAt,
-                DeletedAt = vehicleAssignment.DeletedAt,
-                IsDeleted = vehicleAssignment.IsDeleted
-            };
+            var dto = _mapper.Map<VehicleAssignmentGetDTO>(vehicleAssignment);
 
             return new ApiResponse<VehicleAssignmentGetDTO>(
                 true,
@@ -225,12 +191,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            vehicleAssignment.VehicleId = dto.VehicleId ?? vehicleAssignment.VehicleId;
-            vehicleAssignment.DriverId = dto.DriverId ?? vehicleAssignment.DriverId;
-            vehicleAssignment.AssignedDate = dto.AssignedDate ?? vehicleAssignment.AssignedDate;
-            vehicleAssignment.ReturnedDate = dto.ReturnedDate ?? vehicleAssignment.ReturnedDate;
-            vehicleAssignment.IsActive = dto.IsActive ?? vehicleAssignment.IsActive;
-            vehicleAssignment.Note = dto.Note ?? vehicleAssignment.Note;
+            _mapper.Map(dto, vehicleAssignment);
 
             vehicleAssignment.UpdatedAt = DateTime.Now;
 

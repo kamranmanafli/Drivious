@@ -1,4 +1,5 @@
-﻿using Drivious.Data;
+﻿using AutoMapper;
+using Drivious.Data;
 using Drivious.DTOs.Vehicle;
 using Drivious.Extensions;
 using Drivious.Models;
@@ -13,35 +14,27 @@ namespace Drivious.Services.Implements
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMapper _mapper;
 
         public VehicleService(
             AppDbContext context,
             IWebHostEnvironment env,
-            IHttpContextAccessor accessor)
+            IHttpContextAccessor accessor,
+            IMapper mapper)
         {
             _context = context;
             _env = env;
             _accessor = accessor;
+            _mapper = mapper;
         }
 
         public async Task<ApiResponse<object>> CreateAsync(VehicleCreateDTO dto)
         {
-            Vehicle vehicle = new()
-            {
-                CreatedAt = DateTime.Now,
+            Vehicle vehicle = _mapper.Map<Vehicle>(dto);
 
-                Brand = dto.Brand,
-                Model = dto.Model,
-                Year = dto.Year,
-                PlateNumber = dto.PlateNumber,
-                VIN = dto.VIN,
-                Color = dto.Color,
-                FuelType = dto.FuelType,
-                Mileage = dto.Mileage,
-                Status = dto.Status,
+            vehicle.CreatedAt = DateTime.Now;
 
-                Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Vehicle"),
-            };
+            vehicle.Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Vehicle");
 
             vehicle.ImageURL = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Images/Vehicle/{vehicle.Image}";
 
@@ -78,28 +71,7 @@ namespace Drivious.Services.Implements
         {
             var vehicles = await _context.Vehicles.ToListAsync();
 
-            var dtos = vehicles.Select(v => new VehicleGetDTO
-            {
-                Id = v.Id,
-
-                Brand = v.Brand,
-                Model = v.Model,
-                Year = v.Year,
-                PlateNumber = v.PlateNumber,
-                VIN = v.VIN,
-                Color = v.Color,
-                FuelType = v.FuelType,
-                Mileage = v.Mileage,
-                Status = v.Status,
-
-                Image = v.Image,
-                ImageURL = v.ImageURL,
-
-                CreatedAt = v.CreatedAt,
-                UpdatedAt = v.UpdatedAt,
-                DeletedAt = v.DeletedAt,
-                IsDeleted = v.IsDeleted
-            }).ToList();
+            var dtos = _mapper.Map<List<VehicleGetDTO>>(vehicles);
 
             return new ApiResponse<List<VehicleGetDTO>>(
                 true,
@@ -121,28 +93,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            var dto = new VehicleGetDTO()
-            {
-                Id = vehicle.Id,
-
-                Brand = vehicle.Brand,
-                Model = vehicle.Model,
-                Year = vehicle.Year,
-                PlateNumber = vehicle.PlateNumber,
-                VIN = vehicle.VIN,
-                Color = vehicle.Color,
-                FuelType = vehicle.FuelType,
-                Mileage = vehicle.Mileage,
-                Status = vehicle.Status,
-
-                Image = vehicle.Image,
-                ImageURL = vehicle.ImageURL,
-
-                CreatedAt = vehicle.CreatedAt,
-                UpdatedAt = vehicle.UpdatedAt,
-                DeletedAt = vehicle.DeletedAt,
-                IsDeleted = vehicle.IsDeleted
-            };
+            var dto = _mapper.Map<VehicleGetDTO>(vehicle);
 
             return new ApiResponse<VehicleGetDTO>(
                 true,
@@ -265,15 +216,7 @@ namespace Drivious.Services.Implements
                 vehicle.ImageURL = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Images/Vehicle/{vehicle.Image}";
             }
 
-            vehicle.Brand = dto.Brand ?? vehicle.Brand;
-            vehicle.Model = dto.Model ?? vehicle.Model;
-            vehicle.Year = dto.Year ?? vehicle.Year;
-            vehicle.PlateNumber = dto.PlateNumber ?? vehicle.PlateNumber;
-            vehicle.VIN = dto.VIN ?? vehicle.VIN;
-            vehicle.Color = dto.Color ?? vehicle.Color;
-            vehicle.FuelType = dto.FuelType ?? vehicle.FuelType;
-            vehicle.Mileage = dto.Mileage ?? vehicle.Mileage;
-            vehicle.Status = dto.Status ?? vehicle.Status;
+            _mapper.Map(dto, vehicle);
 
             vehicle.UpdatedAt = DateTime.Now;
 

@@ -1,4 +1,5 @@
-﻿using Drivious.Data;
+﻿using AutoMapper;
+using Drivious.Data;
 using Drivious.DTOs.Maintenance;
 using Drivious.Models;
 using Drivious.Responses;
@@ -10,27 +11,21 @@ namespace Drivious.Services.Implements
     public class MaintenanceService : IMaintenanceService
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public MaintenanceService(AppDbContext context)
+        public MaintenanceService(
+            AppDbContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<ApiResponse<object>> CreateAsync(MaintenanceCreateDTO dto)
         {
-            Maintenance maintenance = new()
-            {
-                CreatedAt = DateTime.Now,
+            Maintenance maintenance = _mapper.Map<Maintenance>(dto);
 
-                VehicleId = dto.VehicleId,
-                ServiceType = dto.ServiceType,
-                Description = dto.Description,
-                Cost = dto.Cost,
-                MaintenanceDate = dto.MaintenanceDate,
-                NextMaintenanceDate = dto.NextMaintenanceDate,
-                Mileage = dto.Mileage,
-                ServiceCenter = dto.ServiceCenter,
-            };
+            maintenance.CreatedAt = DateTime.Now;
 
             var result = await _context.Maintenances.AddAsync(maintenance);
 
@@ -65,25 +60,7 @@ namespace Drivious.Services.Implements
         {
             var maintenances = await _context.Maintenances.ToListAsync();
 
-            var dtos = maintenances.Select(m => new MaintenanceGetDTO
-            {
-                Id = m.Id,
-
-                VehicleId = m.VehicleId,
-                ServiceType = m.ServiceType,
-                Description = m.Description,
-                Cost = m.Cost,
-                MaintenanceDate = m.MaintenanceDate,
-                NextMaintenanceDate = m.NextMaintenanceDate,
-                Mileage = m.Mileage,
-                ServiceCenter = m.ServiceCenter,
-
-                CreatedAt = m.CreatedAt,
-                UpdatedAt = m.UpdatedAt,
-                DeletedAt = m.DeletedAt,
-                IsDeleted = m.IsDeleted
-
-            }).ToList();
+            var dtos = _mapper.Map<List<MaintenanceGetDTO>>(maintenances);
 
             return new ApiResponse<List<MaintenanceGetDTO>>(
                 true,
@@ -105,24 +82,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            var dto = new MaintenanceGetDTO
-            {
-                Id = maintenance.Id,
-
-                VehicleId = maintenance.VehicleId,
-                ServiceType = maintenance.ServiceType,
-                Description = maintenance.Description,
-                Cost = maintenance.Cost,
-                MaintenanceDate = maintenance.MaintenanceDate,
-                NextMaintenanceDate = maintenance.NextMaintenanceDate,
-                Mileage = maintenance.Mileage,
-                ServiceCenter = maintenance.ServiceCenter,
-
-                CreatedAt = maintenance.CreatedAt,
-                UpdatedAt = maintenance.UpdatedAt,
-                DeletedAt = maintenance.DeletedAt,
-                IsDeleted = maintenance.IsDeleted
-            };
+            var dto = _mapper.Map<MaintenanceGetDTO>(maintenance);
 
             return new ApiResponse<MaintenanceGetDTO>(
                 true,
@@ -231,14 +191,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            maintenance.VehicleId = dto.VehicleId ?? maintenance.VehicleId;
-            maintenance.ServiceType = dto.ServiceType ?? maintenance.ServiceType;
-            maintenance.Description = dto.Description ?? maintenance.Description;
-            maintenance.Cost = dto.Cost ?? maintenance.Cost;
-            maintenance.MaintenanceDate = dto.MaintenanceDate ?? maintenance.MaintenanceDate;
-            maintenance.NextMaintenanceDate = dto.NextMaintenanceDate ?? maintenance.NextMaintenanceDate;
-            maintenance.Mileage = dto.Mileage ?? maintenance.Mileage;
-            maintenance.ServiceCenter = dto.ServiceCenter ?? maintenance.ServiceCenter;
+            _mapper.Map(dto, maintenance);
 
             maintenance.UpdatedAt = DateTime.Now;
 

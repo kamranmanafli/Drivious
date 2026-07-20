@@ -1,4 +1,5 @@
-﻿using Drivious.Data;
+﻿using AutoMapper;
+using Drivious.Data;
 using Drivious.DTOs.Income;
 using Drivious.Models;
 using Drivious.Responses;
@@ -10,23 +11,21 @@ namespace Drivious.Services.Implements
     public class IncomeService : IIncomeService
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public IncomeService(AppDbContext context)
+        public IncomeService(
+            AppDbContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
+
         public async Task<ApiResponse<object>> CreateAsync(IncomeCreateDTO dto)
         {
-            Income income = new()
-            {
-                CreatedAt = DateTime.Now,
+            Income income = _mapper.Map<Income>(dto);
 
-                VehicleId = dto.VehicleId,
-                DriverId = dto.DriverId,
-                Amount = dto.Amount,
-                IncomeDate = dto.IncomeDate,
-                Description = dto.Description,
-            };
+            income.CreatedAt = DateTime.Now;
 
             var result = await _context.Incomes.AddAsync(income);
 
@@ -61,22 +60,7 @@ namespace Drivious.Services.Implements
         {
             var incomes = await _context.Incomes.ToListAsync();
 
-            var dtos = incomes.Select(i => new IncomeGetDTO
-            {
-                Id = i.Id,
-
-                VehicleId = i.VehicleId,
-                DriverId = i.DriverId,
-                Amount = i.Amount,
-                IncomeDate = i.IncomeDate,
-                Description = i.Description,
-
-                CreatedAt = i.CreatedAt,
-                UpdatedAt = i.UpdatedAt,
-                DeletedAt = i.DeletedAt,
-                IsDeleted = i.IsDeleted
-
-            }).ToList();
+            var dtos = _mapper.Map<List<IncomeGetDTO>>(incomes);
 
             return new ApiResponse<List<IncomeGetDTO>>(
                 true,
@@ -98,21 +82,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            var dto = new IncomeGetDTO
-            {
-                Id = income.Id,
-
-                VehicleId = income.VehicleId,
-                DriverId = income.DriverId,
-                Amount = income.Amount,
-                IncomeDate = income.IncomeDate,
-                Description = income.Description,
-
-                CreatedAt = income.CreatedAt,
-                UpdatedAt = income.UpdatedAt,
-                DeletedAt = income.DeletedAt,
-                IsDeleted = income.IsDeleted
-            };
+            var dto = _mapper.Map<IncomeGetDTO>(income);
 
             return new ApiResponse<IncomeGetDTO>(
                 true,
@@ -120,7 +90,6 @@ namespace Drivious.Services.Implements
                 dto
             );
         }
-
         public async Task<ApiResponse<object>> RemoveAsync(Guid id)
         {
             var income = await _context.Incomes.FindAsync(id);
@@ -221,11 +190,7 @@ namespace Drivious.Services.Implements
                 );
             }
 
-            income.VehicleId = dto.VehicleId ?? income.VehicleId;
-            income.DriverId = dto.DriverId ?? income.DriverId;
-            income.Amount = dto.Amount ?? income.Amount;
-            income.IncomeDate = dto.IncomeDate ?? income.IncomeDate;
-            income.Description = dto.Description ?? income.Description;
+            _mapper.Map(dto, income);
 
             income.UpdatedAt = DateTime.Now;
 
