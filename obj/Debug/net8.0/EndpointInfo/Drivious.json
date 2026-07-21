@@ -5,6 +5,18 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/Dashboards": {
+      "get": {
+        "tags": [
+          "Dashboards"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Drivers": {
       "post": {
         "tags": [

@@ -1,5 +1,15 @@
 [
   {
+    "ContainingType": "Drivious.Controllers.DashboardsController",
+    "Method": "GetDashboard",
+    "RelativePath": "api/Dashboards",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Drivious.Controllers.DriversController",
     "Method": "Create",
     "RelativePath": "api/Drivers",

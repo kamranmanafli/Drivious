@@ -39,6 +39,7 @@ builder.Services.AddScoped<IVehicleAssignmentService, VehicleAssignmentService>(
 builder.Services.AddScoped<IFuelLogService, FuelLogService>();
 builder.Services.AddScoped<IVehicleDocumentService, VehicleDocumentService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 
 var app = builder.Build();
