@@ -1,12 +1,17 @@
 using Drivious.Data;
 using Drivious.Mappings;
 using Drivious.Middlewares;
+using Drivious.Models;
 using Drivious.Services.Implements;
 using Drivious.Services.Interfaces;
 using Drivious.Validators.Driver;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +26,41 @@ builder.Services.AddHttpContextAccessor();
 
 // Database
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+
+// ---------------------------------
+
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+// ---------------------------------
+
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("Jwt"));
+
+var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = jwt!.Issuer,
+        ValidAudience = jwt.Audience,
+
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwt.Key))
+    };
+});
 
 // FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
@@ -40,6 +80,7 @@ builder.Services.AddScoped<IFuelLogService, FuelLogService>();
 builder.Services.AddScoped<IVehicleDocumentService, VehicleDocumentService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 
 var app = builder.Build();

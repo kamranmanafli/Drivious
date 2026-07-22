@@ -309,3 +309,4 @@ C:\Users\Asus\Desktop\DriviousAPI\obj\Debug\net8.0\refint\Drivious.dll
 C:\Users\Asus\Desktop\DriviousAPI\obj\Debug\net8.0\Drivious.pdb
 C:\Users\Asus\Desktop\DriviousAPI\obj\Debug\net8.0\Drivious.genruntimeconfig.cache
 C:\Users\Asus\Desktop\DriviousAPI\obj\Debug\net8.0\ref\Drivious.dll
+C:\Users\Asus\Desktop\DriviousAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
