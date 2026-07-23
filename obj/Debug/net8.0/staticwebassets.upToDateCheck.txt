@@ -4,4 +4,3 @@ wwwroot\Images\Driver\9555b6bc-d34b-4851-8835-e7bcad7dff2d3-big.jpeg
 wwwroot\Images\Driver\b3addc0f-0306-48a2-921e-32ffb842006f2.jpeg
 wwwroot\Images\Driver\c297133f-d68e-480d-a480-e3ce711896502.jpeg
 wwwroot\Images\Vehicle\1d89003c-c579-4957-94f3-249d9b20bf142-big.jpeg
-wwwroot\Images\Driver\29b237b0-76c5-48d7-8594-a8ed2fff3f6f1.jpg

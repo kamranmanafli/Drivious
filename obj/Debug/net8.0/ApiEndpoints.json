@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "Drivious.Controllers.AuthsController",
+    "Method": "Register",
+    "RelativePath": "api/Auths/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Drivious.DTOs.Auth.RegisterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Drivious.Controllers.DashboardsController",
     "Method": "GetDashboard",
     "RelativePath": "api/Dashboards",
