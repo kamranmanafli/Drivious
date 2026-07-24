@@ -79,9 +79,37 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public Task<ApiResponse<string>> LoginAsync(LoginDTO dto)
+        public async Task<ApiResponse> LoginAsync(LoginDTO dto)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByNameAsync(dto.UserName);
+
+            if (user == null)
+            {
+                return new ApiResponse(
+                    false,
+                    "Username or password is incorrect.",
+                    null
+                );
+            }
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
+
+            if (!result.Succeeded)
+            {
+                return new ApiResponse(
+                    false,
+                    "Username or password is incorrect.",
+                    null
+                );
+            }
+
+            var token = _tokenService.GenerateToken(user);
+
+            return new ApiResponse(
+                true,
+                "Login successful.",
+                token
+            );
         }
     }
 }

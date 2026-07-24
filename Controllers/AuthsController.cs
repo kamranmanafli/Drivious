@@ -1,6 +1,5 @@
 ﻿using Drivious.DTOs.Auth;
 using Drivious.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Drivious.Controllers
@@ -22,7 +21,22 @@ namespace Drivious.Controllers
             var result = await _authService.RegisterAsync(dto);
 
             if (!result.Success)
+            {
                 return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDTO dto)
+        {
+            var result = await _authService.LoginAsync(dto);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
 
             return Ok(result);
         }
