@@ -21,7 +21,7 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<object>> CreateAsync(IncomeCreateDTO dto)
+        public async Task<ApiResponse> CreateAsync(IncomeCreateDTO dto)
         {
             Income income = _mapper.Map<Income>(dto);
 
@@ -31,10 +31,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Added)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income could not be created.",
-                    null
+                    "Income could not be created."
                 );
             }
 
@@ -42,17 +41,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income could not be saved.",
-                    null
+                    "Income could not be saved."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Income created successfully.",
-                null
+                "Income created successfully."
             );
         }
 
@@ -90,16 +87,15 @@ namespace Drivious.Services.Implements
                 dto
             );
         }
-        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
+        public async Task<ApiResponse> RemoveAsync(Guid id)
         {
             var income = await _context.Incomes.FindAsync(id);
 
             if (income == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income not found.",
-                    null
+                    "Income not found."
                 );
             }
 
@@ -107,10 +103,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Deleted)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income could not be deleted.",
-                    null
+                    "Income could not be deleted."
                 );
             }
 
@@ -118,30 +113,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income could not be deleted.",
-                    null
+                    "Income could not be deleted."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Income deleted successfully.",
-                null
+                "Income deleted successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
+        public async Task<ApiResponse> ToggleAsync(Guid id)
         {
             var income = await _context.Incomes.FindAsync(id);
 
             if (income == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income not found.",
-                    null
+                    "Income not found."
                 );
             }
 
@@ -152,10 +144,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income status could not be changed.",
-                    null
+                    "Income status could not be changed."
                 );
             }
 
@@ -163,30 +154,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income status could not be changed.",
-                    null
+                    "Income status could not be changed."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Income status changed successfully.",
-                null
+                "Income status changed successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> UpdateAsync(Guid id, IncomeUpdateDTO dto)
+        public async Task<ApiResponse> UpdateAsync(Guid id, IncomeUpdateDTO dto)
         {
             var income = await _context.Incomes.FindAsync(id);
 
             if (income == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income not found.",
-                    null
+                    "Income not found."
                 );
             }
 
@@ -198,10 +186,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income could not be updated.",
-                    null
+                    "Income could not be updated."
                 );
             }
 
@@ -209,17 +196,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Income could not be updated.",
-                    null
+                    "Income could not be updated."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Income updated successfully.",
-                null
+                "Income updated successfully."
             );
         }
     }

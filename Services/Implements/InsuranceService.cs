@@ -21,7 +21,7 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<object>> CreateAsync(InsuranceCreateDTO dto)
+        public async Task<ApiResponse> CreateAsync(InsuranceCreateDTO dto)
         {
             Insurance insurance = _mapper.Map<Insurance>(dto);
 
@@ -31,10 +31,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Added)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance could not be created.",
-                    null
+                    "Insurance could not be created."
                 );
             }
 
@@ -42,17 +41,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance could not be saved.",
-                    null
+                    "Insurance could not be saved."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Insurance created successfully.",
-                null
+                "Insurance created successfully."
             );
         }
 
@@ -91,16 +88,15 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
+        public async Task<ApiResponse> RemoveAsync(Guid id)
         {
             var insurance = await _context.Insurances.FindAsync(id);
 
             if (insurance == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance not found.",
-                    null
+                    "Insurance not found."
                 );
             }
 
@@ -108,10 +104,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Deleted)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance could not be deleted.",
-                    null
+                    "Insurance could not be deleted."
                 );
             }
 
@@ -119,30 +114,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance could not be deleted.",
-                    null
+                    "Insurance could not be deleted."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Insurance deleted successfully.",
-                null
+                "Insurance deleted successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
+        public async Task<ApiResponse> ToggleAsync(Guid id)
         {
             var insurance = await _context.Insurances.FindAsync(id);
 
             if (insurance == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance not found.",
-                    null
+                    "Insurance not found."
                 );
             }
 
@@ -153,10 +145,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance status could not be changed.",
-                    null
+                    "Insurance status could not be changed."
                 );
             }
 
@@ -164,30 +155,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance status could not be changed.",
-                    null
+                    "Insurance status could not be changed."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Insurance status changed successfully.",
-                null
+                "Insurance status changed successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> UpdateAsync(Guid id, InsuranceUpdateDTO dto)
+        public async Task<ApiResponse> UpdateAsync(Guid id, InsuranceUpdateDTO dto)
         {
             var insurance = await _context.Insurances.FindAsync(id);
 
             if (insurance == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance not found.",
-                    null
+                    "Insurance not found."
                 );
             }
 
@@ -199,10 +187,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance could not be updated.",
-                    null
+                    "Insurance could not be updated."
                 );
             }
 
@@ -210,17 +197,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Insurance could not be updated.",
-                    null
+                    "Insurance could not be updated."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Insurance updated successfully.",
-                null
+                "Insurance updated successfully."
             );
         }
     }

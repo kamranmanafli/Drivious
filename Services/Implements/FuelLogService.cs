@@ -21,7 +21,7 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<object>> CreateAsync(FuelLogCreateDTO dto)
+        public async Task<ApiResponse> CreateAsync(FuelLogCreateDTO dto)
         {
             FuelLog fuelLog = _mapper.Map<FuelLog>(dto);
 
@@ -31,10 +31,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Added)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log could not be created.",
-                    null
+                    "Fuel log could not be created."
                 );
             }
 
@@ -42,17 +41,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log could not be saved.",
-                    null
+                    "Fuel log could not be saved."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Fuel log created successfully.",
-                null
+                "Fuel log created successfully."
             );
         }
 
@@ -91,16 +88,15 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
+        public async Task<ApiResponse> RemoveAsync(Guid id)
         {
             var fuelLog = await _context.FuelLogs.FindAsync(id);
 
             if (fuelLog == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log not found.",
-                    null
+                    "Fuel log not found."
                 );
             }
 
@@ -108,10 +104,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Deleted)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log could not be deleted.",
-                    null
+                    "Fuel log could not be deleted."
                 );
             }
 
@@ -119,30 +114,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log could not be deleted.",
-                    null
+                    "Fuel log could not be deleted."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Fuel log deleted successfully.",
-                null
+                "Fuel log deleted successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
+        public async Task<ApiResponse> ToggleAsync(Guid id)
         {
             var fuelLog = await _context.FuelLogs.FindAsync(id);
 
             if (fuelLog == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log not found.",
-                    null
+                    "Fuel log not found."
                 );
             }
 
@@ -153,10 +145,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log status could not be changed.",
-                    null
+                    "Fuel log status could not be changed."
                 );
             }
 
@@ -164,30 +155,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log status could not be changed.",
-                    null
+                    "Fuel log status could not be changed."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Fuel log status changed successfully.",
-                null
+                "Fuel log status changed successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> UpdateAsync(Guid id, FuelLogUpdateDTO dto)
+        public async Task<ApiResponse> UpdateAsync(Guid id, FuelLogUpdateDTO dto)
         {
             var fuelLog = await _context.FuelLogs.FindAsync(id);
 
             if (fuelLog == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log not found.",
-                    null
+                    "Fuel log not found."
                 );
             }
 
@@ -199,10 +187,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log could not be updated.",
-                    null
+                    "Fuel log could not be updated."
                 );
             }
 
@@ -210,17 +197,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Fuel log could not be updated.",
-                    null
+                    "Fuel log could not be updated."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Fuel log updated successfully.",
-                null
+                "Fuel log updated successfully."
             );
         }
     }

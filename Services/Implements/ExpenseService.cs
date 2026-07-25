@@ -21,7 +21,7 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<object>> CreateAsync(ExpenseCreateDTO dto)
+        public async Task<ApiResponse> CreateAsync(ExpenseCreateDTO dto)
         {
             Expense expense = _mapper.Map<Expense>(dto);
 
@@ -31,10 +31,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Added)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense could not be created.",
-                    null
+                    "Expense could not be created."
                 );
             }
 
@@ -42,17 +41,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense could not be saved.",
-                    null
+                    "Expense could not be saved."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Expense created successfully.",
-                null
+                "Expense created successfully."
             );
         }
 
@@ -91,16 +88,15 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
+        public async Task<ApiResponse> RemoveAsync(Guid id)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
             if (expense == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense not found.",
-                    null
+                    "Expense not found."
                 );
             }
 
@@ -108,10 +104,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Deleted)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense could not be deleted.",
-                    null
+                    "Expense could not be deleted."
                 );
             }
 
@@ -119,30 +114,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense could not be deleted.",
-                    null
+                    "Expense could not be deleted."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Expense deleted successfully.",
-                null
+                "Expense deleted successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
+        public async Task<ApiResponse> ToggleAsync(Guid id)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
             if (expense == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense not found.",
-                    null
+                    "Expense not found."
                 );
             }
 
@@ -153,10 +145,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense status could not be changed.",
-                    null
+                    "Expense status could not be changed."
                 );
             }
 
@@ -164,30 +155,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense status could not be changed.",
-                    null
+                    "Expense status could not be changed."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Expense status changed successfully.",
-                null
+                "Expense status changed successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> UpdateAsync(Guid id, ExpenseUpdateDTO dto)
+        public async Task<ApiResponse> UpdateAsync(Guid id, ExpenseUpdateDTO dto)
         {
             var expense = await _context.Expenses.FindAsync(id);
 
             if (expense == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense not found.",
-                    null
+                    "Expense not found."
                 );
             }
 
@@ -199,10 +187,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense could not be updated.",
-                    null
+                    "Expense could not be updated."
                 );
             }
 
@@ -210,17 +197,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Expense could not be updated.",
-                    null
+                    "Expense could not be updated."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Expense updated successfully.",
-                null
+                "Expense updated successfully."
             );
         }
     }

@@ -5,16 +5,16 @@ namespace Drivious.Services.Interfaces
 {
     public interface IVehicleDocumentService
     {
-        Task<ApiResponse<object>> CreateAsync(VehicleDocumentCreateDTO dto);
+        Task<ApiResponse> CreateAsync(VehicleDocumentCreateDTO dto);
 
-        Task<ApiResponse<object>> RemoveAsync(Guid id);
+        Task<ApiResponse> RemoveAsync(Guid id);
 
         Task<ApiResponse<List<VehicleDocumentGetDTO>>> GetAllAsync();
 
         Task<ApiResponse<VehicleDocumentGetDTO>> GetAsync(Guid id);
 
-        Task<ApiResponse<object>> UpdateAsync(Guid id, VehicleDocumentUpdateDTO dto);
+        Task<ApiResponse> UpdateAsync(Guid id, VehicleDocumentUpdateDTO dto);
 
-        Task<ApiResponse<object>> ToggleAsync(Guid id);
+        Task<ApiResponse> ToggleAsync(Guid id);
     }
 }
