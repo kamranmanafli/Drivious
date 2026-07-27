@@ -21,7 +21,7 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<object>> CreateAsync(VehicleAssignmentCreateDTO dto)
+        public async Task<ApiResponse> CreateAsync(VehicleAssignmentCreateDTO dto)
         {
             VehicleAssignment vehicleAssignment = _mapper.Map<VehicleAssignment>(dto);
 
@@ -31,10 +31,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Added)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment could not be created.",
-                    null
+                    "Vehicle assignment could not be created."
                 );
             }
 
@@ -42,17 +41,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment could not be saved.",
-                    null
+                    "Vehicle assignment could not be saved."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Vehicle assignment created successfully.",
-                null
+                "Vehicle assignment created successfully."
             );
         }
 
@@ -91,16 +88,15 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
+        public async Task<ApiResponse> RemoveAsync(Guid id)
         {
             var vehicleAssignment = await _context.VehicleAssignments.FindAsync(id);
 
             if (vehicleAssignment == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment not found.",
-                    null
+                    "Vehicle assignment not found."
                 );
             }
 
@@ -108,10 +104,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Deleted)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment could not be deleted.",
-                    null
+                    "Vehicle assignment could not be deleted."
                 );
             }
 
@@ -119,30 +114,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment could not be deleted.",
-                    null
+                    "Vehicle assignment could not be deleted."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Vehicle assignment deleted successfully.",
-                null
+                "Vehicle assignment deleted successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
+        public async Task<ApiResponse> ToggleAsync(Guid id)
         {
             var vehicleAssignment = await _context.VehicleAssignments.FindAsync(id);
 
             if (vehicleAssignment == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment not found.",
-                    null
+                    "Vehicle assignment not found."
                 );
             }
 
@@ -153,10 +145,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment status could not be changed.",
-                    null
+                    "Vehicle assignment status could not be changed."
                 );
             }
 
@@ -164,30 +155,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment status could not be changed.",
-                    null
+                    "Vehicle assignment status could not be changed."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Vehicle assignment status changed successfully.",
-                null
+                "Vehicle assignment status changed successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> UpdateAsync(Guid id, VehicleAssignmentUpdateDTO dto)
+        public async Task<ApiResponse> UpdateAsync(Guid id, VehicleAssignmentUpdateDTO dto)
         {
             var vehicleAssignment = await _context.VehicleAssignments.FindAsync(id);
 
             if (vehicleAssignment == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment not found.",
-                    null
+                    "Vehicle assignment not found."
                 );
             }
 
@@ -199,10 +187,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment could not be updated.",
-                    null
+                    "Vehicle assignment could not be updated."
                 );
             }
 
@@ -210,17 +197,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle assignment could not be updated.",
-                    null
+                    "Vehicle assignment could not be updated."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Vehicle assignment updated successfully.",
-                null
+                "Vehicle assignment updated successfully."
             );
         }
     }

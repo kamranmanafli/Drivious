@@ -21,7 +21,7 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<object>> CreateAsync(NotificationCreateDTO dto)
+        public async Task<ApiResponse> CreateAsync(NotificationCreateDTO dto)
         {
             Notification notification = _mapper.Map<Notification>(dto);
 
@@ -31,10 +31,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Added)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification could not be created.",
-                    null
+                    "Notification could not be created."
                 );
             }
 
@@ -42,17 +41,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification could not be saved.",
-                    null
+                    "Notification could not be saved."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Notification created successfully.",
-                null
+                "Notification created successfully."
             );
         }
 
@@ -91,16 +88,15 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
+        public async Task<ApiResponse> RemoveAsync(Guid id)
         {
             var notification = await _context.Notifications.FindAsync(id);
 
             if (notification == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification not found.",
-                    null
+                    "Notification not found."
                 );
             }
 
@@ -108,10 +104,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Deleted)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification could not be deleted.",
-                    null
+                    "Notification could not be deleted."
                 );
             }
 
@@ -119,30 +114,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification could not be deleted.",
-                    null
+                    "Notification could not be deleted."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Notification deleted successfully.",
-                null
+                "Notification deleted successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
+        public async Task<ApiResponse> ToggleAsync(Guid id)
         {
             var notification = await _context.Notifications.FindAsync(id);
 
             if (notification == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification not found.",
-                    null
+                    "Notification not found."
                 );
             }
 
@@ -153,10 +145,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification status could not be changed.",
-                    null
+                    "Notification status could not be changed."
                 );
             }
 
@@ -164,30 +155,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification status could not be changed.",
-                    null
+                    "Notification status could not be changed."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Notification status changed successfully.",
-                null
+                "Notification status changed successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> UpdateAsync(Guid id, NotificationUpdateDTO dto)
+        public async Task<ApiResponse> UpdateAsync(Guid id, NotificationUpdateDTO dto)
         {
             var notification = await _context.Notifications.FindAsync(id);
 
             if (notification == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification not found.",
-                    null
+                    "Notification not found."
                 );
             }
 
@@ -199,10 +187,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification could not be updated.",
-                    null
+                    "Notification could not be updated."
                 );
             }
 
@@ -210,17 +197,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Notification could not be updated.",
-                    null
+                    "Notification could not be updated."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Notification updated successfully.",
-                null
+                "Notification updated successfully."
             );
         }
     }

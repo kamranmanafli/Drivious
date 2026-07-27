@@ -22,16 +22,15 @@ namespace Drivious.Services.Implements
             _tokenService = tokenService;
         }
 
-        public async Task<ApiResponse<object>> RegisterAsync(RegisterDTO dto)
+        public async Task<ApiResponse> RegisterAsync(RegisterDTO dto)
         {
             var userByUsername = await _userManager.FindByNameAsync(dto.UserName);
 
             if (userByUsername != null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Username already exists.",
-                    null
+                    "Username already exists."
                 );
             }
 
@@ -39,19 +38,17 @@ namespace Drivious.Services.Implements
 
             if (userByEmail != null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Email already exists.",
-                    null
+                    "Email already exists."
                 );
             }
 
             if (dto.Password != dto.ConfirmPassword)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Passwords do not match.",
-                    null
+                    "Passwords do not match."
                 );
             }
 
@@ -65,27 +62,25 @@ namespace Drivious.Services.Implements
 
             if (!result.Succeeded)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    string.Join(", ", result.Errors.Select(x => x.Description)),
-                    null
+                    string.Join(", ", result.Errors.Select(x => x.Description))
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "User registered successfully.",
-                null
+                "User registered successfully."
             );
         }
 
-        public async Task<ApiResponse> LoginAsync(LoginDTO dto)
+        public async Task<ApiResponse<string>> LoginAsync(LoginDTO dto)
         {
             var user = await _userManager.FindByNameAsync(dto.UserName);
 
             if (user == null)
             {
-                return new ApiResponse(
+                return new ApiResponse<string>(
                     false,
                     "Username or password is incorrect.",
                     null
@@ -96,16 +91,18 @@ namespace Drivious.Services.Implements
 
             if (!result.Succeeded)
             {
-                return new ApiResponse(
+                return new ApiResponse<string>(
                     false,
                     "Username or password is incorrect.",
                     null
                 );
             }
 
-            var token = _tokenService.GenerateToken(user);
+            var roles = await _userManager.GetRolesAsync(user);
 
-            return new ApiResponse(
+            var token = _tokenService.CreateToken(user, roles);
+
+            return new ApiResponse<string>(
                 true,
                 "Login successful.",
                 token

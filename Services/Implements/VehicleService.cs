@@ -28,7 +28,7 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<object>> CreateAsync(VehicleCreateDTO dto)
+        public async Task<ApiResponse> CreateAsync(VehicleCreateDTO dto)
         {
             Vehicle vehicle = _mapper.Map<Vehicle>(dto);
 
@@ -42,10 +42,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Added)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle could not be created.",
-                    null
+                    "Vehicle could not be created."
                 );
             }
 
@@ -53,17 +52,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle could not be saved.",
-                    null
+                    "Vehicle could not be saved."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Vehicle created successfully.",
-                null
+                "Vehicle created successfully."
             );
         }
 
@@ -102,16 +99,15 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
+        public async Task<ApiResponse> RemoveAsync(Guid id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
 
             if (vehicle == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle not found.",
-                    null
+                    "Vehicle not found."
                 );
             }
 
@@ -121,10 +117,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Deleted)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle could not be deleted.",
-                    null
+                    "Vehicle could not be deleted."
                 );
             }
 
@@ -132,30 +127,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle could not be deleted.",
-                    null
+                    "Vehicle could not be deleted."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Vehicle deleted successfully.",
-                null
+                "Vehicle deleted successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
+        public async Task<ApiResponse> ToggleAsync(Guid id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
 
             if (vehicle == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle not found.",
-                    null
+                    "Vehicle not found."
                 );
             }
 
@@ -166,10 +158,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle status could not be changed.",
-                    null
+                    "Vehicle status could not be changed."
                 );
             }
 
@@ -177,30 +168,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle status could not be changed.",
-                    null
+                    "Vehicle status could not be changed."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Vehicle status changed successfully.",
-                null
+                "Vehicle status changed successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> UpdateAsync(Guid id, VehicleUpdateDTO dto)
+        public async Task<ApiResponse> UpdateAsync(Guid id, VehicleUpdateDTO dto)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
 
             if (vehicle == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle not found.",
-                    null
+                    "Vehicle not found."
                 );
             }
 
@@ -224,10 +212,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle could not be updated.",
-                    null
+                    "Vehicle could not be updated."
                 );
             }
 
@@ -235,17 +222,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Vehicle could not be updated.",
-                    null
+                    "Vehicle could not be updated."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Vehicle updated successfully.",
-                null
+                "Vehicle updated successfully."
             );
         }
     }

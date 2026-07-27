@@ -21,7 +21,7 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<object>> CreateAsync(MaintenanceCreateDTO dto)
+        public async Task<ApiResponse> CreateAsync(MaintenanceCreateDTO dto)
         {
             Maintenance maintenance = _mapper.Map<Maintenance>(dto);
 
@@ -31,10 +31,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Added)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance could not be created.",
-                    null
+                    "Maintenance could not be created."
                 );
             }
 
@@ -42,17 +41,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance could not be saved.",
-                    null
+                    "Maintenance could not be saved."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Maintenance created successfully.",
-                null
+                "Maintenance created successfully."
             );
         }
 
@@ -91,16 +88,15 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<object>> RemoveAsync(Guid id)
+        public async Task<ApiResponse> RemoveAsync(Guid id)
         {
             var maintenance = await _context.Maintenances.FindAsync(id);
 
             if (maintenance == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance not found.",
-                    null
+                    "Maintenance not found."
                 );
             }
 
@@ -108,10 +104,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Deleted)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance could not be deleted.",
-                    null
+                    "Maintenance could not be deleted."
                 );
             }
 
@@ -119,30 +114,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance could not be deleted.",
-                    null
+                    "Maintenance could not be deleted."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Maintenance deleted successfully.",
-                null
+                "Maintenance deleted successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> ToggleAsync(Guid id)
+        public async Task<ApiResponse> ToggleAsync(Guid id)
         {
             var maintenance = await _context.Maintenances.FindAsync(id);
 
             if (maintenance == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance not found.",
-                    null
+                    "Maintenance not found."
                 );
             }
 
@@ -153,10 +145,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance status could not be changed.",
-                    null
+                    "Maintenance status could not be changed."
                 );
             }
 
@@ -164,30 +155,27 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance status could not be changed.",
-                    null
+                    "Maintenance status could not be changed."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Maintenance status changed successfully.",
-                null
+                "Maintenance status changed successfully."
             );
         }
 
-        public async Task<ApiResponse<object>> UpdateAsync(Guid id, MaintenanceUpdateDTO dto)
+        public async Task<ApiResponse> UpdateAsync(Guid id, MaintenanceUpdateDTO dto)
         {
             var maintenance = await _context.Maintenances.FindAsync(id);
 
             if (maintenance == null)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance not found.",
-                    null
+                    "Maintenance not found."
                 );
             }
 
@@ -199,10 +187,9 @@ namespace Drivious.Services.Implements
 
             if (result.State != EntityState.Modified)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance could not be updated.",
-                    null
+                    "Maintenance could not be updated."
                 );
             }
 
@@ -210,17 +197,15 @@ namespace Drivious.Services.Implements
 
             if (saveCount <= 0)
             {
-                return new ApiResponse<object>(
+                return new ApiResponse(
                     false,
-                    "Maintenance could not be updated.",
-                    null
+                    "Maintenance could not be updated."
                 );
             }
 
-            return new ApiResponse<object>(
+            return new ApiResponse(
                 true,
-                "Maintenance updated successfully.",
-                null
+                "Maintenance updated successfully."
             );
         }
     }

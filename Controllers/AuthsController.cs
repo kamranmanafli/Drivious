@@ -21,9 +21,7 @@ namespace Drivious.Controllers
             var result = await _authService.RegisterAsync(dto);
 
             if (!result.Success)
-            {
                 return BadRequest(result);
-            }
 
             return Ok(result);
         }
@@ -34,9 +32,7 @@ namespace Drivious.Controllers
             var result = await _authService.LoginAsync(dto);
 
             if (!result.Success)
-            {
                 return BadRequest(result);
-            }
 
             return Ok(result);
         }
