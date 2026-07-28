@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "Drivious.Controllers.AuthsController",
+    "Method": "Login",
+    "RelativePath": "api/Auths/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Drivious.DTOs.Auth.LoginDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.AuthsController",
     "Method": "Register",
     "RelativePath": "api/Auths/register",
     "HttpMethod": "POST",
