@@ -66,7 +66,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<VehicleGetDTO>>> GetAllAsync()
         {
-            var vehicles = await _context.Vehicles.ToListAsync();
+            var vehicles = await _context.Vehicles
+                .AsNoTracking()
+                .Where(x => !x.IsDeleted)
+                .ToListAsync();
 
             var dtos = _mapper.Map<List<VehicleGetDTO>>(vehicles);
 
@@ -77,9 +80,27 @@ namespace Drivious.Services.Implements
             );
         }
 
+        public async Task<ApiResponse<List<VehicleGetDTO>>> GetDeletedAsync()
+        {
+            var vehicles = await _context.Vehicles
+                .AsNoTracking()
+                .Where(x => x.IsDeleted)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<List<VehicleGetDTO>>(vehicles);
+
+            return new ApiResponse<List<VehicleGetDTO>>(
+                true,
+                "Deleted vehicles retrieved successfully.",
+                dtos
+            );
+        }
+
         public async Task<ApiResponse<VehicleGetDTO>> GetAsync(Guid id)
         {
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _context.Vehicles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
 
             if (vehicle == null)
             {

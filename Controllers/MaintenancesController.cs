@@ -40,6 +40,16 @@ namespace Drivious.Controllers
             return StatusCode(result.Success ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest, result);
         }
 
+        [HttpGet("deleted")]
+        public async Task<IActionResult> GetDeleted()
+        {
+            var result = await _service.GetDeletedAsync();
+
+            return StatusCode(
+                result.Success ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest,
+                result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {

@@ -55,7 +55,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<IncomeGetDTO>>> GetAllAsync()
         {
-            var incomes = await _context.Incomes.ToListAsync();
+            var incomes = await _context.Incomes
+                .AsNoTracking()
+                .Where(x => !x.IsDeleted)
+                .ToListAsync();
 
             var dtos = _mapper.Map<List<IncomeGetDTO>>(incomes);
 
@@ -66,9 +69,27 @@ namespace Drivious.Services.Implements
             );
         }
 
+        public async Task<ApiResponse<List<IncomeGetDTO>>> GetDeletedAsync()
+        {
+            var incomes = await _context.Incomes
+                .AsNoTracking()
+                .Where(x => x.IsDeleted)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<List<IncomeGetDTO>>(incomes);
+
+            return new ApiResponse<List<IncomeGetDTO>>(
+                true,
+                "Deleted incomes retrieved successfully.",
+                dtos
+            );
+        }
+
         public async Task<ApiResponse<IncomeGetDTO>> GetAsync(Guid id)
         {
-            var income = await _context.Incomes.FindAsync(id);
+            var income = await _context.Incomes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
 
             if (income == null)
             {

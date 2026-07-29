@@ -10,6 +10,7 @@ namespace Drivious.Services.Interfaces
         Task<ApiResponse> RemoveAsync(Guid id);
 
         Task<ApiResponse<List<ExpenseGetDTO>>> GetAllAsync();
+        Task<ApiResponse<List<ExpenseGetDTO>>> GetDeletedAsync();
 
         Task<ApiResponse<ExpenseGetDTO>> GetAsync(Guid id);
 

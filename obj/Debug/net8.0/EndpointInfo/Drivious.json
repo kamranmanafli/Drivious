@@ -344,6 +344,18 @@
         }
       }
     },
+    "/api/Drivers/deleted": {
+      "get": {
+        "tags": [
+          "Drivers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Drivers/toggle/{id}": {
       "patch": {
         "tags": [
@@ -485,6 +497,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Expenses/deleted": {
+      "get": {
+        "tags": [
+          "Expenses"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -640,6 +664,18 @@
         }
       }
     },
+    "/api/FuelLogs/deleted": {
+      "get": {
+        "tags": [
+          "FuelLogs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/FuelLogs/toggle/{id}": {
       "patch": {
         "tags": [
@@ -781,6 +817,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Incomes/deleted": {
+      "get": {
+        "tags": [
+          "Incomes"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -936,6 +984,18 @@
         }
       }
     },
+    "/api/Insurances/deleted": {
+      "get": {
+        "tags": [
+          "Insurances"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Insurances/toggle/{id}": {
       "patch": {
         "tags": [
@@ -1077,6 +1137,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Maintenances/deleted": {
+      "get": {
+        "tags": [
+          "Maintenances"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1232,6 +1304,18 @@
         }
       }
     },
+    "/api/Notifications/deleted": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Notifications/toggle/{id}": {
       "patch": {
         "tags": [
@@ -1373,6 +1457,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/VehicleAssignments/deleted": {
+      "get": {
+        "tags": [
+          "VehicleAssignments"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1568,6 +1664,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/VehicleDocuments/deleted": {
+      "get": {
+        "tags": [
+          "VehicleDocuments"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1830,6 +1938,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Vehicles/deleted": {
+      "get": {
+        "tags": [
+          "Vehicles"
+        ],
         "responses": {
           "200": {
             "description": "OK"

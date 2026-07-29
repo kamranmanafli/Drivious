@@ -11,6 +11,8 @@ namespace Drivious.Services.Interfaces
 
         Task<ApiResponse<List<MaintenanceGetDTO>>> GetAllAsync();
 
+        Task<ApiResponse<List<MaintenanceGetDTO>>> GetDeletedAsync();
+
         Task<ApiResponse<MaintenanceGetDTO>> GetAsync(Guid id);
 
         Task<ApiResponse> UpdateAsync(Guid id, MaintenanceUpdateDTO dto);

@@ -55,7 +55,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<NotificationGetDTO>>> GetAllAsync()
         {
-            var notifications = await _context.Notifications.ToListAsync();
+            var notifications = await _context.Notifications
+                .AsNoTracking()
+                .Where(x => !x.IsDeleted)
+                .ToListAsync();
 
             var dtos = _mapper.Map<List<NotificationGetDTO>>(notifications);
 
@@ -66,9 +69,27 @@ namespace Drivious.Services.Implements
             );
         }
 
+        public async Task<ApiResponse<List<NotificationGetDTO>>> GetDeletedAsync()
+        {
+            var notifications = await _context.Notifications
+                .AsNoTracking()
+                .Where(x => x.IsDeleted)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<List<NotificationGetDTO>>(notifications);
+
+            return new ApiResponse<List<NotificationGetDTO>>(
+                true,
+                "Deleted notifications retrieved successfully.",
+                dtos
+            );
+        }
+
         public async Task<ApiResponse<NotificationGetDTO>> GetAsync(Guid id)
         {
-            var notification = await _context.Notifications.FindAsync(id);
+            var notification = await _context.Notifications
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
 
             if (notification == null)
             {

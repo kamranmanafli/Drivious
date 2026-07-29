@@ -11,6 +11,8 @@ namespace Drivious.Services.Interfaces
 
         Task<ApiResponse<List<FuelLogGetDTO>>> GetAllAsync();
 
+        Task<ApiResponse<List<FuelLogGetDTO>>> GetDeletedAsync();
+
         Task<ApiResponse<FuelLogGetDTO>> GetAsync(Guid id);
 
         Task<ApiResponse> UpdateAsync(Guid id, FuelLogUpdateDTO dto);

@@ -55,7 +55,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<FuelLogGetDTO>>> GetAllAsync()
         {
-            var fuelLogs = await _context.FuelLogs.ToListAsync();
+            var fuelLogs = await _context.FuelLogs
+                .AsNoTracking()
+                .Where(x => !x.IsDeleted)
+                .ToListAsync();
 
             var dtos = _mapper.Map<List<FuelLogGetDTO>>(fuelLogs);
 
@@ -66,9 +69,27 @@ namespace Drivious.Services.Implements
             );
         }
 
+        public async Task<ApiResponse<List<FuelLogGetDTO>>> GetDeletedAsync()
+        {
+            var fuelLogs = await _context.FuelLogs
+                .AsNoTracking()
+                .Where(x => x.IsDeleted)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<List<FuelLogGetDTO>>(fuelLogs);
+
+            return new ApiResponse<List<FuelLogGetDTO>>(
+                true,
+                "Deleted fuel logs retrieved successfully.",
+                dtos
+            );
+        }
+
         public async Task<ApiResponse<FuelLogGetDTO>> GetAsync(Guid id)
         {
-            var fuelLog = await _context.FuelLogs.FindAsync(id);
+            var fuelLog = await _context.FuelLogs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
 
             if (fuelLog == null)
             {

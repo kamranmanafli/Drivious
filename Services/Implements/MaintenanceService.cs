@@ -55,7 +55,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<MaintenanceGetDTO>>> GetAllAsync()
         {
-            var maintenances = await _context.Maintenances.ToListAsync();
+            var maintenances = await _context.Maintenances
+                .AsNoTracking()
+                .Where(x => !x.IsDeleted)
+                .ToListAsync();
 
             var dtos = _mapper.Map<List<MaintenanceGetDTO>>(maintenances);
 
@@ -66,9 +69,27 @@ namespace Drivious.Services.Implements
             );
         }
 
+        public async Task<ApiResponse<List<MaintenanceGetDTO>>> GetDeletedAsync()
+        {
+            var maintenances = await _context.Maintenances
+                .AsNoTracking()
+                .Where(x => x.IsDeleted)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<List<MaintenanceGetDTO>>(maintenances);
+
+            return new ApiResponse<List<MaintenanceGetDTO>>(
+                true,
+                "Deleted maintenances retrieved successfully.",
+                dtos
+            );
+        }
+
         public async Task<ApiResponse<MaintenanceGetDTO>> GetAsync(Guid id)
         {
-            var maintenance = await _context.Maintenances.FindAsync(id);
+            var maintenance = await _context.Maintenances
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
 
             if (maintenance == null)
             {

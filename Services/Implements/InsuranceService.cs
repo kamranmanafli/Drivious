@@ -55,7 +55,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<InsuranceGetDTO>>> GetAllAsync()
         {
-            var insurances = await _context.Insurances.ToListAsync();
+            var insurances = await _context.Insurances
+                .AsNoTracking()
+                .Where(x => !x.IsDeleted)
+                .ToListAsync();
 
             var dtos = _mapper.Map<List<InsuranceGetDTO>>(insurances);
 
@@ -66,9 +69,27 @@ namespace Drivious.Services.Implements
             );
         }
 
+        public async Task<ApiResponse<List<InsuranceGetDTO>>> GetDeletedAsync()
+        {
+            var insurances = await _context.Insurances
+                .AsNoTracking()
+                .Where(x => x.IsDeleted)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<List<InsuranceGetDTO>>(insurances);
+
+            return new ApiResponse<List<InsuranceGetDTO>>(
+                true,
+                "Deleted insurances retrieved successfully.",
+                dtos
+            );
+        }
+
         public async Task<ApiResponse<InsuranceGetDTO>> GetAsync(Guid id)
         {
-            var insurance = await _context.Insurances.FindAsync(id);
+            var insurance = await _context.Insurances
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
 
             if (insurance == null)
             {

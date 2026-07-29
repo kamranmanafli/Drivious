@@ -232,6 +232,16 @@
   },
   {
     "ContainingType": "Drivious.Controllers.DriversController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/Drivers/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.DriversController",
     "Method": "Toggle",
     "RelativePath": "api/Drivers/toggle/{id}",
     "HttpMethod": "PATCH",
@@ -323,6 +333,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.ExpensesController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/Expenses/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -422,6 +442,16 @@
   },
   {
     "ContainingType": "Drivious.Controllers.FuelLogsController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/FuelLogs/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.FuelLogsController",
     "Method": "Toggle",
     "RelativePath": "api/FuelLogs/toggle/{id}",
     "HttpMethod": "PATCH",
@@ -513,6 +543,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.IncomesController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/Incomes/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -612,6 +652,16 @@
   },
   {
     "ContainingType": "Drivious.Controllers.InsurancesController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/Insurances/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.InsurancesController",
     "Method": "Toggle",
     "RelativePath": "api/Insurances/toggle/{id}",
     "HttpMethod": "PATCH",
@@ -703,6 +753,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.MaintenancesController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/Maintenances/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -802,6 +862,16 @@
   },
   {
     "ContainingType": "Drivious.Controllers.NotificationsController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/Notifications/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.NotificationsController",
     "Method": "Toggle",
     "RelativePath": "api/Notifications/toggle/{id}",
     "HttpMethod": "PATCH",
@@ -893,6 +963,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.VehicleAssignmentsController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/VehicleAssignments/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -1023,6 +1103,16 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.VehicleDocumentsController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/VehicleDocuments/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -1208,6 +1298,16 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Drivious.Controllers.VehiclesController",
+    "Method": "GetDeleted",
+    "RelativePath": "api/Vehicles/deleted",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
