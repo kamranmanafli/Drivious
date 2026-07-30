@@ -1,4 +1,6 @@
 ﻿using Drivious.DTOs.VehicleDocumnet;
+using Drivious.Enums;
+using Drivious.Extensions;
 using FluentValidation;
 
 namespace Drivious.Validators.VehicleDocument
@@ -7,6 +9,11 @@ namespace Drivious.Validators.VehicleDocument
     {
         public VehicleDocumentUpdateDTOValidator()
         {
+            RuleFor(x => x.File)
+                .Must(x => x!.CheckFileSize(FileSize.MB, 10))
+                .WithMessage("Document cannot exceed 10 MB.")
+                .When(x => x.File != null);
+
             RuleFor(x => x.VehicleId)
                 .NotEqual(Guid.Empty)
                 .WithMessage("Vehicle is required.")

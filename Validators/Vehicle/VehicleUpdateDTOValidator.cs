@@ -1,4 +1,6 @@
 ﻿using Drivious.DTOs.Vehicle;
+using Drivious.Enums;
+using Drivious.Extensions;
 using FluentValidation;
 
 namespace Drivious.Validators.Vehicle
@@ -7,6 +9,14 @@ namespace Drivious.Validators.Vehicle
     {
         public VehicleUpdateDTOValidator()
         {
+            RuleFor(x => x.Image)
+                .Cascade(CascadeMode.Stop)
+                .Must(x => x!.CheckFileType("image/"))
+                .WithMessage("Only image files are allowed.")
+                .Must(x => x!.CheckFileSize(FileSize.MB, 5))
+                .WithMessage("Image cannot exceed 5 MB.")
+                .When(x => x.Image != null);
+
             RuleFor(x => x.Brand)
                 .MinimumLength(2)
                 .MaximumLength(50)

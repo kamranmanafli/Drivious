@@ -1,4 +1,6 @@
 ﻿using Drivious.DTOs.Driver;
+using Drivious.Enums;
+using Drivious.Extensions;
 using FluentValidation;
 
 namespace Drivious.Validators.Driver
@@ -58,8 +60,13 @@ namespace Drivious.Validators.Driver
                 .MaximumLength(200).WithMessage("Address cannot exceed 200 characters.");
 
             RuleFor(x => x.Image)
+                .Cascade(CascadeMode.Stop)
                 .NotNull()
-                .WithMessage("Driver image is required.");
+                .WithMessage("Driver image is required.")
+                .Must(x => x.CheckFileType("image/"))
+                .WithMessage("Only image files are allowed.")
+                .Must(x => x.CheckFileSize(FileSize.MB, 5))
+                .WithMessage("Image cannot exceed 5 MB.");
         }
     }
 }

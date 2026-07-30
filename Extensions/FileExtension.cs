@@ -1,4 +1,4 @@
-﻿using Drivious.Enums;
+using Drivious.Enums;
 
 namespace Drivious.Extensions
 {
@@ -6,39 +6,33 @@ namespace Drivious.Extensions
     {
         public static bool CheckFileType(this IFormFile file, string type)
         {
-            if (file.ContentType.Contains(type))
-            {
-                return true;
-            }
-            return false;
+            return file.ContentType.Contains(type, StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool CheckFileSize(this IFormFile file, FileSize fileSize, long size)
         {
-            switch (fileSize)
+            return fileSize switch
             {
-                case FileSize.KB:
-                    return file.Length <= size * 1024;
-                case FileSize.MB:
-                    return file.Length <= size * 1024 * 1024;
-                case FileSize.GB:
-                    return file.Length <= size * 1024 * 1024 * 1024;
-            }
-            return false;
+                FileSize.KB => file.Length <= size * 1024,
+                FileSize.MB => file.Length <= size * 1024 * 1024,
+                FileSize.GB => file.Length <= size * 1024 * 1024 * 1024,
+                _ => false
+            };
         }
 
         public static async Task<string> CreateFileAsync(this IFormFile file, params string[] roots)
         {
-            string fileName = string.Concat(Guid.NewGuid().ToString(), file.FileName);
+            // Only the extension is taken from the client - the rest of file.FileName is
+            // attacker controlled and could contain path segments such as "../".
+            string extension = Path.GetExtension(file.FileName);
 
-            string path = string.Empty;
+            string fileName = $"{Guid.NewGuid()}{extension}";
 
-            for (int i = 0; i < roots.Length; i++)
-            {
-                path = Path.Combine(path, roots[i]);
-            }
+            string directory = Path.Combine(roots);
 
-            path = Path.Combine(path, fileName);
+            Directory.CreateDirectory(directory);
+
+            string path = Path.Combine(directory, fileName);
 
             using (FileStream fileStream = new(path, FileMode.Create))
             {
@@ -48,16 +42,14 @@ namespace Drivious.Extensions
             return fileName;
         }
 
-        public static void DeleteFile(this string fileName, params string[] roots)
+        public static void DeleteFile(this string? fileName, params string[] roots)
         {
-            string path = string.Empty;
+            if (string.IsNullOrWhiteSpace(fileName)) return;
 
-            for (int i = 0; i < roots.Length; i++)
-            {
-                path = Path.Combine(path, roots[i]);
-            }
+            // Guard against a stored value that escapes the target directory.
+            string safeName = Path.GetFileName(fileName);
 
-            path = Path.Combine(path, fileName);
+            string path = Path.Combine(Path.Combine(roots), safeName);
 
             if (File.Exists(path)) File.Delete(path);
         }

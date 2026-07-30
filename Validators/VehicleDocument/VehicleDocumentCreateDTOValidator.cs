@@ -1,4 +1,6 @@
 ﻿using Drivious.DTOs.VehicleDocumnet;
+using Drivious.Enums;
+using Drivious.Extensions;
 using FluentValidation;
 
 namespace Drivious.Validators.VehicleDocument
@@ -25,8 +27,11 @@ namespace Drivious.Validators.VehicleDocument
                 .WithMessage("Invalid document type.");
 
             RuleFor(x => x.File)
+                .Cascade(CascadeMode.Stop)
                 .NotNull()
-                .WithMessage("Document file is required.");
+                .WithMessage("Document file is required.")
+                .Must(x => x.CheckFileSize(FileSize.MB, 10))
+                .WithMessage("Document cannot exceed 10 MB.");
         }
     }
 }
