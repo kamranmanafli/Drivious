@@ -1,9 +1,11 @@
 ﻿using Drivious.DTOs.VehicleAssignment;
 using Drivious.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Drivious.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class VehicleAssignmentsController : ControllerBase
