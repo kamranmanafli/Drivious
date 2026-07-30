@@ -100,8 +100,11 @@ builder.Services.AddAuthentication(options =>
     {
         OnAuthenticationFailed = context =>
         {
-            Console.WriteLine("JWT ERROR:");
-            Console.WriteLine(context.Exception.ToString());
+            context.HttpContext.RequestServices
+                .GetRequiredService<ILoggerFactory>()
+                .CreateLogger("Jwt")
+                .LogWarning(context.Exception, "JWT authentication failed.");
+
             return Task.CompletedTask;
         }
     };
@@ -128,6 +131,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
+// Registered first so it also catches failures thrown by the middleware below it.
+app.UseMiddleware<ExceptionMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -135,8 +141,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseStaticFiles();
 

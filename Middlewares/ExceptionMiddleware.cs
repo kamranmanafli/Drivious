@@ -1,4 +1,4 @@
-﻿using Drivious.Exceptions;
+using Drivious.Exceptions;
 using Drivious.Responses;
 using System.Text.Json;
 
@@ -6,11 +6,23 @@ namespace Drivious.Middlewares
 {
     public class ExceptionMiddleware
     {
-        private readonly RequestDelegate _next;
+        private static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
-        public ExceptionMiddleware(RequestDelegate next)
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionMiddleware> _logger;
+        private readonly IHostEnvironment _env;
+
+        public ExceptionMiddleware(
+            RequestDelegate next,
+            ILogger<ExceptionMiddleware> logger,
+            IHostEnvironment env)
         {
             _next = next;
+            _logger = logger;
+            _env = env;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -25,38 +37,34 @@ namespace Drivious.Middlewares
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            context.Response.ContentType = "application/json";
+            _logger.LogError(ex, "Unhandled exception on {Method} {Path}",
+                context.Request.Method, context.Request.Path);
 
-            int statusCode = StatusCodes.Status500InternalServerError;
+            // The response is already on the wire - nothing left to write.
+            if (context.Response.HasStarted) return;
 
-            switch (ex)
+            int statusCode = ex switch
             {
-                case NotFoundException:
-                    statusCode = StatusCodes.Status404NotFound;
-                    break;
+                NotFoundException => StatusCodes.Status404NotFound,
+                BadRequestException => StatusCodes.Status400BadRequest,
+                UnauthorizedException => StatusCodes.Status401Unauthorized,
+                _ => StatusCodes.Status500InternalServerError
+            };
 
-                case BadRequestException:
-                    statusCode = StatusCodes.Status400BadRequest;
-                    break;
+            // Never leak internal exception details to clients in production.
+            string message = statusCode == StatusCodes.Status500InternalServerError && !_env.IsDevelopment()
+                ? "An unexpected error occurred."
+                : ex.Message;
 
-                case UnauthorizedException:
-                    statusCode = StatusCodes.Status401Unauthorized;
-                    break;
-            }
-
+            context.Response.Clear();
+            context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
 
-            var response = new ApiResponse<object>(
-                false,
-                ex.Message,
-                null
-            );
+            var response = new ApiResponse<object>(false, message, null);
 
-            var json = JsonSerializer.Serialize(response);
-
-            await context.Response.WriteAsync(json);
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response, JsonOptions));
         }
     }
 }
