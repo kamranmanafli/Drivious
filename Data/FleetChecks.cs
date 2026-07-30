@@ -39,6 +39,25 @@ namespace Drivious.Data
         }
 
         /// <summary>
+        /// Advances the odometer from a reading taken by a fuel stop or a service
+        /// visit. Readings older than what is already recorded are ignored rather
+        /// than rejected, so historical rows can still be backfilled.
+        /// </summary>
+        public static async Task AdvanceMileageAsync(
+            this AppDbContext context,
+            Guid vehicleId,
+            int mileage)
+        {
+            var vehicle = await context.Vehicles.FirstOrDefaultAsync(x => x.Id == vehicleId);
+
+            if (vehicle != null && mileage > vehicle.Mileage)
+            {
+                vehicle.Mileage = mileage;
+                vehicle.UpdatedAt = DateTime.UtcNow;
+            }
+        }
+
+        /// <summary>
         /// Counts the rows that would be destroyed by a hard delete of this vehicle.
         /// </summary>
         public static async Task<int> CountVehicleChildrenAsync(this AppDbContext context, Guid vehicleId)

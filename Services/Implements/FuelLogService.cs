@@ -44,6 +44,9 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            // A fuel stop records the odometer, so it is the freshest reading available.
+            await _context.AdvanceMileageAsync(fuelLog.VehicleId, fuelLog.Mileage);
+
             var saveCount = await _context.SaveChangesAsync();
 
             if (saveCount <= 0)
@@ -221,6 +224,10 @@ namespace Drivious.Services.Implements
             _mapper.Map(dto, fuelLog);
 
             fuelLog.UpdatedAt = DateTime.UtcNow;
+
+            // Correcting a reading upwards should move the vehicle on, the same way
+            // recording it in the first place does.
+            await _context.AdvanceMileageAsync(fuelLog.VehicleId, fuelLog.Mileage);
 
             var result = _context.FuelLogs.Update(fuelLog);
 

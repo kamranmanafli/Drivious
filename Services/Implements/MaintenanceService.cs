@@ -44,6 +44,9 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            // A service visit reads the odometer, so it can move the vehicle forward.
+            await _context.AdvanceMileageAsync(maintenance.VehicleId, maintenance.Mileage);
+
             var saveCount = await _context.SaveChangesAsync();
 
             if (saveCount <= 0)
@@ -221,6 +224,10 @@ namespace Drivious.Services.Implements
             _mapper.Map(dto, maintenance);
 
             maintenance.UpdatedAt = DateTime.UtcNow;
+
+            // Correcting a reading upwards should move the vehicle on, the same way
+            // recording it in the first place does.
+            await _context.AdvanceMileageAsync(maintenance.VehicleId, maintenance.Mileage);
 
             var result = _context.Maintenances.Update(maintenance);
 
