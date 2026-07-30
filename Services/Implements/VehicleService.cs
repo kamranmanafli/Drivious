@@ -37,8 +37,40 @@ namespace Drivious.Services.Implements
             return $"{request.Scheme}://{request.Host}/Images/Vehicle/{fileName}";
         }
 
+        // The unique indexes on Vehicles are the real guarantee; this check exists so a
+        // duplicate returns a readable message instead of a 500 from the database.
+        private async Task<string?> FindConflictAsync(string? vin, string? plateNumber, Guid? excludeId = null)
+        {
+            var query = _context.Vehicles.Where(x => !x.IsDeleted);
+
+            if (excludeId.HasValue)
+            {
+                query = query.Where(x => x.Id != excludeId.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(vin) && await query.AnyAsync(x => x.VIN == vin))
+            {
+                return "A vehicle with this VIN already exists.";
+            }
+
+            if (!string.IsNullOrWhiteSpace(plateNumber) && await query.AnyAsync(x => x.PlateNumber == plateNumber))
+            {
+                return "A vehicle with this plate number already exists.";
+            }
+
+            return null;
+        }
+
         public async Task<ApiResponse> CreateAsync(VehicleCreateDTO dto)
         {
+            // Checked before the upload is written so a rejected create leaves no orphan file.
+            var conflict = await FindConflictAsync(dto.VIN, dto.PlateNumber);
+
+            if (conflict != null)
+            {
+                return new ApiResponse(false, conflict);
+            }
+
             Vehicle vehicle = _mapper.Map<Vehicle>(dto);
 
             vehicle.CreatedAt = DateTime.UtcNow;
@@ -220,6 +252,16 @@ namespace Drivious.Services.Implements
                     false,
                     "Vehicle not found."
                 );
+            }
+
+            var conflict = await FindConflictAsync(
+                dto.VIN ?? vehicle.VIN,
+                dto.PlateNumber ?? vehicle.PlateNumber,
+                id);
+
+            if (conflict != null)
+            {
+                return new ApiResponse(false, conflict);
             }
 
             _mapper.Map(dto, vehicle);

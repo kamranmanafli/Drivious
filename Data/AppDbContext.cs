@@ -23,6 +23,27 @@ namespace Drivious.Data
         {
             base.OnModelCreating(builder);
 
+            // SQL Server cannot index nvarchar(max), so these two need an explicit length.
+            // Lengths match the FluentValidation rules for the same fields.
+            builder.Entity<Vehicle>()
+                .Property(x => x.VIN)
+                .HasMaxLength(17);
+
+            builder.Entity<Vehicle>()
+                .Property(x => x.PlateNumber)
+                .HasMaxLength(20);
+
+            // Filtered so a soft-deleted vehicle does not block reusing its plate or VIN.
+            builder.Entity<Vehicle>()
+                .HasIndex(x => x.VIN)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
+
+            builder.Entity<Vehicle>()
+                .HasIndex(x => x.PlateNumber)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
+
             // Without this EF silently falls back to decimal(18,2) and logs a warning
             // for every money column on startup.
             foreach (var property in builder.Model.GetEntityTypes()
