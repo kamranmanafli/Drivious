@@ -1,7 +1,6 @@
-﻿using Drivious.Models;
+using Drivious.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace Drivious.Data
 {
@@ -19,5 +18,20 @@ namespace Drivious.Data
         public DbSet<FuelLog> FuelLogs { get; set; }
         public DbSet<VehicleDocument> VehicleDocuments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            // Without this EF silently falls back to decimal(18,2) and logs a warning
+            // for every money column on startup.
+            foreach (var property in builder.Model.GetEntityTypes()
+                         .SelectMany(t => t.GetProperties())
+                         .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)))
+            {
+                property.SetPrecision(18);
+                property.SetScale(2);
+            }
+        }
     }
 }
