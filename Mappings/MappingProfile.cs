@@ -17,19 +17,30 @@ namespace Drivious.Mappings
     {
         public MappingProfile()
         {
+            // Image / ImageUrl are filled by the services after the upload is written to disk.
+            // Without these Ignore() calls AutoMapper maps the IFormFile over them via ToString().
             CreateMap<Driver, DriverGetDTO>();
 
-            CreateMap<DriverCreateDTO, Driver>();
+            CreateMap<DriverCreateDTO, Driver>()
+                .ForMember(x => x.Image, opts => opts.Ignore())
+                .ForMember(x => x.ImageUrl, opts => opts.Ignore());
 
             CreateMap<DriverUpdateDTO, Driver>()
+                .ForMember(x => x.Image, opts => opts.Ignore())
+                .ForMember(x => x.ImageUrl, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Vehicle, VehicleGetDTO>();
 
-            CreateMap<VehicleCreateDTO, Vehicle>();
+            CreateMap<VehicleCreateDTO, Vehicle>()
+                .ForMember(x => x.Image, opts => opts.Ignore())
+                .ForMember(x => x.ImageURL, opts => opts.Ignore());
 
             CreateMap<VehicleUpdateDTO, Vehicle>()
+                .ForMember(x => x.Image, opts => opts.Ignore())
+                .ForMember(x => x.ImageURL, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             CreateMap<Expense, ExpenseGetDTO>();
 
             CreateMap<ExpenseCreateDTO, Expense>();
@@ -80,9 +91,14 @@ namespace Drivious.Mappings
 
             CreateMap<VehicleDocument, VehicleDocumentGetDTO>();
 
-            CreateMap<VehicleDocumentCreateDTO, VehicleDocument>();
+            CreateMap<VehicleDocumentCreateDTO, VehicleDocument>()
+                .ForMember(x => x.FileName, opts => opts.Ignore())
+                .ForMember(x => x.FileUrl, opts => opts.Ignore())
+                .ForMember(x => x.UploadDate, opts => opts.Ignore());
 
             CreateMap<VehicleDocumentUpdateDTO, VehicleDocument>()
+                .ForMember(x => x.FileName, opts => opts.Ignore())
+                .ForMember(x => x.FileUrl, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         }

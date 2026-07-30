@@ -28,6 +28,15 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
+        private string? BuildImageUrl(string? fileName)
+        {
+            var request = _accessor.HttpContext?.Request;
+
+            if (request == null || string.IsNullOrEmpty(fileName)) return null;
+
+            return $"{request.Scheme}://{request.Host}/Images/Vehicle/{fileName}";
+        }
+
         public async Task<ApiResponse> CreateAsync(VehicleCreateDTO dto)
         {
             Vehicle vehicle = _mapper.Map<Vehicle>(dto);
@@ -36,7 +45,7 @@ namespace Drivious.Services.Implements
 
             vehicle.Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Vehicle");
 
-            vehicle.ImageURL = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Images/Vehicle/{vehicle.Image}";
+            vehicle.ImageURL = BuildImageUrl(vehicle.Image);
 
             var result = await _context.Vehicles.AddAsync(vehicle);
 
@@ -213,6 +222,8 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            _mapper.Map(dto, vehicle);
+
             if (dto.Image != null)
             {
                 if (!string.IsNullOrEmpty(vehicle.Image))
@@ -222,10 +233,8 @@ namespace Drivious.Services.Implements
 
                 vehicle.Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Vehicle");
 
-                vehicle.ImageURL = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Images/Vehicle/{vehicle.Image}";
+                vehicle.ImageURL = BuildImageUrl(vehicle.Image);
             }
-
-            _mapper.Map(dto, vehicle);
 
             vehicle.UpdatedAt = DateTime.UtcNow;
 

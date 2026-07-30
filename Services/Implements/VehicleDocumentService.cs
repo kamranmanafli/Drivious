@@ -28,6 +28,15 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
+        private string? BuildFileUrl(string? fileName)
+        {
+            var request = _accessor.HttpContext?.Request;
+
+            if (request == null || string.IsNullOrEmpty(fileName)) return null;
+
+            return $"{request.Scheme}://{request.Host}/Files/VehicleDocuments/{fileName}";
+        }
+
         public async Task<ApiResponse> CreateAsync(VehicleDocumentCreateDTO dto)
         {
             VehicleDocument vehicleDocument = _mapper.Map<VehicleDocument>(dto);
@@ -39,8 +48,7 @@ namespace Drivious.Services.Implements
                 "Files",
                 "VehicleDocuments");
 
-            vehicleDocument.FileUrl =
-                $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Files/VehicleDocuments/{vehicleDocument.FileName}";
+            vehicleDocument.FileUrl = BuildFileUrl(vehicleDocument.FileName)!;
 
             vehicleDocument.UploadDate = DateTime.UtcNow;
 
@@ -219,6 +227,8 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            _mapper.Map(dto, document);
+
             if (dto.File != null)
             {
                 if (!string.IsNullOrEmpty(document.FileName))
@@ -231,13 +241,10 @@ namespace Drivious.Services.Implements
                     "Files",
                     "VehicleDocuments");
 
-                document.FileUrl =
-                    $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Files/VehicleDocuments/{document.FileName}";
+                document.FileUrl = BuildFileUrl(document.FileName)!;
 
                 document.UploadDate = DateTime.UtcNow;
             }
-
-            _mapper.Map(dto, document);
 
             document.UpdatedAt = DateTime.UtcNow;
 

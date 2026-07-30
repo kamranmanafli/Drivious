@@ -28,6 +28,15 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
+        private string? BuildImageUrl(string? fileName)
+        {
+            var request = _accessor.HttpContext?.Request;
+
+            if (request == null || string.IsNullOrEmpty(fileName)) return null;
+
+            return $"{request.Scheme}://{request.Host}/Images/Driver/{fileName}";
+        }
+
         public async Task<ApiResponse> CreateAsync(DriverCreateDTO dto)
         {
             Driver driver = _mapper.Map<Driver>(dto);
@@ -36,7 +45,7 @@ namespace Drivious.Services.Implements
 
             driver.Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Driver");
 
-            driver.ImageUrl = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Images/Driver/{driver.Image}";
+            driver.ImageUrl = BuildImageUrl(driver.Image);
 
             var result = await _context.Drivers.AddAsync(driver);
 
@@ -217,6 +226,8 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            _mapper.Map(dto, driver);
+
             if (dto.Image != null)
             {
                 if (!string.IsNullOrEmpty(driver.Image))
@@ -226,10 +237,8 @@ namespace Drivious.Services.Implements
 
                 driver.Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Driver");
 
-                driver.ImageUrl = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Images/Driver/{driver.Image}";
+                driver.ImageUrl = BuildImageUrl(driver.Image);
             }
-
-            _mapper.Map(dto, driver);
 
             driver.UpdatedAt = DateTime.UtcNow;
 
