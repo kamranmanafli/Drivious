@@ -23,6 +23,13 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse> CreateAsync(MaintenanceCreateDTO dto)
         {
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
             Maintenance maintenance = _mapper.Map<Maintenance>(dto);
 
             maintenance.CreatedAt = DateTime.UtcNow;
@@ -162,6 +169,10 @@ namespace Drivious.Services.Implements
             maintenance.IsDeleted = !maintenance.IsDeleted;
             maintenance.DeletedAt = maintenance.IsDeleted ? DateTime.UtcNow : null;
 
+            // Toggling is a deliberate choice, so it never counts as a cascade.
+            // Leaving a stale flag here would let a vehicle restore resurrect this row.
+            maintenance.DeletedByCascade = false;
+
             var result = _context.Maintenances.Update(maintenance);
 
             if (result.State != EntityState.Modified)
@@ -198,6 +209,13 @@ namespace Drivious.Services.Implements
                     false,
                     "Maintenance not found."
                 );
+            }
+
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
             }
 
             _mapper.Map(dto, maintenance);

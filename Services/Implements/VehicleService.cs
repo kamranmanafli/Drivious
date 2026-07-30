@@ -173,6 +173,18 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            // A hard delete cascades in the database and would silently destroy the
+            // vehicle's whole history, so require the soft delete instead.
+            var children = await _context.CountVehicleChildrenAsync(id);
+
+            if (children > 0)
+            {
+                return new ApiResponse(
+                    false,
+                    $"This vehicle has {children} related record(s) and cannot be permanently deleted. " +
+                    "Use the toggle endpoint to archive it instead.");
+            }
+
             vehicle.Image.DeleteFile(_env.WebRootPath, "Images", "Vehicle");
 
             var result = _context.Vehicles.Remove(vehicle);
@@ -215,6 +227,10 @@ namespace Drivious.Services.Implements
 
             vehicle.IsDeleted = !vehicle.IsDeleted;
             vehicle.DeletedAt = vehicle.IsDeleted ? DateTime.UtcNow : null;
+
+            // Otherwise a "deleted" vehicle keeps showing its expenses, fuel logs and
+            // documents in every list endpoint.
+            await _context.CascadeVehicleSoftDeleteAsync(vehicle.Id, vehicle.IsDeleted);
 
             var result = _context.Vehicles.Update(vehicle);
 
