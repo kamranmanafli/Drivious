@@ -21,11 +21,60 @@ namespace Drivious.Services.Implements
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// A vehicle can only be out with one driver at a time, and a driver can only
+        /// hold one vehicle at a time. Returns the message to send back, or null when
+        /// the handover is allowed.
+        /// </summary>
+        private async Task<string?> FindActiveConflictAsync(
+            Guid? vehicleId,
+            Guid? driverId,
+            Guid? excludeId = null)
+        {
+            var open = _context.VehicleAssignments
+                .Where(x => !x.IsDeleted && x.IsActive && x.ReturnedDate == null);
+
+            if (excludeId.HasValue)
+            {
+                open = open.Where(x => x.Id != excludeId.Value);
+            }
+
+            if (vehicleId.HasValue && await open.AnyAsync(x => x.VehicleId == vehicleId.Value))
+            {
+                return "This vehicle is already assigned to a driver. Return it first.";
+            }
+
+            if (driverId.HasValue && await open.AnyAsync(x => x.DriverId == driverId.Value))
+            {
+                return "This driver already holds a vehicle. Return it first.";
+            }
+
+            return null;
+        }
+
         public async Task<ApiResponse> CreateAsync(VehicleAssignmentCreateDTO dto)
         {
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId, dto.DriverId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
+            var conflict = await FindActiveConflictAsync(dto.VehicleId, dto.DriverId);
+
+            if (conflict != null)
+            {
+                return new ApiResponse(false, conflict);
+            }
+
             VehicleAssignment vehicleAssignment = _mapper.Map<VehicleAssignment>(dto);
 
             vehicleAssignment.CreatedAt = DateTime.UtcNow;
+
+            // An assignment that already carries a return date is history, not a
+            // current handover.
+            vehicleAssignment.IsActive = vehicleAssignment.ReturnedDate == null;
 
             var result = await _context.VehicleAssignments.AddAsync(vehicleAssignment);
 
@@ -159,8 +208,29 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            // Restoring an open assignment puts the vehicle back in someone's hands, so
+            // it has to clear the same conflicts a fresh handover would.
+            if (vehicleAssignment.IsDeleted
+                && vehicleAssignment.IsActive
+                && vehicleAssignment.ReturnedDate == null)
+            {
+                var conflict = await FindActiveConflictAsync(
+                    vehicleAssignment.VehicleId,
+                    vehicleAssignment.DriverId,
+                    vehicleAssignment.Id);
+
+                if (conflict != null)
+                {
+                    return new ApiResponse(false, conflict);
+                }
+            }
+
             vehicleAssignment.IsDeleted = !vehicleAssignment.IsDeleted;
             vehicleAssignment.DeletedAt = vehicleAssignment.IsDeleted ? DateTime.UtcNow : null;
+
+            // Toggling is a deliberate choice, so it never counts as a cascade.
+            // Leaving a stale flag here would let a parent restore resurrect this row.
+            vehicleAssignment.DeletedByCascade = false;
 
             var result = _context.VehicleAssignments.Update(vehicleAssignment);
 
@@ -188,6 +258,37 @@ namespace Drivious.Services.Implements
             );
         }
 
+        public async Task<ApiResponse> ReturnAsync(Guid id, DateTime? returnedDate)
+        {
+            var assignment = await _context.VehicleAssignments
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+
+            if (assignment == null)
+            {
+                return new ApiResponse(false, "Vehicle assignment not found.");
+            }
+
+            if (assignment.ReturnedDate != null)
+            {
+                return new ApiResponse(false, "This vehicle has already been returned.");
+            }
+
+            var returnedAt = returnedDate ?? DateTime.UtcNow;
+
+            if (returnedAt < assignment.AssignedDate)
+            {
+                return new ApiResponse(false, "Return date cannot be earlier than the assigned date.");
+            }
+
+            assignment.ReturnedDate = returnedAt;
+            assignment.IsActive = false;
+            assignment.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse(true, "Vehicle returned successfully.");
+        }
+
         public async Task<ApiResponse> UpdateAsync(Guid id, VehicleAssignmentUpdateDTO dto)
         {
             var vehicleAssignment = await _context.VehicleAssignments.FindAsync(id);
@@ -200,7 +301,27 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId, dto.DriverId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
+            var conflict = await FindActiveConflictAsync(dto.VehicleId, dto.DriverId, id);
+
+            if (conflict != null)
+            {
+                return new ApiResponse(false, conflict);
+            }
+
             _mapper.Map(dto, vehicleAssignment);
+
+            // Recording a return closes the assignment, whichever field the caller set.
+            if (vehicleAssignment.ReturnedDate != null)
+            {
+                vehicleAssignment.IsActive = false;
+            }
 
             vehicleAssignment.UpdatedAt = DateTime.UtcNow;
 

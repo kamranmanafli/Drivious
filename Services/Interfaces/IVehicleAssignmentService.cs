@@ -18,5 +18,7 @@ namespace Drivious.Services.Interfaces
         Task<ApiResponse> UpdateAsync(Guid id, VehicleAssignmentUpdateDTO dto);
 
         Task<ApiResponse> ToggleAsync(Guid id);
+
+        Task<ApiResponse> ReturnAsync(Guid id, DateTime? returnedDate);
     }
 }
