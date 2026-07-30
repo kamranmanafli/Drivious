@@ -33,5 +33,7 @@ namespace Drivious.Models
         public List<VehicleAssignment> VehicleAssignments { get; set; } = new(); // Təyin olunan maşınlar
 
         public List<Income> Incomes { get; set; } = new();       // Gəlir tarixçəsi
+
+        public AppUser? User { get; set; }                       // Bu sürücüyə bağlı hesab
     }
 }

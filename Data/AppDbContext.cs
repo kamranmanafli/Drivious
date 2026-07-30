@@ -18,10 +18,46 @@ namespace Drivious.Data
         public DbSet<FuelLog> FuelLogs { get; set; }
         public DbSet<VehicleDocument> VehicleDocuments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // A driver account is optional and a driver record must not be blocked
+            // from deletion by an orphaned login, so the link is set to null instead.
+            builder.Entity<AppUser>()
+                .HasOne(x => x.Driver)
+                .WithOne(x => x.User)
+                .HasForeignKey<AppUser>(x => x.DriverId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<RefreshToken>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.RefreshTokens)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<RefreshToken>()
+                .HasIndex(x => x.Token)
+                .IsUnique();
+
+            builder.Entity<RefreshToken>()
+                .Property(x => x.Token)
+                .HasMaxLength(128);
+
+            builder.Entity<RefreshToken>()
+                .Ignore(x => x.IsActive);
+
+            // Lets the notification generator insert only what does not exist yet.
+            builder.Entity<Notification>()
+                .Property(x => x.ReferenceKey)
+                .HasMaxLength(200);
+
+            builder.Entity<Notification>()
+                .HasIndex(x => x.ReferenceKey)
+                .IsUnique()
+                .HasFilter("[ReferenceKey] IS NOT NULL");
 
             // SQL Server cannot index nvarchar(max), so these two need an explicit length.
             // Lengths match the FluentValidation rules for the same fields.

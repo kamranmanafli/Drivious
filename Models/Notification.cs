@@ -15,5 +15,11 @@ namespace Drivious.Models
 
         public DateTime NotificationDate { get; set; } // Bildiriş tarixi
 
+        /// <summary>
+        /// Stable key for notifications raised by the background generator, so the
+        /// same warning is not re-created on every run. Null for manual entries.
+        /// Shape: "reason:entityId:relevantDate", e.g. "insurance-expiring:{id}:20260815".
+        /// </summary>
+        public string? ReferenceKey { get; set; }
     }
 }

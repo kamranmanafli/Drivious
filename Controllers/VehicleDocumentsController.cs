@@ -1,4 +1,5 @@
 ﻿using Drivious.DTOs.VehicleDocument;
+using Drivious.Constants;
 using Drivious.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Drivious.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = AppRoles.ReadFleet)]
     [Route("api/[controller]")]
     [ApiController]
     public class VehicleDocumentsController : ControllerBase
@@ -18,6 +19,7 @@ namespace Drivious.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = AppRoles.ManageFleet)]
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] VehicleDocumentCreateDTO dto)
         {
@@ -26,6 +28,7 @@ namespace Drivious.Controllers
             return result.Success ? StatusCode(StatusCodes.Status201Created, result) : BadRequest(result);
         }
 
+        [Authorize(Roles = AppRoles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remove(Guid id)
         {
@@ -42,6 +45,7 @@ namespace Drivious.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = AppRoles.ManageFleet)]
         [HttpGet("deleted")]
         public async Task<IActionResult> GetDeleted()
         {
@@ -58,6 +62,7 @@ namespace Drivious.Controllers
             return result.Success ? Ok(result) : NotFound(result);
         }
 
+        [Authorize(Roles = AppRoles.ManageFleet)]
         [HttpPatch("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromForm] VehicleDocumentUpdateDTO dto)
         {
@@ -66,6 +71,7 @@ namespace Drivious.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        [Authorize(Roles = AppRoles.ManageFleet)]
         [HttpPatch("toggle/{id}")]
         public async Task<IActionResult> Toggle(Guid id)
         {

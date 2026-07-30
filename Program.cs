@@ -157,6 +157,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
+await DbSeeder.SeedAsync(app.Services);
+
 // Registered first so it also catches failures thrown by the middleware below it.
 app.UseMiddleware<ExceptionMiddleware>();
 
