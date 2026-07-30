@@ -57,8 +57,36 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddHttpContextAccessor();
 
+// Secrets live in user-secrets (dev) or environment variables (prod), never in appsettings.json.
+// Fail fast with an actionable message instead of crashing deep inside EF or the token handler.
+var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()
+    ?? throw new InvalidOperationException("The \"Jwt\" configuration section is missing.");
+
+var connectionString = builder.Configuration.GetConnectionString("default");
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "ConnectionStrings:default is not configured. Set it with: " +
+        "dotnet user-secrets set \"ConnectionStrings:default\" \"<connection string>\" " +
+        "or via the ConnectionStrings__default environment variable.");
+}
+
+if (string.IsNullOrWhiteSpace(jwt.Key))
+{
+    throw new InvalidOperationException(
+        "Jwt:Key is not configured. Set it with: dotnet user-secrets set \"Jwt:Key\" \"<key>\" " +
+        "or via the Jwt__Key environment variable.");
+}
+
+if (Encoding.UTF8.GetByteCount(jwt.Key) < 32)
+{
+    throw new InvalidOperationException(
+        "Jwt:Key must be at least 32 bytes (256 bits) for HMAC-SHA256.");
+}
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
@@ -66,8 +94,6 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt"));
-
-var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 
 builder.Services.AddAuthentication(options =>
 {
