@@ -32,7 +32,7 @@ namespace Drivious.Services.Implements
         {
             Driver driver = _mapper.Map<Driver>(dto);
 
-            driver.CreatedAt = DateTime.Now;
+            driver.CreatedAt = DateTime.UtcNow;
 
             driver.Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Driver");
 
@@ -177,7 +177,7 @@ namespace Drivious.Services.Implements
 
             driver.IsDeleted = !driver.IsDeleted;
 
-            driver.DeletedAt = driver.IsDeleted ? DateTime.Now : null;
+            driver.DeletedAt = driver.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.Drivers.Update(driver);
 
@@ -231,7 +231,7 @@ namespace Drivious.Services.Implements
 
             _mapper.Map(dto, driver);
 
-            driver.UpdatedAt = DateTime.Now;
+            driver.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.Drivers.Update(driver);
 

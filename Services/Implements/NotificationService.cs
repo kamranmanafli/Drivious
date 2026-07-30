@@ -25,7 +25,7 @@ namespace Drivious.Services.Implements
         {
             Notification notification = _mapper.Map<Notification>(dto);
 
-            notification.CreatedAt = DateTime.Now;
+            notification.CreatedAt = DateTime.UtcNow;
 
             var result = await _context.Notifications.AddAsync(notification);
 
@@ -160,7 +160,7 @@ namespace Drivious.Services.Implements
             }
 
             notification.IsDeleted = !notification.IsDeleted;
-            notification.DeletedAt = notification.IsDeleted ? DateTime.Now : null;
+            notification.DeletedAt = notification.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.Notifications.Update(notification);
 
@@ -202,7 +202,7 @@ namespace Drivious.Services.Implements
 
             _mapper.Map(dto, notification);
 
-            notification.UpdatedAt = DateTime.Now;
+            notification.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.Notifications.Update(notification);
 

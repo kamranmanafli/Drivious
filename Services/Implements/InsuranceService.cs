@@ -25,7 +25,7 @@ namespace Drivious.Services.Implements
         {
             Insurance insurance = _mapper.Map<Insurance>(dto);
 
-            insurance.CreatedAt = DateTime.Now;
+            insurance.CreatedAt = DateTime.UtcNow;
 
             var result = await _context.Insurances.AddAsync(insurance);
 
@@ -160,7 +160,7 @@ namespace Drivious.Services.Implements
             }
 
             insurance.IsDeleted = !insurance.IsDeleted;
-            insurance.DeletedAt = insurance.IsDeleted ? DateTime.Now : null;
+            insurance.DeletedAt = insurance.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.Insurances.Update(insurance);
 
@@ -202,7 +202,7 @@ namespace Drivious.Services.Implements
 
             _mapper.Map(dto, insurance);
 
-            insurance.UpdatedAt = DateTime.Now;
+            insurance.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.Insurances.Update(insurance);
 

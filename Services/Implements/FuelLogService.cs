@@ -25,7 +25,7 @@ namespace Drivious.Services.Implements
         {
             FuelLog fuelLog = _mapper.Map<FuelLog>(dto);
 
-            fuelLog.CreatedAt = DateTime.Now;
+            fuelLog.CreatedAt = DateTime.UtcNow;
 
             var result = await _context.FuelLogs.AddAsync(fuelLog);
 
@@ -160,7 +160,7 @@ namespace Drivious.Services.Implements
             }
 
             fuelLog.IsDeleted = !fuelLog.IsDeleted;
-            fuelLog.DeletedAt = fuelLog.IsDeleted ? DateTime.Now : null;
+            fuelLog.DeletedAt = fuelLog.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.FuelLogs.Update(fuelLog);
 
@@ -202,7 +202,7 @@ namespace Drivious.Services.Implements
 
             _mapper.Map(dto, fuelLog);
 
-            fuelLog.UpdatedAt = DateTime.Now;
+            fuelLog.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.FuelLogs.Update(fuelLog);
 

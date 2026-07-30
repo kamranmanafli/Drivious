@@ -25,7 +25,7 @@ namespace Drivious.Services.Implements
         {
             Expense expense = _mapper.Map<Expense>(dto);
 
-            expense.CreatedAt = DateTime.Now;
+            expense.CreatedAt = DateTime.UtcNow;
 
             var result = await _context.Expenses.AddAsync(expense);
 
@@ -160,7 +160,7 @@ namespace Drivious.Services.Implements
             }
 
             expense.IsDeleted = !expense.IsDeleted;
-            expense.DeletedAt = expense.IsDeleted ? DateTime.Now : null;
+            expense.DeletedAt = expense.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.Expenses.Update(expense);
 
@@ -202,7 +202,7 @@ namespace Drivious.Services.Implements
 
             _mapper.Map(dto, expense);
 
-            expense.UpdatedAt = DateTime.Now;
+            expense.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.Expenses.Update(expense);
 

@@ -25,7 +25,7 @@ namespace Drivious.Services.Implements
         {
             VehicleAssignment vehicleAssignment = _mapper.Map<VehicleAssignment>(dto);
 
-            vehicleAssignment.CreatedAt = DateTime.Now;
+            vehicleAssignment.CreatedAt = DateTime.UtcNow;
 
             var result = await _context.VehicleAssignments.AddAsync(vehicleAssignment);
 
@@ -160,7 +160,7 @@ namespace Drivious.Services.Implements
             }
 
             vehicleAssignment.IsDeleted = !vehicleAssignment.IsDeleted;
-            vehicleAssignment.DeletedAt = vehicleAssignment.IsDeleted ? DateTime.Now : null;
+            vehicleAssignment.DeletedAt = vehicleAssignment.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.VehicleAssignments.Update(vehicleAssignment);
 
@@ -202,7 +202,7 @@ namespace Drivious.Services.Implements
 
             _mapper.Map(dto, vehicleAssignment);
 
-            vehicleAssignment.UpdatedAt = DateTime.Now;
+            vehicleAssignment.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.VehicleAssignments.Update(vehicleAssignment);
 

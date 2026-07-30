@@ -25,7 +25,7 @@ namespace Drivious.Services.Implements
         {
             Income income = _mapper.Map<Income>(dto);
 
-            income.CreatedAt = DateTime.Now;
+            income.CreatedAt = DateTime.UtcNow;
 
             var result = await _context.Incomes.AddAsync(income);
 
@@ -159,7 +159,7 @@ namespace Drivious.Services.Implements
             }
 
             income.IsDeleted = !income.IsDeleted;
-            income.DeletedAt = income.IsDeleted ? DateTime.Now : null;
+            income.DeletedAt = income.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.Incomes.Update(income);
 
@@ -201,7 +201,7 @@ namespace Drivious.Services.Implements
 
             _mapper.Map(dto, income);
 
-            income.UpdatedAt = DateTime.Now;
+            income.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.Incomes.Update(income);
 

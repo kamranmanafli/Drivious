@@ -25,7 +25,7 @@ namespace Drivious.Services.Implements
         {
             Maintenance maintenance = _mapper.Map<Maintenance>(dto);
 
-            maintenance.CreatedAt = DateTime.Now;
+            maintenance.CreatedAt = DateTime.UtcNow;
 
             var result = await _context.Maintenances.AddAsync(maintenance);
 
@@ -160,7 +160,7 @@ namespace Drivious.Services.Implements
             }
 
             maintenance.IsDeleted = !maintenance.IsDeleted;
-            maintenance.DeletedAt = maintenance.IsDeleted ? DateTime.Now : null;
+            maintenance.DeletedAt = maintenance.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.Maintenances.Update(maintenance);
 
@@ -202,7 +202,7 @@ namespace Drivious.Services.Implements
 
             _mapper.Map(dto, maintenance);
 
-            maintenance.UpdatedAt = DateTime.Now;
+            maintenance.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.Maintenances.Update(maintenance);
 

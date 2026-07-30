@@ -32,7 +32,7 @@ namespace Drivious.Services.Implements
         {
             VehicleDocument vehicleDocument = _mapper.Map<VehicleDocument>(dto);
 
-            vehicleDocument.CreatedAt = DateTime.Now;
+            vehicleDocument.CreatedAt = DateTime.UtcNow;
 
             vehicleDocument.FileName = await dto.File.CreateFileAsync(
                 _env.WebRootPath,
@@ -42,7 +42,7 @@ namespace Drivious.Services.Implements
             vehicleDocument.FileUrl =
                 $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Files/VehicleDocuments/{vehicleDocument.FileName}";
 
-            vehicleDocument.UploadDate = DateTime.Now;
+            vehicleDocument.UploadDate = DateTime.UtcNow;
 
             var result = await _context.VehicleDocuments.AddAsync(vehicleDocument);
 
@@ -179,7 +179,7 @@ namespace Drivious.Services.Implements
             }
 
             document.IsDeleted = !document.IsDeleted;
-            document.DeletedAt = document.IsDeleted ? DateTime.Now : null;
+            document.DeletedAt = document.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.VehicleDocuments.Update(document);
 
@@ -234,12 +234,12 @@ namespace Drivious.Services.Implements
                 document.FileUrl =
                     $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/Files/VehicleDocuments/{document.FileName}";
 
-                document.UploadDate = DateTime.Now;
+                document.UploadDate = DateTime.UtcNow;
             }
 
             _mapper.Map(dto, document);
 
-            document.UpdatedAt = DateTime.Now;
+            document.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.VehicleDocuments.Update(document);
 

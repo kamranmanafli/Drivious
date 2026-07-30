@@ -32,7 +32,7 @@ namespace Drivious.Services.Implements
         {
             Vehicle vehicle = _mapper.Map<Vehicle>(dto);
 
-            vehicle.CreatedAt = DateTime.Now;
+            vehicle.CreatedAt = DateTime.UtcNow;
 
             vehicle.Image = await dto.Image.CreateFileAsync(_env.WebRootPath, "Images", "Vehicle");
 
@@ -173,7 +173,7 @@ namespace Drivious.Services.Implements
             }
 
             vehicle.IsDeleted = !vehicle.IsDeleted;
-            vehicle.DeletedAt = vehicle.IsDeleted ? DateTime.Now : null;
+            vehicle.DeletedAt = vehicle.IsDeleted ? DateTime.UtcNow : null;
 
             var result = _context.Vehicles.Update(vehicle);
 
@@ -227,7 +227,7 @@ namespace Drivious.Services.Implements
 
             _mapper.Map(dto, vehicle);
 
-            vehicle.UpdatedAt = DateTime.Now;
+            vehicle.UpdatedAt = DateTime.UtcNow;
 
             var result = _context.Vehicles.Update(vehicle);
 
