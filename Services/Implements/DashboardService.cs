@@ -18,8 +18,13 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<DashboardGetDTO>> GetDashboardAsync()
         {
-            var totalIncome = await _context.Incomes.SumAsync(x => x.Amount);
-            var totalExpense = await _context.Expenses.SumAsync(x => x.Amount);
+            var totalIncome = await _context.Incomes
+                .Where(x => !x.IsDeleted)
+                .SumAsync(x => x.Amount);
+
+            var totalExpense = await _context.Expenses
+                .Where(x => !x.IsDeleted)
+                .SumAsync(x => x.Amount);
 
             var dashboard = new DashboardGetDTO
             {
