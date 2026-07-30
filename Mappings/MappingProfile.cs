@@ -8,7 +8,7 @@ using Drivious.DTOs.Maintenance;
 using Drivious.DTOs.Notification;
 using Drivious.DTOs.Vehicle;
 using Drivious.DTOs.VehicleAssignment;
-using Drivious.DTOs.VehicleDocumnet;
+using Drivious.DTOs.VehicleDocument;
 using Drivious.Models;
 
 namespace Drivious.Mappings

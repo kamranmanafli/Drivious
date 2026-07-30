@@ -6,9 +6,9 @@ namespace Drivious.Models
     {
         public Guid VehicleId { get; set; }           // Sığorta hansı maşına aiddir
 
-        public string CompanyName { get; set; }       // Sığorta şirkətinin adı
+        public string CompanyName { get; set; } = null!;       // Sığorta şirkətinin adı
 
-        public string PolicyNumber { get; set; }      // Sığorta polisinin nömrəsi
+        public string PolicyNumber { get; set; } = null!;      // Sığorta polisinin nömrəsi
 
         public DateTime StartDate { get; set; }       // Sığortanın başlama tarixi
 
@@ -16,6 +16,6 @@ namespace Drivious.Models
 
         public decimal Price { get; set; }            // Sığortanın qiyməti
 
-        public Vehicle Vehicle { get; set; }          // Əlaqəli maşın
+        public Vehicle Vehicle { get; set; } = null!;          // Əlaqəli maşın
     }
 }

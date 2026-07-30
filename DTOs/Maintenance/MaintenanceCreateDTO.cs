@@ -18,6 +18,6 @@ namespace Drivious.DTOs.Maintenance
 
         public int Mileage { get; set; }
 
-        public string ServiceCenter { get; set; }
+        public string ServiceCenter { get; set; } = null!;
     }
 }

@@ -14,8 +14,8 @@ namespace Drivious.Models
 
         public int Mileage { get; set; }             // Yanacaq vurulanda maşının kilometri
 
-        public string StationName { get; set; }      // Hansı yanacaqdoldurma məntəqəsi
+        public string StationName { get; set; } = null!;      // Hansı yanacaqdoldurma məntəqəsi
 
-        public Vehicle Vehicle { get; set; }         // Əlaqəli maşın
+        public Vehicle Vehicle { get; set; } = null!;         // Əlaqəli maşın
     }
 }

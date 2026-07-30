@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Drivious.Data;
-using Drivious.DTOs.VehicleDocumnet;
+using Drivious.DTOs.VehicleDocument;
 using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;

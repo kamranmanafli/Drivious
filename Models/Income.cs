@@ -14,8 +14,8 @@ namespace Drivious.Models
 
         public string? Description { get; set; }     // Gəlir haqqında qeyd
 
-        public Vehicle Vehicle { get; set; }         // Əlaqəli maşın
+        public Vehicle Vehicle { get; set; } = null!;         // Əlaqəli maşın
 
-        public Driver Driver { get; set; }           // Əlaqəli sürücü
+        public Driver Driver { get; set; } = null!;           // Əlaqəli sürücü
     }
 }

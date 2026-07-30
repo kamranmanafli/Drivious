@@ -12,6 +12,6 @@
 
         public int Mileage { get; set; }
 
-        public string StationName { get; set; }
+        public string StationName { get; set; } = null!;
     }
 }

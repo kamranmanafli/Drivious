@@ -1,6 +1,6 @@
 ﻿using Drivious.Enums;
 
-namespace Drivious.DTOs.VehicleDocumnet
+namespace Drivious.DTOs.VehicleDocument
 {
     public class VehicleDocumentUpdateDTO
     {

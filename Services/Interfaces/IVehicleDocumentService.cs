@@ -1,4 +1,4 @@
-﻿using Drivious.DTOs.VehicleDocumnet;
+﻿using Drivious.DTOs.VehicleDocument;
 using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces

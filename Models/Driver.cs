@@ -4,17 +4,17 @@ namespace Drivious.Models
 {
     public class Driver : BaseEntity
     {
-        public string FirstName { get; set; }                    // Ad
+        public string FirstName { get; set; } = null!;                    // Ad
 
-        public string LastName { get; set; }                     // Soyad
+        public string LastName { get; set; } = null!;                     // Soyad
 
-        public string PhoneNumber { get; set; }                  // Telefon nömrəsi
+        public string PhoneNumber { get; set; } = null!;                  // Telefon nömrəsi
 
-        public string Email { get; set; }                        // E-poçt ünvanı
+        public string Email { get; set; } = null!;                        // E-poçt ünvanı
 
-        public string IdentityNumber { get; set; }               // Ş/V FIN və ya seriya nömrəsi
+        public string IdentityNumber { get; set; } = null!;               // Ş/V FIN və ya seriya nömrəsi
 
-        public string DriverLicenseNumber { get; set; }          // Sürücülük vəsiqəsinin nömrəsi
+        public string DriverLicenseNumber { get; set; } = null!;          // Sürücülük vəsiqəsinin nömrəsi
 
         public DateTime LicenseExpireDate { get; set; }          // Vəsiqənin bitmə tarixi
 

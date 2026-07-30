@@ -13,8 +13,8 @@ namespace Drivious.Models
 
         public DateTime ExpenseDate { get; set; }        // Xərcin tarixi
 
-        public string Description { get; set; }          // Xərc haqqında qeyd
+        public string Description { get; set; } = null!;          // Xərc haqqında qeyd
 
-        public Vehicle Vehicle { get; set; }             // Əlaqəli maşın
+        public Vehicle Vehicle { get; set; } = null!;             // Əlaqəli maşın
     }
 }

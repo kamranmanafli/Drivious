@@ -1,6 +1,6 @@
 ﻿using Drivious.Enums;
 
-namespace Drivious.DTOs.VehicleDocumnet
+namespace Drivious.DTOs.VehicleDocument
 {
     public class VehicleDocumentGetDTO
     {
@@ -8,13 +8,13 @@ namespace Drivious.DTOs.VehicleDocumnet
 
         public Guid VehicleId { get; set; }
 
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         public DocumentType DocumentType { get; set; }
 
-        public string FileName { get; set; }
+        public string FileName { get; set; } = null!;
 
-        public string FileUrl { get; set; }
+        public string FileUrl { get; set; } = null!;
 
         public DateTime UploadDate { get; set; }
 

@@ -4,19 +4,19 @@ namespace Drivious.DTOs.Vehicle
 {
     public class VehicleCreateDTO
     {
-        public IFormFile Image { get; set; }
+        public IFormFile Image { get; set; } = null!;
 
-        public string Brand { get; set; }
+        public string Brand { get; set; } = null!;
 
-        public string Model { get; set; }
+        public string Model { get; set; } = null!;
 
         public int Year { get; set; }
 
-        public string PlateNumber { get; set; }
+        public string PlateNumber { get; set; } = null!;
 
-        public string VIN { get; set; }
+        public string VIN { get; set; } = null!;
 
-        public string Color { get; set; }
+        public string Color { get; set; } = null!;
 
         public FuelType FuelType { get; set; }
 

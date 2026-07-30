@@ -1,4 +1,4 @@
-﻿using Drivious.DTOs.VehicleDocumnet;
+﻿using Drivious.DTOs.VehicleDocument;
 using Drivious.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +23,7 @@ namespace Drivious.Controllers
         {
             var result = await _service.CreateAsync(dto);
 
-            return result.Success ? StatusCode(201, result) : BadRequest(result);
+            return result.Success ? StatusCode(StatusCodes.Status201Created, result) : BadRequest(result);
         }
 
         [HttpDelete("{id}")]
@@ -31,7 +31,7 @@ namespace Drivious.Controllers
         {
             var result = await _service.RemoveAsync(id);
 
-            return result.Success ? Ok(result) : BadRequest(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         [HttpGet]
@@ -47,9 +47,7 @@ namespace Drivious.Controllers
         {
             var result = await _service.GetDeletedAsync();
 
-            return StatusCode(
-                result.Success ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest,
-                result);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
@@ -73,7 +71,7 @@ namespace Drivious.Controllers
         {
             var result = await _service.ToggleAsync(id);
 
-            return result.Success ? Ok(result) : BadRequest(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
     }
 }

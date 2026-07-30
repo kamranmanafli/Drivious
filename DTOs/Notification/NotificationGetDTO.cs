@@ -6,9 +6,9 @@ namespace Drivious.DTOs.Notification
     {
         public Guid Id { get; set; }
 
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
-        public string Message { get; set; }
+        public string Message { get; set; } = null!;
 
         public NotificationType Type { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using Drivious.DTOs.VehicleDocumnet;
+﻿using Drivious.DTOs.VehicleDocument;
 using Drivious.Enums;
 using Drivious.Extensions;
 using FluentValidation;

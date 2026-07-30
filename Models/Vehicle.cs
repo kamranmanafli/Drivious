@@ -1,22 +1,21 @@
 ﻿using Drivious.Enums;
 using Drivious.Models.BaseModels;
-using System.Reflection.Metadata;
 
 namespace Drivious.Models
 {
     public class Vehicle : BaseEntity
     {
-        public string Brand { get; set; }                          // Maşının markası
+        public string Brand { get; set; } = null!;                          // Maşının markası
 
-        public string Model { get; set; }                          // Maşının modeli
+        public string Model { get; set; } = null!;                          // Maşının modeli
 
         public int Year { get; set; }                              // Buraxılış ili
 
-        public string PlateNumber { get; set; }                    // Dövlət nömrə nişanı
+        public string PlateNumber { get; set; } = null!;                    // Dövlət nömrə nişanı
 
-        public string VIN { get; set; }                            // VIN nömrəsi
+        public string VIN { get; set; } = null!;                            // VIN nömrəsi
 
-        public string Color { get; set; }                          // Maşının rəngi
+        public string Color { get; set; } = null!;                          // Maşının rəngi
 
         public FuelType FuelType { get; set; }                     // Yanacaq növü
 

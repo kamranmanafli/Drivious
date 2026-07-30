@@ -19,8 +19,8 @@ namespace Drivious.Models
 
         public int Mileage { get; set; }                     // Servis zamanı yürüş (km)
 
-        public string ServiceCenter { get; set; }            // Servisin adı
+        public string ServiceCenter { get; set; } = null!;            // Servisin adı
 
-        public Vehicle Vehicle { get; set; }                 // Əlaqəli maşın
+        public Vehicle Vehicle { get; set; } = null!;                 // Əlaqəli maşın
     }
 }

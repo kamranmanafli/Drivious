@@ -5,9 +5,9 @@ namespace Drivious.Models
 {
     public class Notification : BaseEntity
     {
-        public string Title { get; set; }            // Bildiriş başlığı
+        public string Title { get; set; } = null!;            // Bildiriş başlığı
 
-        public string Message { get; set; }          // Bildiriş mətni
+        public string Message { get; set; } = null!;          // Bildiriş mətni
 
         public NotificationType Type { get; set; }  // Bildiriş növü
 

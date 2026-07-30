@@ -12,17 +12,17 @@
 
         public bool IsDeleted { get; set; }
 
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = null!;
 
-        public string LastName { get; set; }
+        public string LastName { get; set; } = null!;
 
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = null!;
 
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
 
-        public string IdentityNumber { get; set; }
+        public string IdentityNumber { get; set; } = null!;
 
-        public string DriverLicenseNumber { get; set; }
+        public string DriverLicenseNumber { get; set; } = null!;
 
         public DateTime LicenseExpireDate { get; set; }
 

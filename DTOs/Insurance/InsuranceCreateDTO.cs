@@ -4,9 +4,9 @@
     {
         public Guid VehicleId { get; set; }
 
-        public string CompanyName { get; set; }
+        public string CompanyName { get; set; } = null!;
 
-        public string PolicyNumber { get; set; }
+        public string PolicyNumber { get; set; } = null!;
 
         public DateTime StartDate { get; set; }
 
