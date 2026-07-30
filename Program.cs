@@ -35,7 +35,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter: Bearer {your token}"
+        Description = "Paste only the token. Do NOT type 'Bearer' - it is added automatically."
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -69,7 +69,12 @@ builder.Services.Configure<JwtSettings>(
 
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
 .AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;

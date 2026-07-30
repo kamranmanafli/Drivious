@@ -42,7 +42,7 @@ namespace Drivious.Services.Implements
                 issuer: _jwt.Issuer,
                 audience: _jwt.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddDays(_jwt.ExpireDays),
+                expires: DateTime.UtcNow.AddDays(_jwt.ExpireDays),
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
