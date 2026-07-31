@@ -23,6 +23,13 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse> CreateAsync(FuelLogCreateDTO dto)
         {
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
             FuelLog fuelLog = _mapper.Map<FuelLog>(dto);
 
             fuelLog.CreatedAt = DateTime.UtcNow;
@@ -36,6 +43,9 @@ namespace Drivious.Services.Implements
                     "Fuel log could not be created."
                 );
             }
+
+            // A fuel stop records the odometer, so it is the freshest reading available.
+            await _context.AdvanceMileageAsync(fuelLog.VehicleId, fuelLog.Mileage);
 
             var saveCount = await _context.SaveChangesAsync();
 
@@ -162,6 +172,10 @@ namespace Drivious.Services.Implements
             fuelLog.IsDeleted = !fuelLog.IsDeleted;
             fuelLog.DeletedAt = fuelLog.IsDeleted ? DateTime.UtcNow : null;
 
+            // Toggling is a deliberate choice, so it never counts as a cascade.
+            // Leaving a stale flag here would let a vehicle restore resurrect this row.
+            fuelLog.DeletedByCascade = false;
+
             var result = _context.FuelLogs.Update(fuelLog);
 
             if (result.State != EntityState.Modified)
@@ -200,9 +214,20 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
             _mapper.Map(dto, fuelLog);
 
             fuelLog.UpdatedAt = DateTime.UtcNow;
+
+            // Correcting a reading upwards should move the vehicle on, the same way
+            // recording it in the first place does.
+            await _context.AdvanceMileageAsync(fuelLog.VehicleId, fuelLog.Mileage);
 
             var result = _context.FuelLogs.Update(fuelLog);
 

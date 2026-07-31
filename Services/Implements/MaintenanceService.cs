@@ -23,6 +23,13 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse> CreateAsync(MaintenanceCreateDTO dto)
         {
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
             Maintenance maintenance = _mapper.Map<Maintenance>(dto);
 
             maintenance.CreatedAt = DateTime.UtcNow;
@@ -36,6 +43,9 @@ namespace Drivious.Services.Implements
                     "Maintenance could not be created."
                 );
             }
+
+            // A service visit reads the odometer, so it can move the vehicle forward.
+            await _context.AdvanceMileageAsync(maintenance.VehicleId, maintenance.Mileage);
 
             var saveCount = await _context.SaveChangesAsync();
 
@@ -162,6 +172,10 @@ namespace Drivious.Services.Implements
             maintenance.IsDeleted = !maintenance.IsDeleted;
             maintenance.DeletedAt = maintenance.IsDeleted ? DateTime.UtcNow : null;
 
+            // Toggling is a deliberate choice, so it never counts as a cascade.
+            // Leaving a stale flag here would let a vehicle restore resurrect this row.
+            maintenance.DeletedByCascade = false;
+
             var result = _context.Maintenances.Update(maintenance);
 
             if (result.State != EntityState.Modified)
@@ -200,9 +214,20 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
             _mapper.Map(dto, maintenance);
 
             maintenance.UpdatedAt = DateTime.UtcNow;
+
+            // Correcting a reading upwards should move the vehicle on, the same way
+            // recording it in the first place does.
+            await _context.AdvanceMileageAsync(maintenance.VehicleId, maintenance.Mileage);
 
             var result = _context.Maintenances.Update(maintenance);
 

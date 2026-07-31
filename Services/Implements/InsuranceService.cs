@@ -23,6 +23,13 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse> CreateAsync(InsuranceCreateDTO dto)
         {
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
             Insurance insurance = _mapper.Map<Insurance>(dto);
 
             insurance.CreatedAt = DateTime.UtcNow;
@@ -162,6 +169,10 @@ namespace Drivious.Services.Implements
             insurance.IsDeleted = !insurance.IsDeleted;
             insurance.DeletedAt = insurance.IsDeleted ? DateTime.UtcNow : null;
 
+            // Toggling is a deliberate choice, so it never counts as a cascade.
+            // Leaving a stale flag here would let a vehicle restore resurrect this row.
+            insurance.DeletedByCascade = false;
+
             var result = _context.Insurances.Update(insurance);
 
             if (result.State != EntityState.Modified)
@@ -198,6 +209,13 @@ namespace Drivious.Services.Implements
                     false,
                     "Insurance not found."
                 );
+            }
+
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
             }
 
             _mapper.Map(dto, insurance);

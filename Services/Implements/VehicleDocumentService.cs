@@ -39,6 +39,13 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse> CreateAsync(VehicleDocumentCreateDTO dto)
         {
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
             VehicleDocument vehicleDocument = _mapper.Map<VehicleDocument>(dto);
 
             vehicleDocument.CreatedAt = DateTime.UtcNow;
@@ -189,6 +196,10 @@ namespace Drivious.Services.Implements
             document.IsDeleted = !document.IsDeleted;
             document.DeletedAt = document.IsDeleted ? DateTime.UtcNow : null;
 
+            // Toggling is a deliberate choice, so it never counts as a cascade.
+            // Leaving a stale flag here would let a vehicle restore resurrect this row.
+            document.DeletedByCascade = false;
+
             var result = _context.VehicleDocuments.Update(document);
 
             if (result.State != EntityState.Modified)
@@ -225,6 +236,13 @@ namespace Drivious.Services.Implements
                     false,
                     "Vehicle document not found."
                 );
+            }
+
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
             }
 
             _mapper.Map(dto, document);

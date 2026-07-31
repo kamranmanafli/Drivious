@@ -141,6 +141,18 @@ namespace Drivious.Services.Implements
                 );
             }
 
+            // A hard delete cascades in the database and would silently destroy the
+            // driver's incomes and assignment history.
+            var children = await _context.CountDriverChildrenAsync(id);
+
+            if (children > 0)
+            {
+                return new ApiResponse(
+                    false,
+                    $"This driver has {children} related record(s) and cannot be permanently deleted. " +
+                    "Use the toggle endpoint to archive them instead.");
+            }
+
             if (!string.IsNullOrEmpty(driver.Image))
             {
                 driver.Image.DeleteFile(_env.WebRootPath, "Images", "Driver");
@@ -187,6 +199,10 @@ namespace Drivious.Services.Implements
             driver.IsDeleted = !driver.IsDeleted;
 
             driver.DeletedAt = driver.IsDeleted ? DateTime.UtcNow : null;
+
+            // Archiving a driver has to take their incomes and assignments with it,
+            // otherwise those rows keep appearing against a driver who is gone.
+            await _context.CascadeDriverSoftDeleteAsync(driver.Id, driver.IsDeleted);
 
             var result = _context.Drivers.Update(driver);
 

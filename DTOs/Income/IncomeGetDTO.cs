@@ -6,7 +6,14 @@
 
         public Guid VehicleId { get; set; }
 
+        /// <summary>Projected from the vehicle so a list can be rendered in one call.</summary>
+        public string? VehiclePlateNumber { get; set; }
+
+        public string? VehicleName { get; set; }
+
         public Guid DriverId { get; set; }
+
+        public string? DriverFullName { get; set; }
 
         public decimal Amount { get; set; }
 

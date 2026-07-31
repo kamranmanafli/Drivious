@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.Vehicle;
 using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -35,6 +38,40 @@ namespace Drivious.Services.Implements
             if (request == null || string.IsNullOrEmpty(fileName)) return null;
 
             return $"{request.Scheme}://{request.Host}/Images/Vehicle/{fileName}";
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<Vehicle, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<Vehicle, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["brand"] = x => x.Brand,
+                ["model"] = x => x.Model,
+                ["year"] = x => x.Year,
+                ["plateNumber"] = x => x.PlateNumber,
+                ["mileage"] = x => x.Mileage,
+                ["status"] = x => x.Status,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<Vehicle> BuildQuery(VehicleQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.Vehicles
+                .AsNoTracking()
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.Status.HasValue, x => x.Status == parameters.Status!.Value)
+                .WhereIf(parameters.FuelType.HasValue, x => x.FuelType == parameters.FuelType!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(parameters.Brand), x => x.Brand == parameters.Brand)
+                .WhereIf(parameters.MinYear.HasValue, x => x.Year >= parameters.MinYear!.Value)
+                .WhereIf(parameters.MaxYear.HasValue, x => x.Year <= parameters.MaxYear!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => x.Brand.Contains(search!)
+                      || x.Model.Contains(search!)
+                      || x.PlateNumber.Contains(search!)
+                      || x.VIN.Contains(search!))
+                .ApplySort(parameters, Sortable, "createdAt");
         }
 
         // The unique indexes on Vehicles are the real guarantee; this check exists so a
@@ -105,35 +142,27 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<VehicleGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<VehicleGetDTO>>> GetAllAsync(VehicleQueryParameters parameters)
         {
-            var vehicles = await _context.Vehicles
-                .AsNoTracking()
-                .Where(x => !x.IsDeleted)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<Vehicle, VehicleGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            var dtos = _mapper.Map<List<VehicleGetDTO>>(vehicles);
-
-            return new ApiResponse<List<VehicleGetDTO>>(
+            return new ApiResponse<PagedResult<VehicleGetDTO>>(
                 true,
                 "Vehicles retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<VehicleGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<VehicleGetDTO>>> GetDeletedAsync(VehicleQueryParameters parameters)
         {
-            var vehicles = await _context.Vehicles
-                .AsNoTracking()
-                .Where(x => x.IsDeleted)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<Vehicle, VehicleGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            var dtos = _mapper.Map<List<VehicleGetDTO>>(vehicles);
-
-            return new ApiResponse<List<VehicleGetDTO>>(
+            return new ApiResponse<PagedResult<VehicleGetDTO>>(
                 true,
                 "Deleted vehicles retrieved successfully.",
-                dtos
+                page
             );
         }
 
@@ -171,6 +200,18 @@ namespace Drivious.Services.Implements
                     false,
                     "Vehicle not found."
                 );
+            }
+
+            // A hard delete cascades in the database and would silently destroy the
+            // vehicle's whole history, so require the soft delete instead.
+            var children = await _context.CountVehicleChildrenAsync(id);
+
+            if (children > 0)
+            {
+                return new ApiResponse(
+                    false,
+                    $"This vehicle has {children} related record(s) and cannot be permanently deleted. " +
+                    "Use the toggle endpoint to archive it instead.");
             }
 
             vehicle.Image.DeleteFile(_env.WebRootPath, "Images", "Vehicle");
@@ -215,6 +256,10 @@ namespace Drivious.Services.Implements
 
             vehicle.IsDeleted = !vehicle.IsDeleted;
             vehicle.DeletedAt = vehicle.IsDeleted ? DateTime.UtcNow : null;
+
+            // Otherwise a "deleted" vehicle keeps showing its expenses, fuel logs and
+            // documents in every list endpoint.
+            await _context.CascadeVehicleSoftDeleteAsync(vehicle.Id, vehicle.IsDeleted);
 
             var result = _context.Vehicles.Update(vehicle);
 

@@ -71,6 +71,15 @@ namespace Drivious.Controllers
         }
 
         [Authorize(Roles = AppRoles.ManageFleet)]
+        [HttpPatch("return/{id}")]
+        public async Task<IActionResult> Return(Guid id, [FromQuery] DateTime? returnedDate)
+        {
+            var result = await _service.ReturnAsync(id, returnedDate);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [Authorize(Roles = AppRoles.ManageFleet)]
         [HttpPatch("toggle/{id}")]
         public async Task<IActionResult> Toggle(Guid id)
         {

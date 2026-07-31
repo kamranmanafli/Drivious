@@ -23,6 +23,13 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse> CreateAsync(IncomeCreateDTO dto)
         {
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId, dto.DriverId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
+            }
+
             Income income = _mapper.Map<Income>(dto);
 
             income.CreatedAt = DateTime.UtcNow;
@@ -161,6 +168,10 @@ namespace Drivious.Services.Implements
             income.IsDeleted = !income.IsDeleted;
             income.DeletedAt = income.IsDeleted ? DateTime.UtcNow : null;
 
+            // Toggling is a deliberate choice, so it never counts as a cascade.
+            // Leaving a stale flag here would let a parent restore resurrect this row.
+            income.DeletedByCascade = false;
+
             var result = _context.Incomes.Update(income);
 
             if (result.State != EntityState.Modified)
@@ -197,6 +208,13 @@ namespace Drivious.Services.Implements
                     false,
                     "Income not found."
                 );
+            }
+
+            var referenceError = await _context.ValidateReferencesAsync(dto.VehicleId, dto.DriverId);
+
+            if (referenceError != null)
+            {
+                return new ApiResponse(false, referenceError);
             }
 
             _mapper.Map(dto, income);

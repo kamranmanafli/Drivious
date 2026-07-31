@@ -8,6 +8,11 @@ namespace Drivious.DTOs.VehicleDocument
 
         public Guid VehicleId { get; set; }
 
+        /// <summary>Projected from the vehicle so a list can be rendered in one call.</summary>
+        public string? VehiclePlateNumber { get; set; }
+
+        public string? VehicleName { get; set; }
+
         public string Title { get; set; } = null!;
 
         public DocumentType DocumentType { get; set; }

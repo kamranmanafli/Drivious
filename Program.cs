@@ -54,7 +54,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MappingProfile).Assembly));
 builder.Services.AddHttpContextAccessor();
 
 // Secrets live in user-secrets (dev) or environment variables (prod), never in appsettings.json.

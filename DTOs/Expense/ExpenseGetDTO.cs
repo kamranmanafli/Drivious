@@ -16,6 +16,11 @@ namespace Drivious.DTOs.Expense
 
         public Guid VehicleId { get; set; }
 
+        /// <summary>Projected from the vehicle so a list can be rendered in one call.</summary>
+        public string? VehiclePlateNumber { get; set; }
+
+        public string? VehicleName { get; set; }
+
         public ExpenseCategory Category { get; set; }
 
         public decimal Amount { get; set; }
