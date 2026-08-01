@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Drivious.Data;
 using Drivious.DTOs.VehicleDocument;
 using Drivious.Extensions;
@@ -87,12 +88,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<VehicleDocumentGetDTO>>> GetAllAsync()
         {
-            var documents = await _context.VehicleDocuments
-                .AsNoTracking()
+            // Projected in the database so the vehicle columns the DTO carries are
+            // resolved by a join; mapping loaded entities would leave them null.
+            var dtos = await _context.VehicleDocuments
                 .Where(x => !x.IsDeleted)
+                .ProjectTo<VehicleDocumentGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<VehicleDocumentGetDTO>>(documents);
 
             return new ApiResponse<List<VehicleDocumentGetDTO>>(
                 true,
@@ -103,12 +104,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<VehicleDocumentGetDTO>>> GetDeletedAsync()
         {
-            var documents = await _context.VehicleDocuments
-                .AsNoTracking()
+            var dtos = await _context.VehicleDocuments
                 .Where(x => x.IsDeleted)
+                .ProjectTo<VehicleDocumentGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<VehicleDocumentGetDTO>>(documents);
 
             return new ApiResponse<List<VehicleDocumentGetDTO>>(
                 true,
@@ -119,11 +118,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<VehicleDocumentGetDTO>> GetAsync(Guid id)
         {
-            var document = await _context.VehicleDocuments
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var dto = await _context.VehicleDocuments
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .ProjectTo<VehicleDocumentGetDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
-            if (document == null)
+            if (dto == null)
             {
                 return new ApiResponse<VehicleDocumentGetDTO>(
                     false,
@@ -131,8 +131,6 @@ namespace Drivious.Services.Implements
                     null
                 );
             }
-
-            var dto = _mapper.Map<VehicleDocumentGetDTO>(document);
 
             return new ApiResponse<VehicleDocumentGetDTO>(
                 true,

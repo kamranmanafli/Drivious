@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Drivious.Data;
 using Drivious.DTOs.FuelLog;
 using Drivious.Models;
@@ -65,12 +66,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<FuelLogGetDTO>>> GetAllAsync()
         {
-            var fuelLogs = await _context.FuelLogs
-                .AsNoTracking()
+            // Projected in the database so the vehicle columns the DTO carries are
+            // resolved by a join; mapping loaded entities would leave them null.
+            var dtos = await _context.FuelLogs
                 .Where(x => !x.IsDeleted)
+                .ProjectTo<FuelLogGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<FuelLogGetDTO>>(fuelLogs);
 
             return new ApiResponse<List<FuelLogGetDTO>>(
                 true,
@@ -81,12 +82,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<FuelLogGetDTO>>> GetDeletedAsync()
         {
-            var fuelLogs = await _context.FuelLogs
-                .AsNoTracking()
+            var dtos = await _context.FuelLogs
                 .Where(x => x.IsDeleted)
+                .ProjectTo<FuelLogGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<FuelLogGetDTO>>(fuelLogs);
 
             return new ApiResponse<List<FuelLogGetDTO>>(
                 true,
@@ -97,11 +96,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<FuelLogGetDTO>> GetAsync(Guid id)
         {
-            var fuelLog = await _context.FuelLogs
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var dto = await _context.FuelLogs
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .ProjectTo<FuelLogGetDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
-            if (fuelLog == null)
+            if (dto == null)
             {
                 return new ApiResponse<FuelLogGetDTO>(
                     false,
@@ -109,8 +109,6 @@ namespace Drivious.Services.Implements
                     null
                 );
             }
-
-            var dto = _mapper.Map<FuelLogGetDTO>(fuelLog);
 
             return new ApiResponse<FuelLogGetDTO>(
                 true,

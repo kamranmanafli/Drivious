@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Drivious.Data;
 using Drivious.DTOs.Maintenance;
 using Drivious.Models;
@@ -65,12 +66,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<MaintenanceGetDTO>>> GetAllAsync()
         {
-            var maintenances = await _context.Maintenances
-                .AsNoTracking()
+            // Projected in the database so the vehicle columns the DTO carries are
+            // resolved by a join; mapping loaded entities would leave them null.
+            var dtos = await _context.Maintenances
                 .Where(x => !x.IsDeleted)
+                .ProjectTo<MaintenanceGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<MaintenanceGetDTO>>(maintenances);
 
             return new ApiResponse<List<MaintenanceGetDTO>>(
                 true,
@@ -81,12 +82,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<MaintenanceGetDTO>>> GetDeletedAsync()
         {
-            var maintenances = await _context.Maintenances
-                .AsNoTracking()
+            var dtos = await _context.Maintenances
                 .Where(x => x.IsDeleted)
+                .ProjectTo<MaintenanceGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<MaintenanceGetDTO>>(maintenances);
 
             return new ApiResponse<List<MaintenanceGetDTO>>(
                 true,
@@ -97,11 +96,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<MaintenanceGetDTO>> GetAsync(Guid id)
         {
-            var maintenance = await _context.Maintenances
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var dto = await _context.Maintenances
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .ProjectTo<MaintenanceGetDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
-            if (maintenance == null)
+            if (dto == null)
             {
                 return new ApiResponse<MaintenanceGetDTO>(
                     false,
@@ -109,8 +109,6 @@ namespace Drivious.Services.Implements
                     null
                 );
             }
-
-            var dto = _mapper.Map<MaintenanceGetDTO>(maintenance);
 
             return new ApiResponse<MaintenanceGetDTO>(
                 true,

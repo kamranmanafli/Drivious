@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Drivious.Data;
 using Drivious.DTOs.Income;
 using Drivious.Models;
@@ -62,12 +63,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<IncomeGetDTO>>> GetAllAsync()
         {
-            var incomes = await _context.Incomes
-                .AsNoTracking()
+            // Projected in the database so the vehicle and driver columns the DTO
+            // carries are resolved by a join; mapping loaded entities leaves them null.
+            var dtos = await _context.Incomes
                 .Where(x => !x.IsDeleted)
+                .ProjectTo<IncomeGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<IncomeGetDTO>>(incomes);
 
             return new ApiResponse<List<IncomeGetDTO>>(
                 true,
@@ -78,12 +79,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<IncomeGetDTO>>> GetDeletedAsync()
         {
-            var incomes = await _context.Incomes
-                .AsNoTracking()
+            var dtos = await _context.Incomes
                 .Where(x => x.IsDeleted)
+                .ProjectTo<IncomeGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<IncomeGetDTO>>(incomes);
 
             return new ApiResponse<List<IncomeGetDTO>>(
                 true,
@@ -94,11 +93,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<IncomeGetDTO>> GetAsync(Guid id)
         {
-            var income = await _context.Incomes
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var dto = await _context.Incomes
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .ProjectTo<IncomeGetDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
-            if (income == null)
+            if (dto == null)
             {
                 return new ApiResponse<IncomeGetDTO>(
                     false,
@@ -106,8 +106,6 @@ namespace Drivious.Services.Implements
                     null
                 );
             }
-
-            var dto = _mapper.Map<IncomeGetDTO>(income);
 
             return new ApiResponse<IncomeGetDTO>(
                 true,

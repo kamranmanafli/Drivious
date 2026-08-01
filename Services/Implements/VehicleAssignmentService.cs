@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Drivious.Data;
 using Drivious.DTOs.VehicleAssignment;
 using Drivious.Models;
@@ -104,12 +105,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<VehicleAssignmentGetDTO>>> GetAllAsync()
         {
-            var vehicleAssignments = await _context.VehicleAssignments
-                .AsNoTracking()
+            // Projected in the database so the vehicle and driver columns the DTO
+            // carries are resolved by a join; mapping loaded entities leaves them null.
+            var dtos = await _context.VehicleAssignments
                 .Where(x => !x.IsDeleted)
+                .ProjectTo<VehicleAssignmentGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<VehicleAssignmentGetDTO>>(vehicleAssignments);
 
             return new ApiResponse<List<VehicleAssignmentGetDTO>>(
                 true,
@@ -120,12 +121,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<VehicleAssignmentGetDTO>>> GetDeletedAsync()
         {
-            var vehicleAssignments = await _context.VehicleAssignments
-                .AsNoTracking()
+            var dtos = await _context.VehicleAssignments
                 .Where(x => x.IsDeleted)
+                .ProjectTo<VehicleAssignmentGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<VehicleAssignmentGetDTO>>(vehicleAssignments);
 
             return new ApiResponse<List<VehicleAssignmentGetDTO>>(
                 true,
@@ -136,11 +135,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<VehicleAssignmentGetDTO>> GetAsync(Guid id)
         {
-            var vehicleAssignment = await _context.VehicleAssignments
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var dto = await _context.VehicleAssignments
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .ProjectTo<VehicleAssignmentGetDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
-            if (vehicleAssignment == null)
+            if (dto == null)
             {
                 return new ApiResponse<VehicleAssignmentGetDTO>(
                     false,
@@ -148,8 +148,6 @@ namespace Drivious.Services.Implements
                     null
                 );
             }
-
-            var dto = _mapper.Map<VehicleAssignmentGetDTO>(vehicleAssignment);
 
             return new ApiResponse<VehicleAssignmentGetDTO>(
                 true,

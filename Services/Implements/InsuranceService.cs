@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Drivious.Data;
 using Drivious.DTOs.Insurance;
 using Drivious.Models;
@@ -62,12 +63,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<InsuranceGetDTO>>> GetAllAsync()
         {
-            var insurances = await _context.Insurances
-                .AsNoTracking()
+            // Projected in the database so the vehicle columns the DTO carries are
+            // resolved by a join; mapping loaded entities would leave them null.
+            var dtos = await _context.Insurances
                 .Where(x => !x.IsDeleted)
+                .ProjectTo<InsuranceGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<InsuranceGetDTO>>(insurances);
 
             return new ApiResponse<List<InsuranceGetDTO>>(
                 true,
@@ -78,12 +79,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<InsuranceGetDTO>>> GetDeletedAsync()
         {
-            var insurances = await _context.Insurances
-                .AsNoTracking()
+            var dtos = await _context.Insurances
                 .Where(x => x.IsDeleted)
+                .ProjectTo<InsuranceGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<InsuranceGetDTO>>(insurances);
 
             return new ApiResponse<List<InsuranceGetDTO>>(
                 true,
@@ -94,11 +93,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<InsuranceGetDTO>> GetAsync(Guid id)
         {
-            var insurance = await _context.Insurances
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var dto = await _context.Insurances
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .ProjectTo<InsuranceGetDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
-            if (insurance == null)
+            if (dto == null)
             {
                 return new ApiResponse<InsuranceGetDTO>(
                     false,
@@ -106,8 +106,6 @@ namespace Drivious.Services.Implements
                     null
                 );
             }
-
-            var dto = _mapper.Map<InsuranceGetDTO>(insurance);
 
             return new ApiResponse<InsuranceGetDTO>(
                 true,

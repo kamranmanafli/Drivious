@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Drivious.Data;
 using Drivious.DTOs.Expense;
 using Drivious.Models;
@@ -62,12 +63,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<ExpenseGetDTO>>> GetAllAsync()
         {
-            var expenses = await _context.Expenses
-                .AsNoTracking()
+            // Projected in the database so the vehicle columns the DTO carries are
+            // resolved by a join; mapping loaded entities would leave them null.
+            var dtos = await _context.Expenses
                 .Where(x => !x.IsDeleted)
+                .ProjectTo<ExpenseGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<ExpenseGetDTO>>(expenses);
 
             return new ApiResponse<List<ExpenseGetDTO>>(
                 true,
@@ -78,12 +79,10 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<List<ExpenseGetDTO>>> GetDeletedAsync()
         {
-            var expenses = await _context.Expenses
-                .AsNoTracking()
+            var dtos = await _context.Expenses
                 .Where(x => x.IsDeleted)
+                .ProjectTo<ExpenseGetDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            var dtos = _mapper.Map<List<ExpenseGetDTO>>(expenses);
 
             return new ApiResponse<List<ExpenseGetDTO>>(
                 true,
@@ -94,11 +93,12 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<ExpenseGetDTO>> GetAsync(Guid id)
         {
-            var expense = await _context.Expenses
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var dto = await _context.Expenses
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .ProjectTo<ExpenseGetDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
-            if (expense == null)
+            if (dto == null)
             {
                 return new ApiResponse<ExpenseGetDTO>(
                     false,
@@ -106,8 +106,6 @@ namespace Drivious.Services.Implements
                     null
                 );
             }
-
-            var dto = _mapper.Map<ExpenseGetDTO>(expense);
 
             return new ApiResponse<ExpenseGetDTO>(
                 true,
