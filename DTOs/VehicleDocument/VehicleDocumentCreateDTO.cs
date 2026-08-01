@@ -10,6 +10,9 @@ namespace Drivious.DTOs.VehicleDocument
 
         public DocumentType DocumentType { get; set; }
 
+        /// <summary>Optional - leave empty for a document that does not expire.</summary>
+        public DateTime? ExpiryDate { get; set; }
+
         public IFormFile File { get; set; } = null!;
     }
 }

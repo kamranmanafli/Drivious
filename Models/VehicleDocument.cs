@@ -17,6 +17,12 @@ namespace Drivious.Models
 
         public DateTime UploadDate { get; set; }     // Yüklənmə tarixi
 
+        /// <summary>
+        /// Bitmə tarixi. Null when the document does not expire; the notification
+        /// generator only warns about the ones that carry a date.
+        /// </summary>
+        public DateTime? ExpiryDate { get; set; }
+
         public Vehicle Vehicle { get; set; } = null!;         // Əlaqəli maşın
     }
 }

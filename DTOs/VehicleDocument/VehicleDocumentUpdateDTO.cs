@@ -13,5 +13,7 @@ namespace Drivious.DTOs.VehicleDocument
         public IFormFile? File { get; set; }
 
         public DateTime? UploadDate { get; set; }
+
+        public DateTime? ExpiryDate { get; set; }
     }
 }

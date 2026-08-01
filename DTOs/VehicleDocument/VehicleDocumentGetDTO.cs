@@ -23,6 +23,8 @@ namespace Drivious.DTOs.VehicleDocument
 
         public DateTime UploadDate { get; set; }
 
+        public DateTime? ExpiryDate { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
