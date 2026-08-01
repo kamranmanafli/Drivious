@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.Insurance;
+using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -20,6 +23,37 @@ namespace Drivious.Services.Implements
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<Insurance, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<Insurance, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["companyName"] = x => x.CompanyName,
+                ["policyNumber"] = x => x.PolicyNumber,
+                ["startDate"] = x => x.StartDate,
+                ["endDate"] = x => x.EndDate,
+                ["price"] = x => x.Price,
+                ["plateNumber"] = x => x.Vehicle.PlateNumber,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<Insurance> BuildQuery(InsuranceQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.Insurances
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.VehicleId.HasValue, x => x.VehicleId == parameters.VehicleId!.Value)
+                .WhereIf(parameters.ExpiresBefore.HasValue, x => x.EndDate <= parameters.ExpiresBefore!.Value)
+                .WhereIf(parameters.ActiveOn.HasValue,
+                    x => x.StartDate <= parameters.ActiveOn!.Value && x.EndDate >= parameters.ActiveOn!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => x.CompanyName.Contains(search!)
+                      || x.PolicyNumber.Contains(search!)
+                      || x.Vehicle.PlateNumber.Contains(search!))
+                .ApplySort(parameters, Sortable, "endDate");
         }
 
         public async Task<ApiResponse> CreateAsync(InsuranceCreateDTO dto)
@@ -61,33 +95,27 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<InsuranceGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<InsuranceGetDTO>>> GetAllAsync(InsuranceQueryParameters parameters)
         {
-            // Projected in the database so the vehicle columns the DTO carries are
-            // resolved by a join; mapping loaded entities would leave them null.
-            var dtos = await _context.Insurances
-                .Where(x => !x.IsDeleted)
-                .ProjectTo<InsuranceGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<Insurance, InsuranceGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<InsuranceGetDTO>>(
+            return new ApiResponse<PagedResult<InsuranceGetDTO>>(
                 true,
                 "Insurances retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<InsuranceGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<InsuranceGetDTO>>> GetDeletedAsync(InsuranceQueryParameters parameters)
         {
-            var dtos = await _context.Insurances
-                .Where(x => x.IsDeleted)
-                .ProjectTo<InsuranceGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<Insurance, InsuranceGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<InsuranceGetDTO>>(
+            return new ApiResponse<PagedResult<InsuranceGetDTO>>(
                 true,
                 "Deleted insurances retrieved successfully.",
-                dtos
+                page
             );
         }
 

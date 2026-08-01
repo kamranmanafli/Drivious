@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.VehicleAssignment;
+using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -20,6 +23,39 @@ namespace Drivious.Services.Implements
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<VehicleAssignment, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<VehicleAssignment, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["assignedDate"] = x => x.AssignedDate,
+                ["returnedDate"] = x => x.ReturnedDate,
+                ["isActive"] = x => x.IsActive,
+                ["plateNumber"] = x => x.Vehicle.PlateNumber,
+                ["driver"] = x => x.Driver.FirstName,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<VehicleAssignment> BuildQuery(
+            VehicleAssignmentQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.VehicleAssignments
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.VehicleId.HasValue, x => x.VehicleId == parameters.VehicleId!.Value)
+                .WhereIf(parameters.DriverId.HasValue, x => x.DriverId == parameters.DriverId!.Value)
+                .WhereIf(parameters.IsActive.HasValue, x => x.IsActive == parameters.IsActive!.Value)
+                .WhereIf(parameters.IsOpen == true, x => x.ReturnedDate == null)
+                .WhereIf(parameters.IsOpen == false, x => x.ReturnedDate != null)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => (x.Note != null && x.Note.Contains(search!))
+                      || x.Vehicle.PlateNumber.Contains(search!)
+                      || x.Driver.FirstName.Contains(search!)
+                      || x.Driver.LastName.Contains(search!))
+                .ApplySort(parameters, Sortable, "assignedDate");
         }
 
         /// <summary>
@@ -103,33 +139,31 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<VehicleAssignmentGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<VehicleAssignmentGetDTO>>> GetAllAsync(
+            VehicleAssignmentQueryParameters parameters)
         {
-            // Projected in the database so the vehicle and driver columns the DTO
-            // carries are resolved by a join; mapping loaded entities leaves them null.
-            var dtos = await _context.VehicleAssignments
-                .Where(x => !x.IsDeleted)
-                .ProjectTo<VehicleAssignmentGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<VehicleAssignment, VehicleAssignmentGetDTO>(
+                    parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<VehicleAssignmentGetDTO>>(
+            return new ApiResponse<PagedResult<VehicleAssignmentGetDTO>>(
                 true,
                 "Vehicle assignments retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<VehicleAssignmentGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<VehicleAssignmentGetDTO>>> GetDeletedAsync(
+            VehicleAssignmentQueryParameters parameters)
         {
-            var dtos = await _context.VehicleAssignments
-                .Where(x => x.IsDeleted)
-                .ProjectTo<VehicleAssignmentGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<VehicleAssignment, VehicleAssignmentGetDTO>(
+                    parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<VehicleAssignmentGetDTO>>(
+            return new ApiResponse<PagedResult<VehicleAssignmentGetDTO>>(
                 true,
                 "Deleted vehicle assignments retrieved successfully.",
-                dtos
+                page
             );
         }
 

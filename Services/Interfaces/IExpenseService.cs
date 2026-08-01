@@ -1,4 +1,5 @@
-﻿using Drivious.DTOs.Expense;
+﻿using Drivious.DTOs.Common;
+using Drivious.DTOs.Expense;
 using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
@@ -9,8 +10,9 @@ namespace Drivious.Services.Interfaces
 
         Task<ApiResponse> RemoveAsync(Guid id);
 
-        Task<ApiResponse<List<ExpenseGetDTO>>> GetAllAsync();
-        Task<ApiResponse<List<ExpenseGetDTO>>> GetDeletedAsync();
+        Task<ApiResponse<PagedResult<ExpenseGetDTO>>> GetAllAsync(ExpenseQueryParameters parameters);
+
+        Task<ApiResponse<PagedResult<ExpenseGetDTO>>> GetDeletedAsync(ExpenseQueryParameters parameters);
 
         Task<ApiResponse<ExpenseGetDTO>> GetAsync(Guid id);
 

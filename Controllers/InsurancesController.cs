@@ -38,18 +38,18 @@ namespace Drivious.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] InsuranceQueryParameters parameters)
         {
-            var result = await _service.GetAllAsync();
+            var result = await _service.GetAllAsync(parameters);
 
             return Ok(result);
         }
 
         [Authorize(Roles = AppRoles.ManageFleet)]
         [HttpGet("deleted")]
-        public async Task<IActionResult> GetDeleted()
+        public async Task<IActionResult> GetDeleted([FromQuery] InsuranceQueryParameters parameters)
         {
-            var result = await _service.GetDeletedAsync();
+            var result = await _service.GetDeletedAsync(parameters);
 
             return Ok(result);
         }

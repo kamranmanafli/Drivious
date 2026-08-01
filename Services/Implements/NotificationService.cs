@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.Notification;
+using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -19,6 +22,35 @@ namespace Drivious.Services.Implements
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<Notification, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<Notification, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["title"] = x => x.Title,
+                ["type"] = x => x.Type,
+                ["isRead"] = x => x.IsRead,
+                ["notificationDate"] = x => x.NotificationDate,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<Notification> BuildQuery(NotificationQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.Notifications
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.Type.HasValue, x => x.Type == parameters.Type!.Value)
+                .WhereIf(parameters.IsRead.HasValue, x => x.IsRead == parameters.IsRead!.Value)
+                .WhereIf(parameters.From.HasValue, x => x.NotificationDate >= parameters.From!.Value)
+                .WhereIf(parameters.To.HasValue, x => x.NotificationDate <= parameters.To!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => x.Title.Contains(search!)
+                      || x.Message.Contains(search!))
+                // Newest first: an unread warning matters more than last month's.
+                .ApplySort(parameters, Sortable, "notificationDate");
         }
 
         public async Task<ApiResponse> CreateAsync(NotificationCreateDTO dto)
@@ -53,35 +85,31 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<NotificationGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<NotificationGetDTO>>> GetAllAsync(
+            NotificationQueryParameters parameters)
         {
-            var notifications = await _context.Notifications
-                .AsNoTracking()
-                .Where(x => !x.IsDeleted)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<Notification, NotificationGetDTO>(
+                    parameters, _mapper.ConfigurationProvider);
 
-            var dtos = _mapper.Map<List<NotificationGetDTO>>(notifications);
-
-            return new ApiResponse<List<NotificationGetDTO>>(
+            return new ApiResponse<PagedResult<NotificationGetDTO>>(
                 true,
                 "Notifications retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<NotificationGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<NotificationGetDTO>>> GetDeletedAsync(
+            NotificationQueryParameters parameters)
         {
-            var notifications = await _context.Notifications
-                .AsNoTracking()
-                .Where(x => x.IsDeleted)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<Notification, NotificationGetDTO>(
+                    parameters, _mapper.ConfigurationProvider);
 
-            var dtos = _mapper.Map<List<NotificationGetDTO>>(notifications);
-
-            return new ApiResponse<List<NotificationGetDTO>>(
+            return new ApiResponse<PagedResult<NotificationGetDTO>>(
                 true,
                 "Deleted notifications retrieved successfully.",
-                dtos
+                page
             );
         }
 

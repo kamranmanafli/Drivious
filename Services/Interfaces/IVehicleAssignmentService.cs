@@ -1,4 +1,5 @@
-﻿using Drivious.DTOs.VehicleAssignment;
+﻿using Drivious.DTOs.Common;
+using Drivious.DTOs.VehicleAssignment;
 using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
@@ -9,9 +10,11 @@ namespace Drivious.Services.Interfaces
 
         Task<ApiResponse> RemoveAsync(Guid id);
 
-        Task<ApiResponse<List<VehicleAssignmentGetDTO>>> GetAllAsync();
+        Task<ApiResponse<PagedResult<VehicleAssignmentGetDTO>>> GetAllAsync(
+            VehicleAssignmentQueryParameters parameters);
 
-        Task<ApiResponse<List<VehicleAssignmentGetDTO>>> GetDeletedAsync();
+        Task<ApiResponse<PagedResult<VehicleAssignmentGetDTO>>> GetDeletedAsync(
+            VehicleAssignmentQueryParameters parameters);
 
         Task<ApiResponse<VehicleAssignmentGetDTO>> GetAsync(Guid id);
 

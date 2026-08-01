@@ -1,4 +1,5 @@
-﻿using Drivious.DTOs.Insurance;
+﻿using Drivious.DTOs.Common;
+using Drivious.DTOs.Insurance;
 using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
@@ -9,9 +10,9 @@ namespace Drivious.Services.Interfaces
 
         Task<ApiResponse> RemoveAsync(Guid id);
 
-        Task<ApiResponse<List<InsuranceGetDTO>>> GetAllAsync();
+        Task<ApiResponse<PagedResult<InsuranceGetDTO>>> GetAllAsync(InsuranceQueryParameters parameters);
 
-        Task<ApiResponse<List<InsuranceGetDTO>>> GetDeletedAsync();
+        Task<ApiResponse<PagedResult<InsuranceGetDTO>>> GetDeletedAsync(InsuranceQueryParameters parameters);
 
         Task<ApiResponse<InsuranceGetDTO>> GetAsync(Guid id);
 

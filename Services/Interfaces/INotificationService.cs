@@ -1,4 +1,5 @@
-﻿using Drivious.DTOs.Notification;
+﻿using Drivious.DTOs.Common;
+using Drivious.DTOs.Notification;
 using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
@@ -9,9 +10,9 @@ namespace Drivious.Services.Interfaces
 
         Task<ApiResponse> RemoveAsync(Guid id);
 
-        Task<ApiResponse<List<NotificationGetDTO>>> GetAllAsync();
+        Task<ApiResponse<PagedResult<NotificationGetDTO>>> GetAllAsync(NotificationQueryParameters parameters);
 
-        Task<ApiResponse<List<NotificationGetDTO>>> GetDeletedAsync();
+        Task<ApiResponse<PagedResult<NotificationGetDTO>>> GetDeletedAsync(NotificationQueryParameters parameters);
 
         Task<ApiResponse<NotificationGetDTO>> GetAsync(Guid id);
 

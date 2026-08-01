@@ -1,4 +1,5 @@
-﻿using Drivious.DTOs.VehicleDocument;
+﻿using Drivious.DTOs.Common;
+using Drivious.DTOs.VehicleDocument;
 using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
@@ -9,9 +10,11 @@ namespace Drivious.Services.Interfaces
 
         Task<ApiResponse> RemoveAsync(Guid id);
 
-        Task<ApiResponse<List<VehicleDocumentGetDTO>>> GetAllAsync();
+        Task<ApiResponse<PagedResult<VehicleDocumentGetDTO>>> GetAllAsync(
+            VehicleDocumentQueryParameters parameters);
 
-        Task<ApiResponse<List<VehicleDocumentGetDTO>>> GetDeletedAsync();
+        Task<ApiResponse<PagedResult<VehicleDocumentGetDTO>>> GetDeletedAsync(
+            VehicleDocumentQueryParameters parameters);
 
         Task<ApiResponse<VehicleDocumentGetDTO>> GetAsync(Guid id);
 

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.FuelLog;
+using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -20,6 +23,35 @@ namespace Drivious.Services.Implements
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<FuelLog, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<FuelLog, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["fuelDate"] = x => x.FuelDate,
+                ["liters"] = x => x.Liters,
+                ["price"] = x => x.Price,
+                ["mileage"] = x => x.Mileage,
+                ["stationName"] = x => x.StationName,
+                ["plateNumber"] = x => x.Vehicle.PlateNumber,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<FuelLog> BuildQuery(FuelLogQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.FuelLogs
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.VehicleId.HasValue, x => x.VehicleId == parameters.VehicleId!.Value)
+                .WhereIf(parameters.From.HasValue, x => x.FuelDate >= parameters.From!.Value)
+                .WhereIf(parameters.To.HasValue, x => x.FuelDate <= parameters.To!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => x.StationName.Contains(search!)
+                      || x.Vehicle.PlateNumber.Contains(search!))
+                .ApplySort(parameters, Sortable, "fuelDate");
         }
 
         public async Task<ApiResponse> CreateAsync(FuelLogCreateDTO dto)
@@ -64,33 +96,27 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<FuelLogGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<FuelLogGetDTO>>> GetAllAsync(FuelLogQueryParameters parameters)
         {
-            // Projected in the database so the vehicle columns the DTO carries are
-            // resolved by a join; mapping loaded entities would leave them null.
-            var dtos = await _context.FuelLogs
-                .Where(x => !x.IsDeleted)
-                .ProjectTo<FuelLogGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<FuelLog, FuelLogGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<FuelLogGetDTO>>(
+            return new ApiResponse<PagedResult<FuelLogGetDTO>>(
                 true,
                 "Fuel logs retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<FuelLogGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<FuelLogGetDTO>>> GetDeletedAsync(FuelLogQueryParameters parameters)
         {
-            var dtos = await _context.FuelLogs
-                .Where(x => x.IsDeleted)
-                .ProjectTo<FuelLogGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<FuelLog, FuelLogGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<FuelLogGetDTO>>(
+            return new ApiResponse<PagedResult<FuelLogGetDTO>>(
                 true,
                 "Deleted fuel logs retrieved successfully.",
-                dtos
+                page
             );
         }
 

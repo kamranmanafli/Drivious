@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.VehicleDocument;
 using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -36,6 +38,35 @@ namespace Drivious.Services.Implements
             if (request == null || string.IsNullOrEmpty(fileName)) return null;
 
             return $"{request.Scheme}://{request.Host}/Files/VehicleDocuments/{fileName}";
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<VehicleDocument, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<VehicleDocument, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["title"] = x => x.Title,
+                ["documentType"] = x => x.DocumentType,
+                ["uploadDate"] = x => x.UploadDate,
+                ["expiryDate"] = x => x.ExpiryDate,
+                ["plateNumber"] = x => x.Vehicle.PlateNumber,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<VehicleDocument> BuildQuery(
+            VehicleDocumentQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.VehicleDocuments
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.VehicleId.HasValue, x => x.VehicleId == parameters.VehicleId!.Value)
+                .WhereIf(parameters.DocumentType.HasValue,
+                    x => x.DocumentType == parameters.DocumentType!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => x.Title.Contains(search!)
+                      || x.Vehicle.PlateNumber.Contains(search!))
+                .ApplySort(parameters, Sortable, "uploadDate");
         }
 
         public async Task<ApiResponse> CreateAsync(VehicleDocumentCreateDTO dto)
@@ -86,33 +117,31 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<VehicleDocumentGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<VehicleDocumentGetDTO>>> GetAllAsync(
+            VehicleDocumentQueryParameters parameters)
         {
-            // Projected in the database so the vehicle columns the DTO carries are
-            // resolved by a join; mapping loaded entities would leave them null.
-            var dtos = await _context.VehicleDocuments
-                .Where(x => !x.IsDeleted)
-                .ProjectTo<VehicleDocumentGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<VehicleDocument, VehicleDocumentGetDTO>(
+                    parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<VehicleDocumentGetDTO>>(
+            return new ApiResponse<PagedResult<VehicleDocumentGetDTO>>(
                 true,
                 "Vehicle documents retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<VehicleDocumentGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<VehicleDocumentGetDTO>>> GetDeletedAsync(
+            VehicleDocumentQueryParameters parameters)
         {
-            var dtos = await _context.VehicleDocuments
-                .Where(x => x.IsDeleted)
-                .ProjectTo<VehicleDocumentGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<VehicleDocument, VehicleDocumentGetDTO>(
+                    parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<VehicleDocumentGetDTO>>(
+            return new ApiResponse<PagedResult<VehicleDocumentGetDTO>>(
                 true,
                 "Deleted vehicle documents retrieved successfully.",
-                dtos
+                page
             );
         }
 

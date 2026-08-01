@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.Driver;
 using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -35,6 +37,36 @@ namespace Drivious.Services.Implements
             if (request == null || string.IsNullOrEmpty(fileName)) return null;
 
             return $"{request.Scheme}://{request.Host}/Images/Driver/{fileName}";
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<Driver, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<Driver, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["firstName"] = x => x.FirstName,
+                ["lastName"] = x => x.LastName,
+                ["licenseExpireDate"] = x => x.LicenseExpireDate,
+                ["hireDate"] = x => x.HireDate,
+                ["isActive"] = x => x.IsActive,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<Driver> BuildQuery(DriverQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.Drivers
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.IsActive.HasValue, x => x.IsActive == parameters.IsActive!.Value)
+                .WhereIf(parameters.LicenseExpiresBefore.HasValue,
+                    x => x.LicenseExpireDate <= parameters.LicenseExpiresBefore!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => x.FirstName.Contains(search!)
+                      || x.LastName.Contains(search!)
+                      || x.PhoneNumber.Contains(search!)
+                      || x.Email.Contains(search!))
+                .ApplySort(parameters, Sortable, "createdAt");
         }
 
         public async Task<ApiResponse> CreateAsync(DriverCreateDTO dto)
@@ -73,35 +105,27 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<DriverGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<DriverGetDTO>>> GetAllAsync(DriverQueryParameters parameters)
         {
-            var drivers = await _context.Drivers
-                .AsNoTracking()
-                .Where(x => !x.IsDeleted)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<Driver, DriverGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            var dtos = _mapper.Map<List<DriverGetDTO>>(drivers);
-
-            return new ApiResponse<List<DriverGetDTO>>(
+            return new ApiResponse<PagedResult<DriverGetDTO>>(
                 true,
                 "Drivers retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<DriverGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<DriverGetDTO>>> GetDeletedAsync(DriverQueryParameters parameters)
         {
-            var drivers = await _context.Drivers
-                .AsNoTracking()
-                .Where(x => x.IsDeleted)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<Driver, DriverGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            var dtos = _mapper.Map<List<DriverGetDTO>>(drivers);
-
-            return new ApiResponse<List<DriverGetDTO>>(
+            return new ApiResponse<PagedResult<DriverGetDTO>>(
                 true,
                 "Deleted drivers retrieved successfully.",
-                dtos
+                page
             );
         }
 

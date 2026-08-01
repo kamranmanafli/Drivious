@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.Expense;
+using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -20,6 +23,36 @@ namespace Drivious.Services.Implements
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<Expense, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<Expense, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["amount"] = x => x.Amount,
+                ["category"] = x => x.Category,
+                ["expenseDate"] = x => x.ExpenseDate,
+                ["plateNumber"] = x => x.Vehicle.PlateNumber,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<Expense> BuildQuery(ExpenseQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.Expenses
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.VehicleId.HasValue, x => x.VehicleId == parameters.VehicleId!.Value)
+                .WhereIf(parameters.Category.HasValue, x => x.Category == parameters.Category!.Value)
+                .WhereIf(parameters.From.HasValue, x => x.ExpenseDate >= parameters.From!.Value)
+                .WhereIf(parameters.To.HasValue, x => x.ExpenseDate <= parameters.To!.Value)
+                .WhereIf(parameters.MinAmount.HasValue, x => x.Amount >= parameters.MinAmount!.Value)
+                .WhereIf(parameters.MaxAmount.HasValue, x => x.Amount <= parameters.MaxAmount!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => x.Description.Contains(search!)
+                      || x.Vehicle.PlateNumber.Contains(search!))
+                .ApplySort(parameters, Sortable, "expenseDate");
         }
 
         public async Task<ApiResponse> CreateAsync(ExpenseCreateDTO dto)
@@ -61,33 +94,27 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<ExpenseGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<ExpenseGetDTO>>> GetAllAsync(ExpenseQueryParameters parameters)
         {
-            // Projected in the database so the vehicle columns the DTO carries are
-            // resolved by a join; mapping loaded entities would leave them null.
-            var dtos = await _context.Expenses
-                .Where(x => !x.IsDeleted)
-                .ProjectTo<ExpenseGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<Expense, ExpenseGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<ExpenseGetDTO>>(
+            return new ApiResponse<PagedResult<ExpenseGetDTO>>(
                 true,
                 "Expenses retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<ExpenseGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<ExpenseGetDTO>>> GetDeletedAsync(ExpenseQueryParameters parameters)
         {
-            var dtos = await _context.Expenses
-                .Where(x => x.IsDeleted)
-                .ProjectTo<ExpenseGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<Expense, ExpenseGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<ExpenseGetDTO>>(
+            return new ApiResponse<PagedResult<ExpenseGetDTO>>(
                 true,
                 "Deleted expenses retrieved successfully.",
-                dtos
+                page
             );
         }
 

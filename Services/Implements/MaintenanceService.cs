@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.Maintenance;
+using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -20,6 +23,40 @@ namespace Drivious.Services.Implements
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<Maintenance, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<Maintenance, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["serviceType"] = x => x.ServiceType,
+                ["cost"] = x => x.Cost,
+                ["maintenanceDate"] = x => x.MaintenanceDate,
+                ["nextMaintenanceDate"] = x => x.NextMaintenanceDate,
+                ["mileage"] = x => x.Mileage,
+                ["serviceCenter"] = x => x.ServiceCenter,
+                ["plateNumber"] = x => x.Vehicle.PlateNumber,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<Maintenance> BuildQuery(MaintenanceQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.Maintenances
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.VehicleId.HasValue, x => x.VehicleId == parameters.VehicleId!.Value)
+                .WhereIf(parameters.ServiceType.HasValue, x => x.ServiceType == parameters.ServiceType!.Value)
+                .WhereIf(parameters.From.HasValue, x => x.MaintenanceDate >= parameters.From!.Value)
+                .WhereIf(parameters.To.HasValue, x => x.MaintenanceDate <= parameters.To!.Value)
+                .WhereIf(parameters.DueBefore.HasValue,
+                    x => x.NextMaintenanceDate != null && x.NextMaintenanceDate <= parameters.DueBefore!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => x.ServiceCenter.Contains(search!)
+                      || (x.Description != null && x.Description.Contains(search!))
+                      || x.Vehicle.PlateNumber.Contains(search!))
+                .ApplySort(parameters, Sortable, "maintenanceDate");
         }
 
         public async Task<ApiResponse> CreateAsync(MaintenanceCreateDTO dto)
@@ -64,33 +101,27 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<MaintenanceGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<MaintenanceGetDTO>>> GetAllAsync(MaintenanceQueryParameters parameters)
         {
-            // Projected in the database so the vehicle columns the DTO carries are
-            // resolved by a join; mapping loaded entities would leave them null.
-            var dtos = await _context.Maintenances
-                .Where(x => !x.IsDeleted)
-                .ProjectTo<MaintenanceGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<Maintenance, MaintenanceGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<MaintenanceGetDTO>>(
+            return new ApiResponse<PagedResult<MaintenanceGetDTO>>(
                 true,
                 "Maintenances retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<MaintenanceGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<MaintenanceGetDTO>>> GetDeletedAsync(MaintenanceQueryParameters parameters)
         {
-            var dtos = await _context.Maintenances
-                .Where(x => x.IsDeleted)
-                .ProjectTo<MaintenanceGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<Maintenance, MaintenanceGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<MaintenanceGetDTO>>(
+            return new ApiResponse<PagedResult<MaintenanceGetDTO>>(
                 true,
                 "Deleted maintenances retrieved successfully.",
-                dtos
+                page
             );
         }
 

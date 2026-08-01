@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Drivious.Data;
+using Drivious.DTOs.Common;
 using Drivious.DTOs.Income;
+using Drivious.Extensions;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Drivious.Services.Implements
 {
@@ -20,6 +23,36 @@ namespace Drivious.Services.Implements
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        // Only these fields can be ordered by. Building an expression from an arbitrary
+        // caller-supplied name would put user input into the query itself.
+        private static readonly IReadOnlyDictionary<string, Expression<Func<Income, object?>>> Sortable =
+            new Dictionary<string, Expression<Func<Income, object?>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["amount"] = x => x.Amount,
+                ["incomeDate"] = x => x.IncomeDate,
+                ["plateNumber"] = x => x.Vehicle.PlateNumber,
+                ["driver"] = x => x.Driver.FirstName,
+                ["createdAt"] = x => x.CreatedAt
+            };
+
+        private IQueryable<Income> BuildQuery(IncomeQueryParameters parameters, bool deleted)
+        {
+            var search = parameters.Search?.Trim();
+
+            return _context.Incomes
+                .Where(x => x.IsDeleted == deleted)
+                .WhereIf(parameters.VehicleId.HasValue, x => x.VehicleId == parameters.VehicleId!.Value)
+                .WhereIf(parameters.DriverId.HasValue, x => x.DriverId == parameters.DriverId!.Value)
+                .WhereIf(parameters.From.HasValue, x => x.IncomeDate >= parameters.From!.Value)
+                .WhereIf(parameters.To.HasValue, x => x.IncomeDate <= parameters.To!.Value)
+                .WhereIf(parameters.MinAmount.HasValue, x => x.Amount >= parameters.MinAmount!.Value)
+                .WhereIf(parameters.MaxAmount.HasValue, x => x.Amount <= parameters.MaxAmount!.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(search),
+                    x => (x.Description != null && x.Description.Contains(search!))
+                      || x.Vehicle.PlateNumber.Contains(search!))
+                .ApplySort(parameters, Sortable, "incomeDate");
         }
 
         public async Task<ApiResponse> CreateAsync(IncomeCreateDTO dto)
@@ -61,33 +94,27 @@ namespace Drivious.Services.Implements
             );
         }
 
-        public async Task<ApiResponse<List<IncomeGetDTO>>> GetAllAsync()
+        public async Task<ApiResponse<PagedResult<IncomeGetDTO>>> GetAllAsync(IncomeQueryParameters parameters)
         {
-            // Projected in the database so the vehicle and driver columns the DTO
-            // carries are resolved by a join; mapping loaded entities leaves them null.
-            var dtos = await _context.Incomes
-                .Where(x => !x.IsDeleted)
-                .ProjectTo<IncomeGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: false)
+                .ToPagedResultAsync<Income, IncomeGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<IncomeGetDTO>>(
+            return new ApiResponse<PagedResult<IncomeGetDTO>>(
                 true,
                 "Incomes retrieved successfully.",
-                dtos
+                page
             );
         }
 
-        public async Task<ApiResponse<List<IncomeGetDTO>>> GetDeletedAsync()
+        public async Task<ApiResponse<PagedResult<IncomeGetDTO>>> GetDeletedAsync(IncomeQueryParameters parameters)
         {
-            var dtos = await _context.Incomes
-                .Where(x => x.IsDeleted)
-                .ProjectTo<IncomeGetDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var page = await BuildQuery(parameters, deleted: true)
+                .ToPagedResultAsync<Income, IncomeGetDTO>(parameters, _mapper.ConfigurationProvider);
 
-            return new ApiResponse<List<IncomeGetDTO>>(
+            return new ApiResponse<PagedResult<IncomeGetDTO>>(
                 true,
                 "Deleted incomes retrieved successfully.",
-                dtos
+                page
             );
         }
 

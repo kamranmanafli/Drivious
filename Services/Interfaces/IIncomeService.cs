@@ -1,4 +1,5 @@
-﻿using Drivious.DTOs.Income;
+﻿using Drivious.DTOs.Common;
+using Drivious.DTOs.Income;
 using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
@@ -9,9 +10,9 @@ namespace Drivious.Services.Interfaces
 
         Task<ApiResponse> RemoveAsync(Guid id);
 
-        Task<ApiResponse<List<IncomeGetDTO>>> GetAllAsync();
+        Task<ApiResponse<PagedResult<IncomeGetDTO>>> GetAllAsync(IncomeQueryParameters parameters);
 
-        Task<ApiResponse<List<IncomeGetDTO>>> GetDeletedAsync();
+        Task<ApiResponse<PagedResult<IncomeGetDTO>>> GetDeletedAsync(IncomeQueryParameters parameters);
 
         Task<ApiResponse<IncomeGetDTO>> GetAsync(Guid id);
 
