@@ -2,6 +2,7 @@ using Drivious.Data;
 using Drivious.Mappings;
 using Drivious.Middlewares;
 using Drivious.Models;
+using Drivious.Services.Background;
 using Drivious.Services.Implements;
 using Drivious.Services.Interfaces;
 using Drivious.Validators.Driver;
@@ -178,6 +179,12 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INotificationGenerator, NotificationGenerator>();
+
+builder.Services.Configure<NotificationSettings>(
+    builder.Configuration.GetSection("Notifications"));
+
+builder.Services.AddHostedService<NotificationScanService>();
 
 var app = builder.Build();
 

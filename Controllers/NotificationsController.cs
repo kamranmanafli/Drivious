@@ -1,5 +1,6 @@
 ﻿using Drivious.DTOs.Notification;
 using Drivious.Constants;
+using Drivious.Responses;
 using Drivious.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,28 @@ namespace Drivious.Controllers
     public class NotificationsController : ControllerBase
     {
         private readonly INotificationService _service;
+        private readonly INotificationGenerator _generator;
 
-        public NotificationsController(INotificationService service)
+        public NotificationsController(
+            INotificationService service,
+            INotificationGenerator generator)
         {
             _service = service;
+            _generator = generator;
+        }
+
+        /// <summary>
+        /// Runs the expiry scan immediately instead of waiting for the background
+        /// pass. Creating nothing is a normal result: it means every warning that
+        /// applies already exists.
+        /// </summary>
+        [Authorize(Roles = AppRoles.ManageFleet)]
+        [HttpPost("scan")]
+        public async Task<IActionResult> Scan(CancellationToken cancellationToken)
+        {
+            var created = await _generator.GenerateAsync(cancellationToken);
+
+            return Ok(new ApiResponse(true, $"Scan complete. {created} notification(s) created."));
         }
 
         [Authorize(Roles = AppRoles.ManageFleet)]
