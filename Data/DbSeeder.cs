@@ -1,23 +1,31 @@
 using Drivious.Constants;
 using Drivious.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Drivious.Data
 {
     public static class DbSeeder
     {
         /// <summary>
-        /// Creates the application roles, and the first administrator when one is
-        /// configured. Safe to run on every start: everything here is idempotent.
+        /// Brings the database up to the latest migration, then creates the
+        /// application roles and the first administrator when one is configured.
+        /// Safe to run on every start: everything here is idempotent.
         /// </summary>
         public static async Task SeedAsync(IServiceProvider services)
         {
             using var scope = services.CreateScope();
 
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Seed");
             var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            // On a machine that has never run this API there is no database yet, and
+            // everything below would fail against it. Applying migrations first makes
+            // a fresh checkout start on its own.
+            await context.Database.MigrateAsync();
 
             foreach (var role in AppRoles.All)
             {
