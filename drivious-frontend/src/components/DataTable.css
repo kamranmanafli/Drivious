@@ -1,0 +1,87 @@
+.dt {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dt-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dt-search {
+  flex: 1;
+  max-width: 320px;
+  padding: 8px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.dt-count {
+  color: #667085;
+  font-size: 14px;
+}
+
+.dt-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #fef3f2;
+  color: #b42318;
+}
+
+/* Keeps a wide table inside its own scroller instead of pushing the page sideways. */
+.dt-scroll {
+  overflow-x: auto;
+}
+
+.dt table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.dt th,
+.dt td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eaecf0;
+  text-align: left;
+}
+
+.dt th {
+  font-size: 13px;
+  color: #667085;
+  font-weight: 600;
+}
+
+.dt-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.dt-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.dt-pager {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dt-pager button {
+  padding: 6px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.dt-pager button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

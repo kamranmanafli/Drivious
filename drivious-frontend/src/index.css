@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #101828;
+  background: #f9fafb;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  padding: 20px 16px;
+  background: #101828;
+  color: #fff;
+}
+
+.sidebar h1 {
+  margin: 0 0 24px;
+  font-size: 20px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar a {
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #d0d5dd;
+  text-decoration: none;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #1d2939;
+  color: #fff;
+}
+
+.sidebar footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #1d2939;
+  font-size: 13px;
+  color: #98a2b3;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 28px;
+  min-width: 0;
+}
+
+.content h2 {
+  margin: 0 0 20px;
+}
+
+button.primary {
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: #175cd3;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.login {
+  max-width: 340px;
+  margin: 12vh auto;
+  padding: 28px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1);
+}
+
+.login label {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+.login input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.error {
+  margin: 0 0 14px;
+  color: #b42318;
+  font-size: 14px;
+}
