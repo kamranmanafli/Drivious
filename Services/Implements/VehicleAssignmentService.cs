@@ -16,13 +16,33 @@ namespace Drivious.Services.Implements
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
         public VehicleAssignmentService(
             AppDbContext context,
-            IMapper mapper)
+            IMapper mapper,
+            ICurrentUser currentUser)
         {
             _context = context;
             _mapper = mapper;
+            _currentUser = currentUser;
+        }
+
+        /// <summary>
+        /// A driver may read the handovers made to them, not the whole fleet's. An
+        /// account in the driver role that is not linked to a driver record matches
+        /// nothing, which is the safe answer rather than everything.
+        /// </summary>
+        private IQueryable<VehicleAssignment> RestrictToCaller(IQueryable<VehicleAssignment> query)
+        {
+            if (!_currentUser.IsDriverOnly)
+            {
+                return query;
+            }
+
+            var driverId = _currentUser.DriverId ?? Guid.Empty;
+
+            return query.Where(x => x.DriverId == driverId);
         }
 
         // Only these fields can be ordered by. Building an expression from an arbitrary
@@ -43,7 +63,7 @@ namespace Drivious.Services.Implements
         {
             var search = parameters.Search?.Trim();
 
-            return _context.VehicleAssignments
+            return RestrictToCaller(_context.VehicleAssignments)
                 .Where(x => x.IsDeleted == deleted)
                 .WhereIf(parameters.VehicleId.HasValue, x => x.VehicleId == parameters.VehicleId!.Value)
                 .WhereIf(parameters.DriverId.HasValue, x => x.DriverId == parameters.DriverId!.Value)
@@ -169,7 +189,9 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<VehicleAssignmentGetDTO>> GetAsync(Guid id)
         {
-            var dto = await _context.VehicleAssignments
+            // Restricted here too - otherwise a driver could read someone else's
+            // handover simply by asking for the id directly.
+            var dto = await RestrictToCaller(_context.VehicleAssignments)
                 .Where(x => x.Id == id && !x.IsDeleted)
                 .ProjectTo<VehicleAssignmentGetDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();

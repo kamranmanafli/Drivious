@@ -16,13 +16,33 @@ namespace Drivious.Services.Implements
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
         public IncomeService(
             AppDbContext context,
-            IMapper mapper)
+            IMapper mapper,
+            ICurrentUser currentUser)
         {
             _context = context;
             _mapper = mapper;
+            _currentUser = currentUser;
+        }
+
+        /// <summary>
+        /// A driver may read the earnings they brought in, not the whole fleet's. An
+        /// account in the driver role that is not linked to a driver record matches
+        /// nothing, which is the safe answer rather than everything.
+        /// </summary>
+        private IQueryable<Income> RestrictToCaller(IQueryable<Income> query)
+        {
+            if (!_currentUser.IsDriverOnly)
+            {
+                return query;
+            }
+
+            var driverId = _currentUser.DriverId ?? Guid.Empty;
+
+            return query.Where(x => x.DriverId == driverId);
         }
 
         // Only these fields can be ordered by. Building an expression from an arbitrary
@@ -41,7 +61,7 @@ namespace Drivious.Services.Implements
         {
             var search = parameters.Search?.Trim();
 
-            return _context.Incomes
+            return RestrictToCaller(_context.Incomes)
                 .Where(x => x.IsDeleted == deleted)
                 .WhereIf(parameters.VehicleId.HasValue, x => x.VehicleId == parameters.VehicleId!.Value)
                 .WhereIf(parameters.DriverId.HasValue, x => x.DriverId == parameters.DriverId!.Value)
@@ -120,7 +140,9 @@ namespace Drivious.Services.Implements
 
         public async Task<ApiResponse<IncomeGetDTO>> GetAsync(Guid id)
         {
-            var dto = await _context.Incomes
+            // Restricted here too - otherwise a driver could read someone else's
+            // earnings simply by asking for the id directly.
+            var dto = await RestrictToCaller(_context.Incomes)
                 .Where(x => x.Id == id && !x.IsDeleted)
                 .ProjectTo<IncomeGetDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
