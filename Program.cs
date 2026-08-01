@@ -57,6 +57,30 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MappingProfile).Assembly));
 builder.Services.AddHttpContextAccessor();
 
+// The browser blocks every cross-origin call unless the API answers with these
+// headers, so the front end cannot reach the API without a policy here. Origins
+// are listed explicitly - a wildcard cannot be combined with credentials.
+const string CorsPolicy = "DriviousCors";
+
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? Array.Empty<string>();
+
+if (allowedOrigins.Length == 0)
+{
+    throw new InvalidOperationException(
+        "Cors:AllowedOrigins is empty. List the front end origins that may call this API, " +
+        "for example [ \"http://localhost:5173\" ].");
+}
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicy, policy => policy
+        .WithOrigins(allowedOrigins)
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials());
+});
+
 // Secrets live in user-secrets (dev) or environment variables (prod), never in appsettings.json.
 // Fail fast with an actionable message instead of crashing deep inside EF or the token handler.
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()
@@ -169,6 +193,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Before the static files so uploaded images and documents are also fetchable
+// from the front end origin.
+app.UseCors(CorsPolicy);
 
 app.UseStaticFiles();
 
