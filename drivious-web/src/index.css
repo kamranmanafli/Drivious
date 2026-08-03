@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* The theme is driven by a class on <html>, not by the media query alone, so the
+   manual toggle can override the operating system preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Design tokens — "clean & precise"
+
+   One accent colour, near-neutral greys with a faint blue cast, and borders
+   instead of shadows. Every surface is one of four steps so a nested panel is
+   still readable against its parent. Values are oklch: it keeps the perceived
+   lightness even across hues, which is what stops status colours from looking
+   louder than one another.
+   ──────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.18 0.012 264);
+
+    --surface: oklch(1 0 0);
+    --surface-raised: oklch(0.985 0.002 264);
+    --surface-sunken: oklch(0.975 0.003 264);
+
+    --muted: oklch(0.968 0.003 264);
+    --muted-foreground: oklch(0.5 0.014 264);
+
+    --border: oklch(0.918 0.005 264);
+    --border-strong: oklch(0.86 0.007 264);
+
+    --primary: oklch(0.51 0.19 262);
+    --primary-foreground: oklch(0.99 0 0);
+    --primary-muted: oklch(0.955 0.02 262);
+
+    --success: oklch(0.58 0.14 152);
+    --success-muted: oklch(0.955 0.03 152);
+    --warning: oklch(0.68 0.15 72);
+    --warning-muted: oklch(0.96 0.04 82);
+    --danger: oklch(0.56 0.2 26);
+    --danger-muted: oklch(0.96 0.03 26);
+    --info: oklch(0.58 0.14 235);
+    --info-muted: oklch(0.955 0.03 235);
+
+    --ring: oklch(0.51 0.19 262);
+
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: oklch(0.165 0.008 265);
+    --foreground: oklch(0.97 0.003 264);
+
+    --surface: oklch(0.196 0.009 265);
+    --surface-raised: oklch(0.225 0.01 265);
+    --surface-sunken: oklch(0.15 0.008 265);
+
+    --muted: oklch(0.245 0.011 265);
+    --muted-foreground: oklch(0.68 0.014 264);
+
+    --border: oklch(0.275 0.011 265);
+    --border-strong: oklch(0.35 0.013 265);
+
+    --primary: oklch(0.64 0.17 262);
+    --primary-foreground: oklch(0.14 0.01 265);
+    --primary-muted: oklch(0.28 0.05 262);
+
+    --success: oklch(0.7 0.15 152);
+    --success-muted: oklch(0.27 0.05 152);
+    --warning: oklch(0.78 0.15 78);
+    --warning-muted: oklch(0.29 0.05 78);
+    --danger: oklch(0.66 0.19 26);
+    --danger-muted: oklch(0.29 0.06 26);
+    --info: oklch(0.7 0.13 235);
+    --info-muted: oklch(0.28 0.05 235);
+
+    --ring: oklch(0.64 0.17 262);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-muted: var(--primary-muted);
+
+  --color-success: var(--success);
+  --color-success-muted: var(--success-muted);
+  --color-warning: var(--warning);
+  --color-warning-muted: var(--warning-muted);
+  --color-danger: var(--danger);
+  --color-danger-muted: var(--danger-muted);
+  --color-info: var(--info);
+  --color-info-muted: var(--info-muted);
+
+  --color-ring: var(--ring);
+
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 0.25rem);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Slightly tighter than the Tailwind defaults. Dense tables read better when
+     the type does not have to travel as far vertically. */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.1rem;
+  --text-sm: 0.8125rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.375rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Tabular figures everywhere a number is compared against another number —
+     without them a column of prices jitters as the digits change width. */
+  .tnum,
+  table td,
+  table th {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--primary-muted);
+  }
+
+  /* Thin scrollbars keep a dense table from losing 15px of width to chrome. */
+  @supports (scrollbar-width: thin) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-strong) transparent;
+    }
+  }
+}
+
+@layer utilities {
+  /* Respects the iPhone home indicator, so the driver app's bottom navigation
+     is not half-covered by it. */
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+
+  .h-safe-bottom {
+    height: max(env(safe-area-inset-bottom), 0px);
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
