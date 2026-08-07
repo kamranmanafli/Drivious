@@ -46,3 +46,6 @@ packages/
 *.swp
 Thumbs.db
 .DS_Store
+
+## Agent workspace
+.claude/
