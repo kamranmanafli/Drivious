@@ -75,6 +75,20 @@ namespace Drivious.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// Lists the accounts an administrator manages. Without it there is no way to
+        /// discover which users exist - assign-role and link-driver both take a user
+        /// name the caller has to already know.
+        /// </summary>
+        [Authorize(Roles = AppRoles.Admin)]
+        [HttpGet("users")]
+        public async Task<IActionResult> Users([FromQuery] UserQueryParameters parameters)
+        {
+            var result = await _authService.GetUsersAsync(parameters);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
         [Authorize(Roles = AppRoles.Admin)]
         [HttpPost("assign-role")]
         public async Task<IActionResult> AssignRole(AssignRoleDTO dto)

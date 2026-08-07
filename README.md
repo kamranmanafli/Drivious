@@ -1,14 +1,31 @@
-# Drivious API
+# Drivious
 
-## Live Demo
+Fleet management for vehicles, drivers, assignments, costs and automatic expiry
+warnings. An ASP.NET Core 8 API with a React front end on top of it.
 
-Frontend: https://drivious-web.vercel.app/
+## Live demo
 
-Fleet management REST API — vehicles, drivers, assignments, costs and automatic
-expiry warnings.
+| | |
+|---|---|
+| Site | <https://drivious-web.vercel.app> |
+| API | <http://drivious.runasp.net> |
+
+Register at `/register` to try it. The Driver role is open to anyone; Manager and
+Admin ask for an invite code. A driver signing up sees the mobile shell, and an
+administrator can link that account to a driver record so the driver's vehicle
+and earnings appear on it.
+
+The API is served over plain http, so the site proxies `/api`, `/Images` and
+`/Files` through its own origin — see `drivious-web/vercel.json`. Nothing in the
+browser is cross-origin, which keeps mixed content and CORS out of the picture.
+The first request after an idle period wakes the free host and can take a few
+seconds.
+
+---
 
 Built with ASP.NET Core 8, Entity Framework Core (SQL Server), ASP.NET Identity
-with JWT, AutoMapper, FluentValidation and Swagger.
+with JWT, AutoMapper, FluentValidation and Swagger. The front end is React 18,
+TypeScript, Vite 6 and Tailwind 4.
 
 ---
 
@@ -58,6 +75,39 @@ dotnet run
 
 Migrations are applied automatically at startup, so a fresh machine only needs a
 reachable SQL Server. Swagger UI is served at `/swagger` in development.
+
+---
+
+## Front end
+
+`drivious-web/` is the front end: React 18, TypeScript, Vite 6, Tailwind 4, in
+Azerbaijani. One project serves two shells — a desktop console for Admin and
+Manager, a mobile driver app for Driver — and the role on the login decides which
+one opens. `drivious-web/TEHVIL.md` describes the screens in detail.
+
+In a second terminal, with the API already running:
+
+```bash
+cd drivious-web
+npm install
+npm run dev
+```
+
+It serves <http://localhost:5173>, an origin already listed in
+`Cors:AllowedOrigins`. Change the port and you must add the new origin there too,
+or the browser blocks every request.
+
+`drivious-web/.env` points the client at the API and is set up for the default
+`http` launch profile. That is the only setting it needs — every request goes
+straight to this API.
+
+`/register` creates an account through `POST /api/auths/register` and signs in
+with it. Self-registration always lands in the Driver role, so the first
+administrator comes from the seeded account instead (see Configuration), and
+promotes others from `/admin/users`.
+
+`drivious-frontend/` is an earlier prototype covering login and a vehicle list.
+It is kept for reference and is not part of the working application.
 
 ---
 
@@ -128,6 +178,7 @@ Additional endpoints:
 | `PATCH` | `/api/vehicleassignments/return/{id}` | Records a vehicle coming back. |
 | `POST` | `/api/auths/register`, `login`, `refresh`, `logout`, `change-password`, `assign-role`, `link-driver` | |
 | `GET` | `/api/auths/me` | The current account and its roles. |
+| `GET` | `/api/auths/users` | Admin only. The account list with its roles and linked drivers, paged, searchable by user name or email and filterable by `role`. |
 
 ### Deleting
 
@@ -220,6 +271,9 @@ Mappings/       AutoMapper profile
 Middlewares/    Exception handling
 Extensions/     Query and file helpers
 Migrations/     EF migrations
+
+drivious-web/       The front end (see below)
+drivious-frontend/  An earlier prototype, superseded
 ```
 
 ---

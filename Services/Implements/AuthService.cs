@@ -1,6 +1,7 @@
 using Drivious.Constants;
 using Drivious.Data;
 using Drivious.DTOs.Auth;
+using Drivious.DTOs.Common;
 using Drivious.Models;
 using Drivious.Responses;
 using Drivious.Services.Interfaces;
@@ -16,19 +17,73 @@ namespace Drivious.Services.Implements
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenService _tokenService;
+        private readonly IConfiguration _configuration;
 
         public AuthService(
             AppDbContext context,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _tokenService = tokenService;
+            _configuration = configuration;
+        }
+
+        /// <summary>
+        /// Decides which role a registration may open the account in.
+        /// </summary>
+        /// <remarks>
+        /// Driver is free to take. Anything above it needs the invite code, because
+        /// this endpoint is anonymous — without that check the address of the site
+        /// would be enough for a stranger to make themselves an administrator.
+        /// The comparison is length-checked and fixed-time so a wrong code leaks
+        /// neither its length nor how much of it was right.
+        /// </remarks>
+        private (bool Allowed, string Role, string? Error) ResolveRegistrationRole(RegisterDTO dto)
+        {
+            var requested = string.IsNullOrWhiteSpace(dto.Role) ? AppRoles.Driver : dto.Role.Trim();
+
+            var role = AppRoles.All.FirstOrDefault(
+                x => x.Equals(requested, StringComparison.OrdinalIgnoreCase));
+
+            if (role == null)
+            {
+                return (false, AppRoles.Driver,
+                    $"Role '{requested}' does not exist. Valid roles: {string.Join(", ", AppRoles.All)}.");
+            }
+
+            if (role.Equals(AppRoles.Driver, StringComparison.Ordinal))
+            {
+                return (true, role, null);
+            }
+
+            var expected = _configuration["Registration:InviteCode"];
+
+            // No code configured means elevated self-registration is simply closed,
+            // rather than open to everyone.
+            if (string.IsNullOrWhiteSpace(expected) || !CodeMatches(dto.InviteCode, expected))
+            {
+                return (false, role, "Invite code is not valid.");
+            }
+
+            return (true, role, null);
+        }
+
+        private static bool CodeMatches(string? provided, string expected)
+        {
+            if (string.IsNullOrEmpty(provided)) return false;
+
+            var a = System.Text.Encoding.UTF8.GetBytes(provided);
+            var b = System.Text.Encoding.UTF8.GetBytes(expected);
+
+            return a.Length == b.Length
+                && System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(a, b);
         }
 
         public async Task<ApiResponse> RegisterAsync(RegisterDTO dto)
@@ -52,6 +107,15 @@ namespace Drivious.Services.Implements
                 return new ApiResponse(false, "Passwords do not match.");
             }
 
+            // Settled before the account exists, so a wrong invite code leaves
+            // nothing behind to clean up.
+            var (allowed, role, roleError) = ResolveRegistrationRole(dto);
+
+            if (!allowed)
+            {
+                return new ApiResponse(false, roleError!);
+            }
+
             AppUser user = new()
             {
                 UserName = dto.UserName,
@@ -67,9 +131,7 @@ namespace Drivious.Services.Implements
                     string.Join(", ", result.Errors.Select(x => x.Description)));
             }
 
-            // Self-registration always lands in the least privileged role; an
-            // administrator promotes from there.
-            await _userManager.AddToRoleAsync(user, AppRoles.Driver);
+            await _userManager.AddToRoleAsync(user, role);
 
             return new ApiResponse(true, "User registered successfully.");
         }
@@ -187,6 +249,101 @@ namespace Drivious.Services.Implements
                     DriverId = user.DriverId,
                     Roles = roles.ToList()
                 });
+        }
+
+        public async Task<ApiResponse<PagedResult<UserGetDTO>>> GetUsersAsync(
+            UserQueryParameters parameters)
+        {
+            var query = _userManager.Users.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(parameters.Role))
+            {
+                // Identity keeps the membership in a join table with no navigation
+                // property on AppUser, so the filter goes through the role id rather
+                // than calling GetUsersInRoleAsync and filtering the result in memory.
+                var roleId = await _context.Roles
+                    .Where(x => x.Name == parameters.Role)
+                    .Select(x => x.Id)
+                    .FirstOrDefaultAsync();
+
+                if (roleId == null)
+                {
+                    return new ApiResponse<PagedResult<UserGetDTO>>(
+                        false,
+                        $"Role '{parameters.Role}' does not exist. " +
+                        $"Valid roles: {string.Join(", ", AppRoles.All)}.",
+                        null);
+                }
+
+                var userIds = _context.UserRoles
+                    .Where(x => x.RoleId == roleId)
+                    .Select(x => x.UserId);
+
+                query = query.Where(x => userIds.Contains(x.Id));
+            }
+
+            var search = parameters.Search?.Trim();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(x =>
+                    (x.UserName != null && x.UserName.Contains(search))
+                 || (x.Email != null && x.Email.Contains(search)));
+            }
+
+            // Only these two are worth ordering by, and both are allow-listed for the
+            // same reason as everywhere else: a caller-supplied field name must never
+            // reach the query itself.
+            query = (parameters.SortBy?.ToLowerInvariant()) switch
+            {
+                "email" => parameters.Descending
+                    ? query.OrderByDescending(x => x.Email)
+                    : query.OrderBy(x => x.Email),
+                _ => parameters.Descending
+                    ? query.OrderByDescending(x => x.UserName)
+                    : query.OrderBy(x => x.UserName),
+            };
+
+            var totalCount = await query.CountAsync();
+
+            var page = await query
+                .Skip((parameters.Page - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .Select(x => new UserGetDTO
+                {
+                    Id = x.Id,
+                    UserName = x.UserName!,
+                    Email = x.Email!,
+                    DriverId = x.DriverId,
+                    DriverFullName = x.Driver == null
+                        ? null
+                        : x.Driver.FirstName + " " + x.Driver.LastName
+                })
+                .ToListAsync();
+
+            // One round trip for the whole page's memberships instead of one per row.
+            var ids = page.Select(x => x.Id).ToList();
+
+            var roles = await _context.UserRoles
+                .Where(x => ids.Contains(x.UserId))
+                .Join(_context.Roles,
+                    membership => membership.RoleId,
+                    role => role.Id,
+                    (membership, role) => new { membership.UserId, role.Name })
+                .ToListAsync();
+
+            foreach (var user in page)
+            {
+                user.Roles = roles
+                    .Where(x => x.UserId == user.Id && x.Name != null)
+                    .Select(x => x.Name!)
+                    .ToList();
+            }
+
+            return new ApiResponse<PagedResult<UserGetDTO>>(
+                true,
+                "Users retrieved successfully.",
+                new PagedResult<UserGetDTO>(page, totalCount, parameters.Page, parameters.PageSize));
         }
 
         public async Task<ApiResponse> AssignRoleAsync(AssignRoleDTO dto)

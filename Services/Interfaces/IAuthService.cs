@@ -1,4 +1,5 @@
 using Drivious.DTOs.Auth;
+using Drivious.DTOs.Common;
 using Drivious.Responses;
 
 namespace Drivious.Services.Interfaces
@@ -16,6 +17,11 @@ namespace Drivious.Services.Interfaces
         Task<ApiResponse> ChangePasswordAsync(string userId, ChangePasswordDTO dto);
 
         Task<ApiResponse<CurrentUserDTO>> GetCurrentUserAsync(string userId);
+
+        /// <summary>
+        /// The accounts an administrator manages, with their roles and driver link.
+        /// </summary>
+        Task<ApiResponse<PagedResult<UserGetDTO>>> GetUsersAsync(UserQueryParameters parameters);
 
         Task<ApiResponse> AssignRoleAsync(AssignRoleDTO dto);
 

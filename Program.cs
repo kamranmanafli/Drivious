@@ -200,7 +200,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only outside development. A redirect here would answer the browser's CORS
+// preflight with a 307, and a preflight is not allowed to follow one — so a front
+// end running on another machine over http would fail before any request is made,
+// with an error that names CORS rather than the redirect that caused it.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // Before the static files so uploaded images and documents are also fetchable
 // from the front end origin.

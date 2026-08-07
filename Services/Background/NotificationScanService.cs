@@ -34,6 +34,19 @@ namespace Drivious.Services.Background
 
             var interval = TimeSpan.FromHours(Math.Max(_settings.ScanIntervalHours, 0.1));
 
+            // A hosting plan that stops an idle site makes the first visitor pay for
+            // the whole start-up, and a full expiry scan competing for the same
+            // connection pool lengthens exactly that wait. The scan is not urgent to
+            // the second, so it yields to whoever is waiting on a page.
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(20), stoppingToken);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 try

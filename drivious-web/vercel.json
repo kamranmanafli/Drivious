@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "http://drivious.runasp.net/api/:path*" },
+    { "source": "/Images/:path*", "destination": "http://drivious.runasp.net/Images/:path*" },
+    { "source": "/Files/:path*", "destination": "http://drivious.runasp.net/Files/:path*" },
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+  ]
+}

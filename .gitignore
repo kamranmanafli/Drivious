@@ -23,6 +23,13 @@ secrets.json
 node_modules/
 dist/
 .vite/
+*.tsbuildinfo
+
+# .env is committed on purpose: it holds only the local API origin, and a VITE_
+# variable ends up in the browser bundle anyway, so it can hold nothing secret.
+# Personal overrides go in .env.local.
+.env.local
+.env.*.local
 
 ## Uploaded content (runtime data, not source)
 wwwroot/Images/**/*
