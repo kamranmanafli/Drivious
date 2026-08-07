@@ -8,7 +8,7 @@ warnings. An ASP.NET Core 8 API with a React front end on top of it.
 | | |
 |---|---|
 | Site | <https://drivious-web.vercel.app> |
-| API | <http://drivious.runasp.net> |
+| API | <http://drivious.runasp.net> — opens Swagger, where every endpoint can be tried against the live database |
 
 Register at `/register` to try it. The Driver role is open to anyone; Manager and
 Admin ask for an invite code. A driver signing up sees the mobile shell, and an

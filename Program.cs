@@ -194,11 +194,12 @@ await DbSeeder.SeedAsync(app.Services);
 // Registered first so it also catches failures thrown by the middleware below it.
 app.UseMiddleware<ExceptionMiddleware>();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Served everywhere, not only in development: the API is deployed on its own
+// host with no page of its own, so this is what someone opening that address
+// gets. It documents the surface, it does not widen it - every endpoint behind
+// it still answers 401 without a token.
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Only outside development. A redirect here would answer the browser's CORS
 // preflight with a 307, and a preflight is not allowed to follow one — so a front
@@ -220,5 +221,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// The root would otherwise be a 404, which reads as a broken deployment rather
+// than as an API with nothing of its own to serve at "/".
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 
 app.Run();
